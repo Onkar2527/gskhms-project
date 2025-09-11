@@ -1,0 +1,92 @@
+<section  class="">
+    <div class="content-block">
+        <div class="block-header">
+            <!-- breadcrumb -->
+            <button mat-icon-button (click)="dialogRef.close()" class="modal-close-button" aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+        <div class="row clearfix">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="card">
+                    <div class="body" id="print-section">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="white-box">
+                                    <h3>
+                                        <b>Appointment Token</b>
+                                    </h3>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="float-start">
+                                                <address>
+                                                    <address>
+                                                        <!-- <img src="assets/images/image-gallery/dummylogo1.png" alt="logo" />
+                                                        <p class="text-muted m-l-5">
+                                                          Hospital Name <br>
+                                                          Address and Pin Code <br>
+                                                          Phone : (0111) 22222222
+                                                        </p> -->
+
+                                                        <img src="assets\images\image-gallery\gs.png" alt="logo" width="75" height="75"/>
+                                                        <p  class="text-muted m-l-5">
+                                                       GS Kulkurni Hospital<br>
+                                                        Shivaji Nagar, Miraj,<br> 416410 <br>
+                                                        Phone : Phone : (0233)– 2222590, 22223268
+                                                        </p>
+                                                    </address>
+                                                </address>
+                                            </div>
+                                            <div class="float-end" style="margin-right: 10% !important;">
+                                                    <address>
+                                                        <p class="m-0">
+                                                            <b>UHID NO : </b> {{appoinmentData.patientUHIDNumber}}
+                                                        </p>
+                                                        <p class="m-0">
+                                                            <b>Appointment NO : </b> {{appoinmentData.documentNumber}}
+                                                        </p>
+                                                        <p class="m-0">
+                                                            <b>Consulting Doctor : </b>Dr. {{appoinmentData.doctorName}}
+                                                        </p>
+                                                        <p class="m-0">
+                                                            <b>Patient Name / Gender : </b> {{appoinmentData.firstName}}
+                                                            {{appoinmentData.lastName}} / {{appoinmentData.gender}}
+                                                        </p>
+                                                        <p class="m-0">
+                                                            <b>Address : </b> {{appoinmentData.address}}
+                                                        </p>
+                                                        <p class="m-0">
+                                                            <b>Date of Birth / Age : </b>
+                                                            <i class="fa fa-calendar"></i> {{appoinmentData.dob | date:'MMMM
+                                                            d, y'}} / {{calculateAge(appoinmentData.dob)}} Years
+                                                        </p>
+                                                        <p class="m-0">
+                                                            <b>Appointment Date : </b>
+                                                            <i class="fa fa-calendar"></i> {{appoinmentData.appointmentDate
+                                                            | date:'MMMM d, y'}}
+                                                        </p>
+                                                        <p class="m-0">
+                                                            <b>Appointment Type : </b> {{serviceRate?.serviceName}}
+                                                        </p>
+                                                        <p class="m-0">
+                                                            <b>Fees : </b> Rs. {{serviceRate?.serviceRate}}
+                                                        </p>
+                                                    </address>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <button mat-flat-button color="primary" printSectionId="print-section" [useExistingCss]="true"
+                            ngxPrint><i class="fas fa-print"></i>
+                            Print</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

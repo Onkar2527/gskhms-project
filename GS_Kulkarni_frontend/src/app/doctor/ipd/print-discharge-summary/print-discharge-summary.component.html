@@ -1,0 +1,187 @@
+<section>
+  <div class="card">
+    <div class="body" id="print-section">
+      <table style="width: 100%;">
+        <thead>
+          <tr>
+            <td>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="float-start" style="display: flex; align-items: flex-start; gap: 15px;">
+                    <img src="assets\images\image-gallery\gs.png" alt="logo" width="75" height="75" />
+
+                    <div>
+
+                      <h3 style="margin: 0;"><strong>SOMASHEKHAR HOSPITAL</strong></h3>
+                      <p style="margin: 0;">
+                        Shivaji Nagar, Miraj,<br> 416410 <br>
+                        Phone : Phone : (0233)– 2222590, 22223268
+                        President:  Dr. GS Kulkarni 
+                      </p>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              <hr>
+              <h4 class="text-center"><strong>DISCHARGE SUMMARY CARD</strong></h4>
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <p><strong>Name:</strong> {{appoinmentData?.firstName}} {{appoinmentData?.lastName}}</p>
+              <p>
+                <strong>D.O.A:</strong> {{appoinmentData?.appointmentDate | date:'dd/MM/yyyy'}} &nbsp;
+                <strong>D.O.D:</strong> {{appoinmentData?.dischargeDate | date:'dd/MM/yyyy'}} &nbsp;
+                <strong>Reg. No:</strong> {{appoinmentData?.patientUHIDNumber}}
+              </p>
+              <p><strong>Diagnosis:</strong> {{dischargeSummaryData?.produre}}</p>
+              <p><strong>Salient Features:</strong><br>{{dischargeSummaryData?.chiefComplaint}}</p>
+
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <hr>
+
+      <table style="width: 100%; border-collapse: collapse;">
+        <tr>
+          <td style="vertical-align: top; width: 50%; padding-right: 10px; border-right: 2px solid #000;">
+            <h5>Investigations:</h5>
+            <p>Hb: {{ dischargeSummaryData?.assessmentVitalDTOList[0]?.pulse }} ______</p>
+            <p>T.C.: ___________________</p>
+            <p>D.C.: ___________________</p>
+            <p>Platelet: ________________</p>
+            <p>Bl. gr.: _________________</p>
+            <p>HIV: ___________________</p>
+            <p>BSL: ___________________</p>
+            <p>BUL: ___________________</p>
+            <p>Hbs Ag: ________________</p>
+            <p>Urine - Alb.: ____________</p>
+            <p>Sugar: _________________</p>
+            <p>U. micro: ________________</p>
+            <p>PT: ________________</p>
+            <p>IMR: ________________</p>
+            <p>Sr.Creat: ________________</p>
+            <p>SGOT: ________________</p>
+            <p>SGPT: ________________</p>
+          </td>
+          <td style="vertical-align: top; width: 50%; padding-left: 10px;">
+            <h5>Sonography:</h5>
+            <p>{{ dischargeSummaryData?.summaryOfInvestigation }}</p>
+          </td>
+        </tr>
+      </table>
+      <div>
+        <p><strong>Procedure / Delivery Notes:</strong><br>{{dischargeSummaryData?.treatmentGiven}} </p>
+
+        <div class="table-responsive m-0">
+          <p class="m-0 mb-2" style="text-align: center !important;">
+
+          </p>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Medicine</th>
+                <th>Unit Name</th>
+                <th>Frequency</th>
+                <th>Dosage</th>
+                <th>Till Days</th>
+                <th>Quantity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let prescription of presdcriptionData$;let i =index">
+                <td>{{i+1}}</td>
+                <td>{{prescription?.medicineName}}</td>
+                <td>{{prescription?.unitName}}</td>
+                <td>{{prescription?.frequency}}</td>
+                <td>{{prescription?.dosage}}</td>
+                <td>{{prescription?.tillDay}} {{prescription?.tillDay?'Days':''}}</td>
+                <td>{{prescription?.quantity}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <p><strong>Advise:</strong> {{dischargeSummaryData?.adviseDischargeTime}}</p>
+      <p><strong>Follow-Up:</strong> {{dischargeSummaryData?.followupDate | date:'dd/MM/yyyy'}}</p>
+      <div>
+        <p><strong>prescription during discharge:</strong> </p>
+        <div class="table-responsive m-0">
+          <p class="m-0 mb-2" style="text-align: center !important;">
+
+          </p>
+          <table class="table ">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Medicine</th>
+                <th>Unit Name</th>
+                <th>Frequency</th>
+                <th>Dosage</th>
+                <th>Till Days</th>
+                <th>Quantity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let Aprescription of afterPrescriptionData$;let i =index">
+                <td>{{i+1}}</td>
+                <td>{{Aprescription?.medicineName}}</td>
+                <td>{{Aprescription?.unitName}}</td>
+                <td>{{Aprescription?.frequency}}</td>
+                <td>{{Aprescription?.dosage}}</td>
+                <td>{{Aprescription?.tillDay}} {{Aprescription?.tillDay?'Days':''}}</td>
+                <td>{{Aprescription?.quantity}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <hr>
+
+      <p><strong>Facilities Available:</strong><br>
+        Maternity Home, Gynac Surgery, Ultrasonography, Laproscopy, Infertility, Microsurgery,
+        Family Welfare (MTP, Abortion, Tubectomy), Balloon Therapy, IUI Lab, Colposcopy.
+      </p>
+      <div class="row text-center mt-4">
+  <div class="col-md-4 text-start">
+    <p>Sign: ____________________________</p>
+    <p>Doctor Name: <strong>Dr.Somashekhar Patil</strong></p>
+   
+  </div>
+  <div class="col-md-4">
+    <p>Sign: ____________________________</p>
+    <p>Doctor Name: <strong>Dr.Vidya Patil</strong></p>
+   
+  </div>
+  <div class="col-md-4 text-end">
+    <p>Sign: ____________________________</p>
+    <p>Doctor Name: <strong>Dr. Dhruva Patil</strong></p>
+    <p>Date: {{appoinmentData?.appointmentDate | date: 'dd/MM/yyyy'}}</p>
+  </div>
+</div>
+
+      <hr>
+      <p class="text-center"><strong>In case of Emergency </strong>
+  <br>  Contant No:-> 0233-224177
+            Ph:->9172311964</p>
+
+    </div>
+
+    <div class="text-end mt-2">
+      <button mat-flat-button color="primary" printSectionId="print-section" [useExistingCss]="true" ngxPrint>
+        <i class="fas fa-print"></i> Print
+      </button>
+      <button mat-flat-button color="primary" (click)=" sharePDFOnEmail()" style="margin-left: 5px;">
+        <i class="fas fa-envelope"></i> Email
+      </button>
+      <button mat-raised-button color="primary" color="warn" (click)="dialogRef.close()">Close</button>
+    </div>
+  </div>
+</section>

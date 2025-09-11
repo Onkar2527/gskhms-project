@@ -1,0 +1,120 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <div class="modal-about">
+          {{dialogTitle}}
+        </div>
+      </div>
+    </div>
+    <button mat-icon-button (click)="dialogRef.close()" class="modal-close-button" aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <form class="register-form m-4" [formGroup]="listForm" (ngSubmit)="save()">
+      <div class="row">
+        <div class="col-xl-10 col-lg-10 col-md-12 col-sm-12 mb-3">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Select Department</mat-label>
+            <mat-select formControlName="deptId" required>
+              <mat-option *ngFor="let dept of departments$" [value]="dept.deptId">{{dept.deptName}}</mat-option>
+            </mat-select>
+            @if (listForm.get('deptId')?.hasError('required')) {
+            <mat-error>
+              Select Any Department
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+
+
+      </div>
+
+
+      <div class="row">
+
+
+
+        <div class="col-xl-10 col-lg-10 col-md-12 col-sm-12 mb-3">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Consulting Service</mat-label>
+            <mat-select multiple formControlName="serviceId">
+              <mat-option *ngFor="let data of services$" [value]="data.id">{{data.name}} - {{data.rate}}</mat-option>
+            </mat-select>
+
+          </mat-form-field>
+        </div>
+
+      </div>
+
+      <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12 mb-3">
+        <button type="button"  class="btn-space"  (click)="addPackageDetails()"  mat-raised-button color="primary">Add Details</button>
+      </div>
+
+      <div class="row">
+
+        <div class="row clearfix" >
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="card">
+              <div class="header">
+                <h2>Services Included</h2>
+
+              </div>
+              <div class="tableBody">
+                <div class="table-responsive">
+                  <table class="table display product-overview mb-30" id="support_table">
+                    <thead>
+                      <tr>
+                        <th>Service Name</th>
+                        <th>Charges</th>
+                        <th>Action</th>
+                      </tr>
+
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let packageDtl of packageDetails$;let i =index">
+                        <td>{{getServiceName(packageDtl.serviceId)}}</td>
+                        <td>{{packageDtl.charges}}</td>
+                        <td><button type="button" mat-icon-button (click)="deleteServiceDtl(packageDtl.id)">
+                            <mat-icon class="col-orange">delete</mat-icon>
+                          </button></td>
+                      </tr>
+                      <tr>
+                        <td><strong>Total</strong></td>
+                        <td><strong>{{ getTotalCharges() }}</strong></td>
+                        <td></td>
+                      </tr>
+ 
+
+                      <!-- <tr *ngFor="let data of serviceOptions;let i =index">
+                      <td>{{getServiceName(data.id)}}</td>
+                      <td>{{data.rate}}</td>
+                      <td><button  type="button" mat-icon-button (click)="deleteServiceDtl(data.id)">
+                        <mat-icon class="col-orange">delete</mat-icon>
+                      </button></td>
+                    </tr> -->
+
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+          <button class="btn-space" mat-raised-button color="primary">Save</button>
+          <button type="button" mat-raised-button color="warn" (click)="cancel()">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,355 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb [title]="'Appointments'" [items]="['Appointments']" [active_item]="'Appointments'">
+      </app-breadcrumb>
+    </div>
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="materialTableHeader">
+            <div class="left">
+              <ul class="header-buttons-left ms-0">
+                <li class="tbl-search-box">
+                  <label for="search-input"><i class="material-icons search-icon">search</i></label>
+                  <input placeholder="Search" type="text" #filter class="browser-default search-field"
+                    aria-label="Search box">
+                </li>
+              </ul>
+            </div>
+            <div class="right">
+              <ul class="tbl-export-btn">
+                <li class="tbl-header-btn">
+                  <div class="m-l-5" matTooltip="ADD">
+                    <button mat-mini-fab color="primary" (click)="addNew()">
+                      <mat-icon class="col-white">add</mat-icon>
+                    </button>
+                  </div>
+                </li>
+                <li class="tbl-header-btn">
+                  <div class="m-l-5">
+                      <mat-form-field style="width: 8rem !important;">
+                          <mat-label>Appointment Status</mat-label>
+                          <mat-select [(ngModel)]="appointmentStatus" required>
+                            <mat-option [value]="'All'">
+                              All
+                            </mat-option>
+                            <mat-option [value]="'All'">
+                              New
+                            </mat-option>
+                            <mat-option [value]="'Waiting'">
+                              Waiting
+                            </mat-option>
+                            <mat-option [value]="'Confirmed'">
+                              Confirmed
+                            </mat-option>
+                            <mat-option [value]="'Casualty Completed'">
+                              Casualty Completed
+                            </mat-option>
+                            <mat-option [value]="'Completed'">
+                              Completed
+                            </mat-option>
+                            <mat-option [value]="'Cancelled'">
+                              Cancelled
+                            </mat-option>
+                          </mat-select>
+                      </mat-form-field>
+                  </div>
+                </li>
+                <li class="tbl-header-btn">
+                  <div class="m-l-5">
+                      <mat-form-field style="width: 9rem !important;">
+                          <mat-label>Start Date</mat-label>
+                          <input matInput [matDatepicker]="picker" [(ngModel)]="startDate" required>
+                          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                          <mat-datepicker #picker></mat-datepicker>   
+                        </mat-form-field>
+                  </div>
+                </li>
+                <li class="tbl-header-btn">
+                  <div class="m-l-5">
+                      <mat-form-field style="width: 9rem !important;">
+                          <mat-label>End Date</mat-label>
+                          <input matInput [matDatepicker]="picker1" [(ngModel)]="endDate" required>
+                          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                          <mat-datepicker #picker1></mat-datepicker>  
+                        </mat-form-field>
+                  </div>
+                </li>
+                <li class="tbl-header-btn">
+                  <div class="m-l-5" matTooltip="REFRESH">
+                    <button mat-mini-fab color="primary" (click)="refresh()">
+                      <mat-icon class="col-white">refresh</mat-icon>
+                    </button>
+                  </div>
+                </li>
+                <li>
+                  <div class="export-button m-l-5" matTooltip="XLSX">
+                    <img src="assets/images/icons/xlsx.png" alt="" (click)="exportExcel()" />
+                  </div>
+                </li>
+                <li>
+                  <div class="export-button m-l-5" matTooltip="PDF">
+                      <img src="assets/images/icons/pdf.png" alt="" (click)="exportPDF()" />
+                  </div>
+              </li>
+              </ul>
+            </div>
+          </div>
+          <div class="body overflow-auto">
+            <div class="responsive_table">
+              <table mat-table [dataSource]="dataSource" matSort class="mat-cell advance-table">
+               
+
+                <ng-container matColumnDef="sno">
+                  <th class="resizeDiv" mat-header-cell *matHeaderCellDef> S.No. </th>
+                  <td mat-cell *matCellDef="let row; let i = index">
+                    {{ i + 1 }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="name">
+                  <th class="resizeDiv" mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                  <td mat-cell *matCellDef="let row" [matTooltip]="row.namePrefix+' '+row.firstName+' '+row.husbandName+' '+row.lastName"><span class="mobile-label">Name:</span>{{row.namePrefix}} {{row.firstName}} {{row.husbandName}} {{row.lastName}}
+                  </td>
+                </ng-container>
+                 <!-- <ng-container matColumnDef="mobileNumber">
+                  <th class="resizeDiv" mat-header-cell *matHeaderCellDef mat-sort-header>Mobile Number
+                  </th>
+                  <td mat-cell *matCellDef="let row" [matTooltip]="row.mobileNumber"> <span class="truncate-text" ><span
+                        class="mobile-label">Mobile Number:</span>{{row.mobileNumber}}</span></td>
+                </ng-container> -->
+                <!-- <ng-container matColumnDef="gender">
+                  <th class="resizeDiv" mat-header-cell *matHeaderCellDef mat-sort-header>Gender
+                  </th>
+                  <td mat-cell *matCellDef="let row" [matTooltip]="row.gender"> <span class="truncate-text"><span
+                        class="mobile-label">Gender:</span>{{row.gender}}</span></td>
+                </ng-container> -->
+
+                <!-- <ng-container matColumnDef="status">
+                  <th class="resizeDiv" mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+                  <td mat-cell *matCellDef="let row" [matTooltip]="row.status">
+                    <span class="truncate-text">
+                      <span class="mobile-label">Status :</span>
+                
+                      <ng-container *ngIf="row.status === 'OnCall'; else checkWaiting">
+                        <i class="fas fa-phone" style="color: red;"></i>
+                      </ng-container>
+                
+                      <ng-template #checkWaiting>
+                        <span *ngIf="row.status === 'Waiting'">Waiting</span>
+                      </ng-template>
+                
+                    </span>
+                  </td>
+                </ng-container> -->
+
+                <!-- <ng-container matColumnDef="status">
+                  <th class="resizeDiv" mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+                  <td mat-cell *matCellDef="let row" [matTooltip]="row.status">
+                    <span class="truncate-text">
+                      <span class="mobile-label">Status :</span>
+                
+                      <ng-container *ngIf="row.status === 'OnCall'; else checkWaiting">
+                        <i class="fas fa-phone" style="color: red; margin-right: 3px;"></i> Waiting
+                      </ng-container>
+                
+                      <ng-template #checkWaiting>
+                        <span *ngIf="row.status === 'Waiting'">Waiting</span>
+                      </ng-template>
+
+                      <ng-template>
+                        <span *ngIf="row.status === 'Cancelled'">Cancelled</span>
+                      </ng-template>
+
+
+                
+                    </span>
+                  </td>
+                </ng-container> -->
+                 
+
+                <ng-container matColumnDef="status">
+                  <th class="resizeDiv" mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+                  <td mat-cell *matCellDef="let row" [matTooltip]="row.status">
+                    <span class="truncate-text">
+                      <span class="mobile-label">Status :</span>
+                
+                      <ng-container [ngSwitch]="row.status">
+                        <span *ngSwitchCase="'OnCall'">
+                          <i class="fas fa-phone" style="color: red; margin-right: 3px;"></i> Waiting
+                        </span>
+                        <span *ngSwitchCase="'Waiting'">Waiting</span>
+                        <span *ngSwitchCase="'Cancelled'">Cancelled</span>
+                        <span *ngSwitchDefault>{{ row.status }}</span>
+                      </ng-container>
+                      
+                    </span>
+                  </td>
+                </ng-container>
+                
+
+
+                <ng-container matColumnDef="priority">
+                  <th class="resizeDiv" mat-header-cell *matHeaderCellDef mat-sort-header>priority
+                  </th>
+                  <td mat-cell *matCellDef="let row" [matTooltip]="row.priority"> <span class="truncate-text"><span
+                        class="mobile-label">Priority:</span>{{row.priority }}</span></td>
+                </ng-container>
+
+                <!-- <ng-container matColumnDef="Time">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="resizeDiv">Time</th>
+                <td mat-cell *matCellDef="let row">
+                <span class="mobile-label">Time: {{ row.Time | date: 'mediumTime' }}</span>
+                </td>
+                </ng-container> -->
+
+          <ng-container matColumnDef="appointmentTime">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="resizeDiv">Time</th>
+              <td mat-cell *matCellDef="let row" [matTooltip]="row.appointmentTime ? (row.appointmentTime | date: 'short') ?? '': ''">
+                     <span *ngIf="row.appointmentTime; else noData">
+                             {{ row.appointmentTime | date: 'h:mm a' }}
+                       </span>
+               <ng-template #noData>-</ng-template>
+                </td>
+          </ng-container>
+
+
+
+
+
+
+
+
+                <!-- <ng-container matColumnDef="status">
+                  <th class="resizeDiv" mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+                  <td mat-cell *matCellDef="let row" [matTooltip]="row.status">
+                    <span class="truncate-text">
+                      <span class="mobile-label">Status :</span>
+                      <i *ngIf="row.status === 'OnCall'" class="fas fa-phone" style="color: red;"></i> 
+                    </span>
+                  </td>
+                </ng-container> -->
+
+
+                <!-- <ng-container matColumnDef="status">
+                  <th class="resizeDiv" mat-header-cell *matHeaderCellDef mat-sort-header>Status
+                  </th>
+                  <td mat-cell *matCellDef="let row" [matTooltip]="row.status">
+                    <span class="truncate-text">
+                      <span class="mobile-label">Status :</span>
+                      <i *ngIf="row.status === 'OnCall'" class="fas fa-phone" style="color: red; margin-right: 5px;"></i> 
+                      {{ row.status }}
+                    </span>
+                  </td>
+                  
+                  <th class="resizeDiv" mat-header-cell *matHeaderCellDef mat-sort-header> Status
+                  </th>
+                  <td mat-cell *matCellDef="let row" [matTooltip]="row.status"> <span class="truncate-text"><span
+                    class="mobile-label">Status :</span>{{row.status}}</span></td>
+                </ng-container> -->
+              
+                <!-- <ng-container matColumnDef="dob">
+                  <th class="resizeDiv" mat-header-cell *matHeaderCellDef mat-sort-header>DOB
+                  </th>
+                  <td mat-cell *matCellDef="let row" [matTooltip]="datepipe.transform(row.dob, 'MMM d, y') ?? ''"> <span class="truncate-text"><span
+                        class="mobile-label">DOB:</span>{{row.dob | date:'MMM d, y'}}</span></td>
+                </ng-container> -->
+                <!-- <ng-container matColumnDef="address">
+                  <th class="resizeDiv" mat-header-cell *matHeaderCellDef mat-sort-header>Address
+                  </th>
+                  <td mat-cell *matCellDef="let row" [matTooltip]="row.address"> <span class="truncate-text"><span
+                        class="mobile-label">Address :</span>{{row.address}}</span></td>
+                </ng-container> -->
+               
+                <!-- <ng-container matColumnDef="createdBy">
+                  <th class="resizeDiv" mat-header-cell *matHeaderCellDef mat-sort-header> Created By
+                  </th>
+                  <td mat-cell *matCellDef="let row" [matTooltip]="row.createdBy"> <span class="truncate-text"><span
+                    class="mobile-label">Created By :</span>{{row.createdBy}}</span></td>
+                </ng-container>  -->
+                <!-- actions -->
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell class="psl-3 tbl-col-width-per-10" *matHeaderCellDef>Actions
+                  </th>
+                  <td mat-cell *matCellDef="let row; let i=index;" class="psl-3 tbl-col-width-per-10">
+                    <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
+                      <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                      <button mat-menu-item (click)="editCall(row)">
+                        <i class="material-icons-outlined align-middle msr-2">edit</i>
+                        <span>Update</span>
+                      </button>
+
+                      <button mat-menu-item (click)="changeHospital(row)">
+                        <i class="material-icons-outlined align-middle msr-2">edit</i>
+                        <span>Change Hospital</span>
+                      </button>
+
+                      <button mat-menu-item (click)="addServices(row.id)">
+                        <i class="material-icons-outlined align-middle msr-2">edit</i>
+                        <span>Add Services</span>
+                      </button>
+
+
+
+
+                      @if (row.status=='Waiting') {
+                      <button mat-menu-item (click)="printToken(row)" >
+                        <i class="material-icons-outlined align-middle msr-2">print</i>
+                        <span>Print Token</span>
+                      </button>
+                      <button mat-menu-item (click)="printLabel(row)" >
+                        <i class="material-icons-outlined align-middle msr-2">print</i>
+                        <span>Print Label</span>
+                      </button>
+                      <button mat-menu-item (click)="printCasePaper(row)" >
+                        <i class="material-icons-outlined align-middle msr-2">print</i>
+                        <span>Print Case Paper</span>
+                      </button>
+                      }
+                      @if (row.status!='Completed' && row.status!='Cancelled' && row.status!='Confirmed') {
+                        <button mat-menu-item (click)="deleteItem(row)">
+                          <i class="material-icons-outlined align-middle msr-2">highlight_off</i>
+                          <span>Cancel</span>
+                        </button>
+                      }
+                      <!-- @if (row.status=='Completed') {
+                        <button mat-menu-item >
+                          <i class="material-icons-outlined align-middle msr-2">print</i>
+                          <span>Print Prescription</span>
+                        </button>
+                      } -->
+                    </mat-menu>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <!-- <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row> -->
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="editCall(row)"
+                  [style.cursor]="'pointer'" matRipple>
+                </tr>
+              </table>
+              <!-- Loading spinner -->
+              @if (exampleDatabase?.isTblLoading) {
+              <div class="tbl-spinner">
+                <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
+                </mat-progress-spinner>
+              </div>
+              }
+              @if (!exampleDatabase?.isTblLoading) {
+              <div class="no-results" [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
+                No results
+              </div>
+              }
+              <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0" [pageSize]="10"
+                [pageSizeOptions]="[5, 10, 25, 100]">
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+ 

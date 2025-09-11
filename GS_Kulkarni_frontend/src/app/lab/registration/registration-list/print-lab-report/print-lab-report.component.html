@@ -1,0 +1,215 @@
+<section class="">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <button mat-icon-button (click)="dialogRef.close()" class="modal-close-button" aria-label="Close dialog">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div class="row clearfix">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="card">
+          <div class="body" id="print-section">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="white-box">
+                  <table style="width: 100% !important; height: 100% !important; overflow: visible !important;">
+                    <thead>
+                      <tr>
+                        <td>    
+                          <div class="row">
+                            <div class="col-md-12">
+                              <div *ngIf="withLH" style="height: 130px !important; width: 100% !important;"></div>
+                              <div style="margin-left: 5% !important; margin-right: 5% !important;">
+                                <div class="float-start">
+                                  <address>
+                                    <!-- <img *ngIf="!withLH" src="assets/images/image-gallery/dummylogo1.png" alt="logo" />
+                                    <p *ngIf="!withLH" class="text-muted m-l-5">
+                                      Hospital Name <br>
+                                      Address and Pin Code <br>
+                                      Phone : (0111) 22222222
+                                    </p> -->
+
+                                    
+                                  <img *ngIf="!withLH" src="assets\images\image-gallery\gs.png" alt="logo" width="75" height="75"/>
+                                  <p *ngIf="!withLH" class="text-muted m-l-5">
+                                   GS Kulkurni Hospital<br>
+                                    Shivaji Nagar, Miraj,<br> 416410 <br>
+                                     Phone : Phone : (0233)– 2222590, 22223268
+                                  </p>
+                                    <p class="mt-2 m-0">
+                                      <b>UHID NO : </b> {{appoinmentData?.patientUHIDNumber}}
+                                    </p>
+                                  </address>
+                                </div>
+                                <div class="float-end">
+                                  <address>
+                                    <p class="m-0 mt-3">
+                                      <b>Patient Name(Gender) : </b> {{appoinmentData?.firstName}}
+                                      {{appoinmentData?.lastName}}({{appoinmentData?.gender}})
+                                    </p>
+
+                                    <p class="m-0">
+                                      <b>Date of Birth(Age) : </b>
+                                      <i class="fa fa-calendar"></i> {{appoinmentData?.dob |
+                                      date:'dd/MM/YYYY'}}({{calculateAge(appoinmentData?.dob)}} Years)
+                                    </p>
+                                    <p class="m-0">
+                                      <b>Adhar Number : </b> {{appoinmentData?.aadharNumber}}
+                                    </p>
+                                    <p class="m-0">
+                                      <b>Mobile NO : </b> {{appoinmentData?.mobileNumber}}
+                                    </p>
+                                   
+                                    <p class="m-0">
+                                      <b>Sample Collection Date : </b>
+                                      <i class="fa fa-calendar"></i> {{this.reportData$?.sampleCollected |
+                                      date:'dd/MM/YYYY'}} {{this.reportData$?.sampleCollectedTime }}
+                                    </p>
+                                    <p class="m-0">
+                                      <b>Report Date : </b>
+                                      <i class="fa fa-calendar"></i> {{this.reportData$?.reportGenerated |
+                                      date:'dd/MM/YYYY'}}
+                                    </p>
+                                    <p class="m-1" style="text-align: center;">
+                                      <ngx-barcode6
+                                      [bc-font-size]="14"
+                                      [bc-width]="0.75"
+                                      [bc-height]="25" 
+                                      [bc-value]="this.reportData$?.labNumber"
+                                      [bc-display-value]="true"
+                                      [bc-text-margin]="0"
+		                                  [bc-margin]="0" 
+                                      [bc-margin-top]="0" 
+                                      [bc-margin-bottom]="0" 
+                                      [bc-margin-left]="0" 
+                                      [bc-margin-right]="0"
+                                      >
+                                      </ngx-barcode6>
+                                    </p> 
+                                  </address>
+                                </div>
+                              </div>
+                            </div>
+                            <hr style="margin-left: 5% !important; width: 90% !important;">
+                          </div>
+                        </td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <div class="col-md-12" style="margin-left: 5% !important; margin-right: 5% !important;">
+                            <div class="table-responsive">
+                              <table class="table-hover" style="width: 100% !important;"
+                                *ngFor="let ele of reportData$?.labTestHeaderList;let i =index">
+                                <thead>
+                                  <tr>
+                                    <th class="underline"
+                                      style="text-align: center !important; font-size: medium !important;">
+                                      <b><u>{{ele.serviceName}}</u></b>
+                                      <hr>
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td>
+                                      <table class="table">
+                                        <thead>
+                                          <th style="width: 30%;">
+                                            <b>TEST DESCRIPTION</b>
+                                          </th>
+                                          <th style="width: 20%;">
+                                            <b>RESULT</b>
+                                          </th>
+                                          <th style="width: 30%;">
+                                            <b>REFERENCE RANGE</b>
+                                          </th>
+                                          <th style="width: 20%;">
+                                            <b>UNITS</b>
+                                          </th>
+                                        </thead>
+                                        <tbody>
+                                          <tr *ngFor="let dtl of ele.labTestDetailsList;let j =index">
+                                            <td>
+                                              {{dtl.serviceDetailedName}} <br> <span style="font-size: small !important;">{{dtl.methodDesc}}</span> 
+                                            </td>
+                                            <td *ngIf="dtl.descriptiveRange">
+                                              <span *ngIf="!highlightIfOutOfRange(dtl.descriptiveRange, dtl.value)">{{dtl.value}}</span>
+                                              <span *ngIf="highlightIfOutOfRange(dtl.descriptiveRange, dtl.value)"><b>{{dtl.value}}</b></span>
+                                            </td>
+                                            <td *ngIf="!dtl.descriptiveRange">
+                                              <span *ngIf="!dtl.normalMin && !dtl.normalMax">{{dtl.value}}</span>
+                                              <span *ngIf="(dtl.normalMin || dtl.normalMax) && (dtl.value >= dtl.normalMin && dtl.value <= dtl.normalMax)">{{dtl.value}}</span>
+                                              <span *ngIf="(dtl.normalMin || dtl.normalMax) && (dtl.value < dtl.normalMin || dtl.value > dtl.normalMax)"><b>{{dtl.value}}</b></span>
+                                            </td>
+                                            <td>
+                                              <span *ngIf="dtl.descriptiveRange">{{dtl.descriptiveRange}}</span>
+                                              <span *ngIf="!dtl.descriptiveRange && (dtl.normalMin != 0 && dtl.normalMax != 0)">{{dtl.normalMin}}-{{dtl.normalMax}}</span>
+                                              <span *ngIf="!dtl.descriptiveRange  && (dtl.normalMin == 0 && dtl.normalMax == 0)">-</span>
+                                            </td>
+                                            <td>
+                                              {{dtl.unitName}}
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                        <tfoot *ngIf="ele.description">
+                                          <tr>
+                                            <td colspan="100%" [innerHtml]="ele.description"></td>
+                                          </tr>
+                                        </tfoot>
+                                      </table>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td style="text-align: center !important;">
+                                      <span>
+                                        **END OF REPORT**
+                                        <br>
+                                        <br>
+                                      </span>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td>
+                          <div style="height: 13rem !important; width: 100% !important;"></div>
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <footer class="text-end">
+              <div>
+                <div class="float-end text-end" style="margin-right: 10% !important; margin-bottom: 2% !important;">
+                    <p class="text-start m-0">Sign : </p>
+                    <p class="text-start m-0">Doctor Name : <b> {{appoinmentData?.doctorName}}</b></p>
+                    <p class="text-start m-0">Date : {{appoinmentData?.appointmentDate | date: 'MM/dd/yyyy'}}</p>
+                </div>
+                <div *ngIf="withLH" style="height: 200px !important; width: 100% !important;"></div>
+              </div>
+            </footer>
+          </div>
+          <div class="text-end">
+            <button mat-flat-button color="primary" printSectionId="print-section" [useExistingCss]="true" ngxPrint><i
+                class="fas fa-print"></i>
+              Print</button>
+            <button mat-flat-button color="primary" (click)="sharePDFOnEmail()" style="margin-left: 5px !important;"><i
+                class="fas fa-email"></i>
+              Email</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

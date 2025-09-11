@@ -1,0 +1,205 @@
+<div class="col">
+  <div class="col1">
+    <div mat-dialog-content *ngIf="appointmentForm">
+      <form class="register-form m-4" [formGroup]="appointmentForm" (ngSubmit)="submit()">
+        <div class="example-action-buttons">
+          <button mat-button color="primary" (click)="accordion().openAll()">Expand All</button>
+          <button mat-button color="primary" (click)="accordion().closeAll()">Collapse All</button>
+        </div>
+        <mat-accordion class="example-headers-align" multi>
+          <mat-expansion-panel *ngIf="appointment">
+            <mat-expansion-panel-header>
+              <mat-panel-title> Personal Details </mat-panel-title>
+              <mat-panel-description>
+                <p class="m-0">
+                  <b>Patient Name(Age) : </b> {{appointment.firstName}}
+                  {{appointment.lastName}}({{calculateAge(appointment.dob)}} Y)
+                </p>
+                <mat-icon>account_circle</mat-icon>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <address>
+              <p class="m-0">
+                <b>UHID NO : </b> {{appointment.patientUHIDNumber}}
+              </p>
+              <p class="m-0">
+                <b>Appointment NO : </b> {{appointment.documentNumber}}
+              </p>
+              <p class="m-0">
+                <b>Consulting Doctor : </b>Dr. {{appointment.doctorName}}
+              </p>
+              <p class="m-0">
+                <b>Gender : </b> {{appointment.gender}}
+              </p>
+              <p class="m-0">
+                <b>Mobile NO : </b> {{appointment.mobileNumber}}
+              </p>
+              <p class="m-0">
+                <b>Address : </b> {{appointment.address}}
+              </p>
+              <p class="m-0">
+                <b>Date of Birth : </b>
+                <i class="fa fa-calendar"></i> {{appointment.dob | date:'MMMM, d, y'}}
+              </p>
+              <p class="m-0">
+                <b>Appointment Date : </b>
+                <i class="fa fa-calendar"></i> {{appointment.appointmentDate
+                | date:'MMMM d, y'}}
+              </p>
+            </address>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title> Additional Billing </mat-panel-title>
+              <mat-panel-description>
+                Add additional charges if applicable
+                <mat-icon>payment</mat-icon>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class="body" *ngIf="paymentForm">
+              <form class="m-4" [formGroup]="paymentForm" (ngSubmit)="savePayment()">
+                <div class="row">
+                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Description</mat-label>
+                      <input matInput formControlName="description" required>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Amount</mat-label>
+                      <input matInput formControlName="amount" required>
+                    </mat-form-field>
+                  </div>
+                </div>  
+                <button class="btn-space" 
+                    [disabled]="!paymentForm?.valid" 
+                    mat-raised-button
+                    color="primary">Submit</button>
+              </form>
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12" style="display: inline-block !important; overflow: scroll !important;">
+                  <table mat-table [dataSource]="paymentDataSource" matSort class="mat-cell advance-table" style="overflow-x: scroll !important; width: 100% !important;">
+                    <!-- ID Column -->
+                    <ng-container matColumnDef="paymentDate">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Time
+                      </mat-header-cell>
+                      <mat-cell *matCellDef="let row" [matTooltip]="row.paymentDate">{{row.paymentDate | date: 'MM/dd/yyyy,
+                        HH:mm'}}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="description">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Description
+                      </mat-header-cell>
+                      <mat-cell *matCellDef="let row" [matTooltip]="row.description"><span class="mobile-label">Description:</span>
+                        {{row?.description}}
+                      </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="amount">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Amount
+                      </mat-header-cell>
+                      <mat-cell *matCellDef="let row" [matTooltip]="row.amount">
+                        <span class="mobile-label">Amount:</span> {{row?.amount}}
+                      </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="createdBy">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Created By</mat-header-cell>
+                      <mat-cell *matCellDef="let row" [matTooltip]="row.createdBy">
+                        <span class="truncate-text"><span class="mobile-label">Created By:</span>{{row.createdBy}}</span>
+                      </mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="displayedPaymentColumns">
+                    </mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedPaymentColumns;" [style.cursor]="'pointer'" matRipple>
+                    </mat-row>
+                  </table>
+                  <mat-paginator #paginator [length]="paymentDataSource?.filteredData?.length" [pageIndex]="0" [pageSize]="10"
+                    [pageSizeOptions]="[5, 10, 25, 100, paymentDataSource?.filteredData?.length]">
+                  </mat-paginator>
+                </div>
+              </div>
+            </div>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title> Operation Summary </mat-panel-title>
+              <mat-panel-description>
+                Create Operation Summary
+                <mat-icon>check_circle</mat-icon>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class="body" *ngIf="operationSummaryForm">
+              <form class="m-4" [formGroup]="operationSummaryForm" (keydown.enter)="$event.preventDefault()" (ngSubmit)="$event.preventDefault()">
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Operation Status</mat-label>
+                      <input matInput formControlName="operationStatus">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Operation Note</mat-label>
+                      <input matInput formControlName="operationNote">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Precautionary Note</mat-label>
+                      <input matInput formControlName="precautionaryNote">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Pre Cleaning Status</mat-label>
+                      <input matInput formControlName="preCleaningStatus">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Post Cleaning Status</mat-label>
+                      <input matInput formControlName="postCleaningStatus">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Follow up Date</mat-label>
+                      <input matInput [matDatepicker]="picker" formControlName="folloupDate" required>
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <button class="btn-space" mat-raised-button color="primary" (click)="saveOperationSummary()">Submit</button>
+              </form>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </form>
+    </div>
+  </div>
+  <div class="col2">
+    <div>
+      <print-operation-summary 
+        [appoinmentData]="appointment" 
+        [operationSummaryData]="operationSummaryData"
+        [otRegistration]="otRegistration"
+      >
+      </print-operation-summary>
+    </div>
+    <div style="float: inline-end;">
+      <button mat-raised-button color="primary" color="warn" (click)="dialogRef.close()">Close</button>
+    </div>
+  </div>
+</div>

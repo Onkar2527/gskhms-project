@@ -1,0 +1,95 @@
+/* General print styles */
+@media print {
+  footer {
+    position: fixed;
+    bottom: 0;
+    height: auto !important;
+    width: 100% !important;
+  }
+
+  .col-md-4 {
+      display: inline-block !important;
+      vertical-align: top;
+      width: 33.33% !important;
+      box-sizing: border-box;
+    }
+
+    .text-start {
+      text-align: left !important;
+    }
+
+    .text-center {
+      text-align: center !important;
+    }
+
+    .text-end {
+      text-align: right !important;
+    }
+
+  #print-section {
+    padding: 60px !important;
+    
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .card {
+    
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  
+}
+
+/* Page-break and layout consistency for print */
+thead {
+  display: table-header-group;
+  page-break-after: avoid;
+}
+tbody {
+  display: table-row-group;
+  page-break-after: avoid;
+}
+tfoot {
+  display: table-footer-group;
+  page-break-after: avoid;
+}
+
+/* Logo and header alignment */
+.float-start {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+}
+.float-start img {
+  flex-shrink: 0;
+}
+.float-start p, 
+.float-start h3 {
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Optional: apply background in screen mode too (not just print) */
+#print-section {
+  padding: 60px;
+  box-sizing: border-box;
+ 
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    accent-color: exact !important; 
+}
+
+@media print {
+  body, .card, #print-section {
+   
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    accent-color: exact !important; /* fallback */
+  }
+
+  .text-end.mt-2, button, .mat-flat-button {
+    display: none !important; /* Hide buttons when printing */
+  }
+}

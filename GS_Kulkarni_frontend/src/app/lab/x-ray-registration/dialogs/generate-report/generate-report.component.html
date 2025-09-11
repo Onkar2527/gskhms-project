@@ -1,0 +1,63 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <div class="modal-about">
+          {{dialogTitle}}
+        </div>
+      </div>
+    </div>
+   
+  </div>
+  <div mat-dialog-content>
+
+    <div class="row"  >
+      <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+        Tests
+      </div>
+      <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12 mb-2">
+        Doc Url
+      </div>
+    </div>
+
+     <div *ngFor="let ele of reportData$.labTestHeaderList;let i =index">
+      <div class="row"  >
+        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+          <h3 style="text-align: left;">{{ele.serviceName}}</h3>
+        </div>
+        <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Report Url</mat-label>
+            <input matInput [(ngModel)]="ele.reportPath"  >
+            
+        </mat-form-field>
+          </div>
+       <!-- <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-select  [(ngModel)]="ele.status" [disabled]="action==='view'">
+              <mat-option [value]="'Scanned'">
+                Scanned
+              </mat-option>
+              <mat-option [value]="'Completed'">
+                Completed
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>-->
+        
+      </div>      
+    </div>
+
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="example-button-row">
+            <button mat-raised-button color="primary" *ngIf="action!='view'" type="button" 
+            (click)="submit()"
+              >Save</button>
+            <button type="button" mat-raised-button color="warn" (click)="onNoClick()" tabindex="-1">Cancel</button>
+          </div>
+        </div>
+      </div>
+    
+  </div>
+</div>

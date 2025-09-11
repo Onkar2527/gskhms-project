@@ -1,0 +1,13 @@
+export class Template {
+  [x: string]: any;
+  id!: number;
+  name!: string;
+
+
+
+  constructor() {
+    this.id = 0;
+    this.name = '';
+  }
+
+}

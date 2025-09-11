@@ -1,0 +1,21 @@
+footer {
+    text-align: right;
+    float: right;
+  }
+  
+  @page {
+    size: A4;
+    margin: 11mm 17mm 17mm 17mm;
+  }
+  
+  @media print {
+    footer {
+      position: fixed;
+      bottom: 0;
+      height: auto !important;
+    }
+  
+    .content-block, p {
+      page-break-inside: auto;
+    }
+  }

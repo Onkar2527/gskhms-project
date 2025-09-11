@@ -1,0 +1,211 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb [title]="'Dashboard'" [items]="[]" [active_item]="'Dashboard'"></app-breadcrumb>
+    </div>
+    <!-- Widgets -->
+    <div class="row">
+      <div class="col-lg-4 col-sm-6">
+        <div class="info-box7 l-bg-card1 order-info-box7">
+          <div class="info-box7-block">
+            <h3 class="m-b-15">TODAYS PATIENTS</h3>
+            <hr>
+            <h2 class="text-end">Total <span class="font-30">{{dashboardData?.todaysPatient?.total}}</span></h2>
+            <hr>
+            <p class="m-b-0">NEW PATIENT {{dashboardData?.todaysPatient?.newReq}}</p>
+            <hr>
+            <p class="m-b-0">FOLLOW UP {{dashboardData?.todaysPatient?.followUp}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-sm-6">
+        <div class="info-box7 l-bg-card2 order-info-box7">
+          <div class="info-box7-block">
+            <h3 class="m-b-15">REGISTRATION CONFIRMED</h3>
+            <hr>
+            <h2 class="text-end">Total <span class="font-30">{{dashboardData?.confirmedRegistrations?.total}}</span></h2>
+            <hr>
+            <p class="m-b-0">NEW PATIENT {{dashboardData?.confirmedRegistrations?.newReq}}</p>
+            <hr>
+            <p class="m-b-0">FOLLOW UP {{dashboardData?.confirmedRegistrations?.followUp}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-sm-6">
+        <div class="info-box7 l-bg-card3 order-info-box7">
+          <div class="info-box7-block">
+            <h3 class="m-b-15">REGISTRATION WAITING</h3>
+            <hr>
+            <h2 class="text-end">Total <span class="font-30">{{dashboardData?.waitingRegistrations?.total}}</span></h2>
+            <hr>
+            <p class="m-b-0">NEW PATIENT {{dashboardData?.waitingRegistrations?.newReq}}</p>
+            <hr>
+            <p class="m-b-0">FOLLOW UP {{dashboardData?.waitingRegistrations?.followUp}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- #END# Widgets -->
+
+    <div class="row clearfix">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="card">
+          <div class="header">
+            <h2>Doctors List</h2>
+            <button mat-icon-button [matMenuTriggerFor]="menu" class="header-dropdown">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item>
+                <mat-icon>add_circle_outline</mat-icon>
+                <span>Add</span>
+              </button>
+              <button mat-menu-item disabled>
+                <mat-icon>delete_outline</mat-icon>
+                <span>Delete</span>
+              </button>
+              <button mat-menu-item>
+                <mat-icon>refresh</mat-icon>
+                <span>Refresh</span>
+              </button>
+            </mat-menu>
+          </div>
+          <div class="tableBody">
+            <ng-scrollbar style="height: 390px" visibility="hover">
+              <div class="table-responsive">
+                <table class="table table-hover ">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Doctor Name</th>
+                      <th>Status</th>
+                      <th> Available Days</th>
+                      <th>Time</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="table-img">
+                        <img src="assets/images/user/user5.jpg" alt="">
+                      </td>
+                      <td>
+                        <div class="media-title"><a href="mailto:test@gmail.com"> Dr.Jay Soni
+                          </a></div>
+                        <div class="text-job font-11">(MBBS,MD)</div>
+                      </td>
+                      <td>
+                        <div class="badge col-green">Available</div>
+                      </td>
+                      <td>
+                        <div class="badge col-green"> Saturday</div>
+                      </td>
+                      <td>
+                        <div class="Time"> 2 - 6 PM</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="table-img">
+                        <img src="assets/images/user/user6.jpg" alt="">
+                      </td>
+                      <td>
+                        <div class="media-title"><a href="mailto:test@gmail.com"> Dr.Sarah Smith
+                          </a></div>
+                        <div class="text-job font-11">(BDS,MDS)</div>
+                      </td>
+                      <td>
+                        <div class="badge col-red">Absend</div>
+                      </td>
+                      <td>
+                        <div class="badge col-green"> Saturday, Monday</div>
+                      </td>
+                      <td>
+                        <div class="Time"> 12 - 6 PM</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="table-img">
+                        <img src="assets/images/user/user3.jpg" alt="">
+                      </td>
+                      <td>
+                        <div class="media-title"><a href="mailto:test@gmail.com">Dr.Megha Trivedi
+                          </a></div>
+                        <div class="text-job font-11">(BHMS)</div>
+                      </td>
+                      <td>
+                        <div class="badge col-green">Available</div>
+                      </td>
+                      <td>
+                        <div class="badge col-green">All</div>
+                      </td>
+                      <td>
+                        <div class="Time"> 12 - 10 PM</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="table-img">
+                        <img src="assets/images/user/user2.jpg" alt="">
+                      </td>
+                      <td>
+                        <div class="media-title"><a href="mailto:test@gmail.com"> Dr.John Deo
+                          </a></div>
+                        <div class="text-job font-11">(MBBS,MS)</div>
+                      </td>
+                      <td>
+                        <div class="badge col-green">Available</div>
+                      </td>
+                      <td>
+                        <div class="badge col-green">All</div>
+                      </td>
+                      <td>
+                        <div class="Time"> 12 - 10 PM</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="table-img">
+                        <img src="assets/images/user/user1.jpg" alt="">
+                      </td>
+                      <td>
+                        <div class="media-title"><a href="mailto:test@gmail.com"> Dr.Jacob Ryan
+                          </a></div>
+                        <div class="text-job font-11">(MBBS,MD)</div>
+                      </td>
+                      <td>
+                        <div class="badge col-red">Absend</div>
+                      </td>
+                      <td>
+                        <div class="badge col-green"> All</div>
+                      </td>
+                      <td>
+                        <div class="Time"> 12 - 4 PM</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="table-img">
+                        <img src="assets/images/user/user8.jpg" alt="">
+                      </td>
+                      <td>
+                        <div class="media-title"><a href="mailto:test@gmail.com"> Dr.Jay Soni
+                          </a></div>
+                        <div class="text-job font-11">(MBBS)</div>
+                      </td>
+                      <td>
+                        <div class="badge col-green">Available</div>
+                      </td>
+                      <td>
+                        <div class="badge col-green"> Wednessday,Friday</div>
+                      </td>
+                      <td>
+                        <div class="Time">7 - 11 AM</div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </ng-scrollbar>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

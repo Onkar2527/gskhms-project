@@ -1,0 +1,217 @@
+<section class="">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <button mat-icon-button (click)="dialogRef.close()" class="modal-close-button" aria-label="Close dialog">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div class="row clearfix">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="card">
+          <div class="body" id="print-section">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="white-box">
+                  <table style="width: 100% !important; height: 100% !important; overflow: visible !important;">
+                    <thead>
+                      <tr>
+                        <td>
+                          <div class="row">
+                            <div class="col-md-12">
+                              <div class="float-start">
+                                <address>
+                                  <img src="assets\images\image-gallery\gs.png" alt="logo" width="75" height="75" />
+                                  <p *ngIf="showPrint" class="text-muted m-l-5">
+                                   GS Kulkurni Hospital<br>
+                                    Shivaji Nagar, Miraj,<br> 416410 <br>
+                                    Phone : Phone : (0233)– 2222590, 22223268
+                                  </p>
+                                  <p *ngIf="!showPrint" class="text-muted m-l-5">
+                                   GS Kulkurni Hospital<br>
+                                    Vijay Colony, Near Shivajinagar, <br> Miraj-416410 <br>
+                                      Phone : (0233)-2224177
+                                  </p>
+
+                                  <!-- <img src="assets\images\image-gallery\gs.png" alt="logo" />
+                                  <p  class="text-muted m-l-5">
+                                 GS Kulkurni Hospital<br>
+                                  Vijay Colony, Near Shivajinagar, Miraj-416410 <br>
+                                    Phone : (0233)-2224177
+                                  </p> -->
+                                </address>
+                              </div>
+                              <div class="float-end">
+                                <address>
+                                  <p class="m-0">
+                                    <b>UHID NO : </b> {{appoinmentData?.patientUHIDNumber}}
+                                  </p>
+                                  <p class="m-0">
+                                    <b>Appointment NO : </b> {{appoinmentData?.documentNumber}}
+                                  </p>
+                                  <p class="m-0">
+                                    <b>Consulting Doctor : </b> {{appoinmentData?.doctorName}}
+                                  </p>
+                                  <p class="m-0" *ngIf="showPrint">
+                                    <b>Patient Name / Gender : </b> {{appoinmentData?.firstName}}
+                                    {{appoinmentData?.lastName}} / {{appoinmentData?.gender}}
+                                  </p>
+                                  <p class="m-0" *ngIf="!showPrint">
+                                    <b>Patient Name : </b> {{appoinmentData?.firstName}}
+                                    {{appoinmentData?.lastName}}
+                                  </p>
+                                  <p class="m-0" *ngIf="!showPrint">
+                                    <b>Gender : </b> {{appoinmentData?.gender}}
+                                  </p>
+                                  <p class="m-0">
+                                    <b>Date of Birth(Age) : </b>
+                                    <i class="fa fa-calendar"></i> {{appoinmentData?.dob |
+                                    date:'dd/MM/YYYY'}}({{calculateAge(appoinmentData?.dob)}} Years)
+                                  </p>
+                                  <p class="m-0">
+                                    <b>Mobile NO : </b> {{appoinmentData?.mobileNumber}}
+                                  </p>
+                                  <p class="m-0">
+                                    <b>Address : </b> {{appoinmentData?.address}}
+                                  </p>
+                                
+                                  <p class="m-0">
+                                    <b>Appointment Date : </b>
+                                    <i class="fa fa-calendar"></i> {{appoinmentData?.appointmentDate |
+                                    date:'dd/MM/YYYY'}}
+                                  </p>
+                                </address>
+                              </div>
+                            </div>
+                            <hr>
+                          </div>
+                        </td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <div class="col-md-12">
+                            <div class="table-responsive">
+                              <table class="table-hover" style="width: 100% !important;">
+                                <thead>
+                                  <tr>
+                                    <div class="col-md-12 mb-2" *ngIf="appointmentLabServices.length>0 || appointmentXrayServices.length>0">
+                                      <div class="table-responsive m-0">
+                                        <p class="m-0" *ngIf="appointmentLabServices.length>0">
+                                          <u><b>Lab Tests</b></u>
+                                        </p>
+                                        <div *ngFor="let item of appointmentLabServices; let i = index;">
+                                          <p class="m-0">
+                                            &nbsp;&nbsp;&nbsp;{{item.serviceName}}
+                                          </p>
+                                        </div>
+                                        <p class="m-0" *ngIf="appointmentXrayServices.length>0">
+                                          <u><b>X-Ray</b></u>
+                                        </p>
+                                        <div *ngFor="let item of appointmentXrayServices; let i = index;">
+                                          <p class="m-0">
+                                            &nbsp;&nbsp;&nbsp;{{item.serviceName}}
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <hr *ngIf="appointmentLabServices.length>0 || appointmentXrayServices.length>0">
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td>
+                                      <div class="col-md-12">
+                                        <div class="table-responsive m-0">
+                                          <p class="m-0 mb-2" style="text-align: center !important;">
+                                            <u><b>PRESCRIPTION</b> </u>
+                                          </p>
+                                          <table class="table table-hover">
+                                            <thead>
+                                              <tr>
+                                                <th>No</th>
+                                                <th>Medicine</th>
+                                                <th>Unit Name</th>
+                                                <th>Frequency</th>
+                                                <th>Dosage</th>
+                                                <th>Till Days</th>
+                                                <th>Quantity</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              <tr *ngFor="let prescription of presdcriptionData$;let i =index">
+                                                <td>{{i+1}}</td>
+                                                <td>{{prescription?.medicineName}}</td>
+                                                <td>{{prescription?.unitName}}</td>
+                                                <td>{{prescription?.frequency}}</td>
+                                                <td>{{prescription?.dosage}}</td>
+                                                <td>{{prescription?.tillDay}} {{prescription?.tillDay?'Days':''}}</td>
+                                                <td>{{prescription?.quantity}}</td>
+                                              </tr>
+                                            </tbody>
+                                          </table>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-12" 
+                                        *ngIf="appoinmentData?.instruction || appoinmentData?.operationRecommended || appoinmentData?.admissionRecommended">
+                                        <hr>
+                                        <div class="table-responsive m-0">
+                                          <p class="m-0" style="text-align: center !important;">
+                                            <u><b>INSTRUCTIONS</b> </u>
+                                          </p>
+                                          <p *ngIf="appoinmentData?.instruction" class="m-0">
+                                            - {{appoinmentData?.instruction}}
+                                          </p>
+                                          <p *ngIf="appoinmentData?.operationRecommended" class="m-0">
+                                            <b>Operations Details : </b>{{appoinmentData?.operationDetails}}
+                                          </p>
+                                          <p *ngIf="appoinmentData?.admissionRecommended" class="m-0">
+                                            <b>Admit Details : </b>{{appoinmentData?.admissionDetails }}
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td>
+                          <div style="height: 8rem !important; width: 100% !important;"></div>
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <footer class="text-end">
+              <div *ngIf="showPrint">
+                <div class="float-end text-end" style="margin-right: 10% !important; margin-bottom: 2% !important;">
+                  <p class="text-start m-0">Sign : </p>
+                  <p class="text-start m-0">Doctor Name : <b>Dr. {{appoinmentData?.doctorName}}</b></p>
+                  <p class="text-start m-0">Date : {{appoinmentData?.appointmentDate | date: 'MM/dd/yyyy'}}</p>
+                </div>
+                <div *ngIf="withLH" style="height: 200px !important; width: 100% !important;"></div>
+              </div>
+            </footer>
+          </div>
+          <div *ngIf="showPrint" class="text-end">
+            <button mat-flat-button color="primary" printSectionId="print-section" [useExistingCss]="true" ngxPrint><i
+                class="fas fa-print"></i>
+              Print</button>
+            <button mat-flat-button color="primary" (click)="sharePDFOnEmail()" style="margin-left: 5px !important;"><i
+                class="fas fa-email"></i>
+              Email</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

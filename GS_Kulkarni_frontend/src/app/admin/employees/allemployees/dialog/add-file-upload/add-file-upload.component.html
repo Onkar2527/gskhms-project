@@ -1,0 +1,170 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <!-- <img [src]='doctors.img' alt="avatar"> -->
+        <div class="modal-about">
+          {{dialogTitle}}
+        </div>
+      </div>
+    </div>
+    <button mat-icon-button (click)="dialogRef.close()" class="modal-close-button" aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="container" *ngIf="!uploadDocumentsList"> 
+    <section style="margin: 15px !important;">
+      <div class="content-block">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+              <div class="materialTableHeader">
+                <div class="left">
+                  <ul class="header-buttons-left ms-0">
+                    <li class="tbl-title">
+                      <h2>{{employee.firstName}} {{employee.lastName}}</h2>
+                    </li>
+                    <li class="tbl-search-box">
+                      <label for="search-input"><i class="material-icons search-icon">search</i></label>
+                      <input placeholder="Search" type="text" #filter class="browser-default search-field"
+                        aria-label="Search box">
+                    </li>
+                    <li class="tbl-title">
+                      <span *ngIf="errorMsg" style="color: red;">{{errorMsg}}</span>
+                      <span *ngIf="successMsg" style="color: green;">{{successMsg}}</span>
+                    </li>
+                  </ul>
+                </div>
+                <div class="right">
+                  <ul class="tbl-export-btn">
+                    <li class="tbl-header-btn">
+                      <div class="m-l-10" matTooltip="ADD">
+                        <button mat-mini-fab color="primary" (click)="addNew()">
+                          <mat-icon class="col-white">add</mat-icon>
+                        </button>
+                      </div>
+                    </li>
+                    <li class="tbl-header-btn">
+                      <div class="m-l-10" matTooltip="REFRESH">
+                        <button mat-mini-fab color="primary" (click)="refresh()">
+                          <mat-icon class="col-white">refresh</mat-icon>
+                        </button>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="body overflow-auto">
+                <div class="responsive_table">
+                  <table mat-table [dataSource]="dataSource" matSort class="mat-cell advance-table">
+                    <ng-container matColumnDef="docType">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Document Type</mat-header-cell>
+                      <mat-cell *matCellDef="let row"><span class="mobile-label">Document Type:</span> {{row.docType}}
+                      </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="docName">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Document Name</mat-header-cell>
+                      <mat-cell *matCellDef="let row"><span class="mobile-label">Document Name:</span> {{row.name}}
+                      </mat-cell>
+                    </ng-container>
+                    <!-- <ng-container matColumnDef="documentNumber">
+                        <mat-header-cell style="width: 25rem !important;" *matHeaderCellDef mat-sort-header>Service Start Date</mat-header-cell>
+                        <mat-cell style="width: 25rem !important;" *matCellDef="let row"> 
+                          <mat-form-field class="mt-4" appearance="fill">
+                            <!-- <mat-label>Start Date</mat-label> -->
+                    <!-- <input matInput [matDatepicker]="picker" [(ngModel)]="row.startDate" [min]="todaysDate"> -->
+                    <!-- <mat-hint>MM/DD/YYYY</mat-hint> -->
+                    <!-- <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                          </mat-form-field>
+                        </mat-cell>
+                      </ng-container> -->
+                    <ng-container matColumnDef="docNumber">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Document Number</mat-header-cell>
+                      <mat-cell *matCellDef="let row">
+                        <mat-form-field class="mt-4" appearance="outline">
+                          <span class="mobile-label">Document Number:</span> {{row.docNumber}}
+                        </mat-form-field>
+                      </mat-cell>
+                    </ng-container>
+                    <!-- actions -->
+                    <ng-container matColumnDef="actions">
+                      <mat-header-cell class="pr-0" *matHeaderCellDef>Actions</mat-header-cell>
+                      <mat-cell *matCellDef="let row; let i=index;" class="pr-0">
+                        <button mat-stroked-button (click)="$event.stopPropagation()" (click)="addAddFileUpload(row)"
+                          class="tbl-action-btn"> download
+                          <!-- <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'"></app-feather-icons> -->
+                        </button>
+                        <!-- <button mat-icon-button (click)="$event.stopPropagation()" (click)="deleteItem(row)"
+                            class="tbl-action-btn">
+                            <app-feather-icons [icon]="'trash-2'" [class]="'tbl-fav-delete'"></app-feather-icons>
+                          </button> -->
+                      </mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="$event.stopPropagation()"
+                      [style.cursor]="'pointer'" matRipple>
+                    </mat-row>
+                  </table>
+                  <!-- Loading spinner -->
+                  @if (isTblLoading) {
+                  <div class="tbl-spinner">
+                    <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
+                    </mat-progress-spinner>
+                  </div>
+                  }
+                  @if (isTblLoading) {
+                  <div class="no-results pt-2" [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
+                    No results
+                  </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div> 
+  <div class="container" *ngIf="uploadDocumentsList"> 
+    <form class="m-4" [formGroup]="addFileUploadForm" (ngSubmit)="$event.preventDefault()">
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Document Name</mat-label>
+            <mat-select formControlName="docName" required>
+              <mat-option [value]="'Aadhar Card'">
+                Aadhar Card
+              </mat-option>
+              <mat-option [value]="'Pan Card'">
+               Pan Card
+              </mat-option>
+              <mat-option [value]="'Driving License'">
+                Driving License
+              </mat-option>
+              <mat-option [value]="'Passport'">
+                Passport
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Document Number</mat-label>
+            <input matInput formControlName="docNumber">
+          </mat-form-field>
+        </div>
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+          <mat-label>Upload</mat-label>
+          <app-file-upload  [requiredFileType]="'image/*'"></app-file-upload>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+          <button class="btn-space" [disabled]="!addFileUploadForm.valid" mat-raised-button color="primary" (click)="onSubmit()">Submit</button>
+          <button type="button" mat-raised-button color="warn" (click)="cancel()">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </div> 
+</div>

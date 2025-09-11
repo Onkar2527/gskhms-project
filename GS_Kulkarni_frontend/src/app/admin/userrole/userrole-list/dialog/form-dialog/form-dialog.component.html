@@ -1,0 +1,99 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <div class="modal-about">
+          {{dialogTitle}}
+        </div>
+      </div>
+    </div>
+    <button mat-icon-button (click)="dialogRef.close()" class="modal-close-button" aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <form class="register-form m-4" [formGroup]="listForm" (ngSubmit)="submit">
+      <div class="row">      
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>User Name</mat-label>
+            <mat-select formControlName="userId" required>
+              <mat-option *ngFor="let user of userCombo$" [value]="user.userId">{{user.fullName}}</mat-option>
+            </mat-select>
+            @if (listForm.get('userId')?.hasError('required')) {
+            <mat-error>
+              Select Any Service group
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Select Role</mat-label>
+            <mat-select formControlName="roleId" required>
+              <mat-option *ngFor="let role of roleCombo$" [value]="role.id">{{role.name}}</mat-option>
+            </mat-select>
+            @if (listForm.get('deptId')?.hasError('required')) {
+            <mat-error>
+              Select Any Departmenet
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Start Timestamp</mat-label>
+            <input matInput [matDatepicker]="startpicker" formControlName="startTimestamp" required>
+            <mat-datepicker-toggle matSuffix [for]="startpicker"></mat-datepicker-toggle>
+            <mat-datepicker #startpicker></mat-datepicker>
+            @if (listForm.get('startTimestamp')?.hasError('required')) {
+            <mat-error>
+              Please select date
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>End Timestamp</mat-label>
+            <input matInput [matDatepicker]="endpicker" formControlName="endTimestamp" required>
+            <mat-datepicker-toggle matSuffix [for]="endpicker"></mat-datepicker-toggle>
+            <mat-datepicker #endpicker></mat-datepicker>
+            @if (listForm.get('endTimestamp')?.hasError('required')) {
+            <mat-error>
+              Please select date
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="m-b-20">
+            <mat-label class="msr-3">Status:</mat-label>
+            <mat-radio-group aria-label="Select status" formControlName="status" required>
+              <mat-radio-button value="Active">Active</mat-radio-button>
+              <mat-radio-button value="Inactive">Inactive</mat-radio-button>
+              @if (listForm.get('status')?.hasError('required')) {
+              <mat-error>
+                Select status
+              </mat-error>
+              }
+            </mat-radio-group>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="example-button-row">
+            <button mat-raised-button color="primary" [disabled]="!listForm.valid" [mat-dialog-close]="1"
+              (click)="confirmAdd()">Save</button>
+            <button mat-raised-button color="warn" (click)="onNoClick()" tabindex="-1">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

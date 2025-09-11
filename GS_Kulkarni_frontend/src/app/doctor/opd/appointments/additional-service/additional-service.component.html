@@ -1,0 +1,47 @@
+
+  <div class="row">
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 mb-2">
+      <mat-form-field  appearance="outline">
+        <mat-label>Services</mat-label>
+        <mat-select [(ngModel)]="service" >
+          <mat-option *ngFor="let service of serviceCombo$" [value]="service">{{service.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 mt-2">
+      <button type="button" class="btn-space" (click)="addServiceDetails()" mat-raised-button color="primary">Add
+        Services</button>
+    </div>
+  </div> 
+  <div class="row clearfix">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <div class="card">
+        <div class="header">
+          <h2>Service Details</h2>
+        </div>
+        <div class="tableBody">
+          <div class="table-responsive">
+            <table class="table display product-overview mb-30" id="support_table">
+              <thead>
+                <tr>
+                  <th>Service Name</th>
+                  <th>Charges</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let testDetail of prescriptionDetails$;let i =index">
+                  <td>{{getServiceName(testDetail.serviceId,testDetail.type)}}</td>
+                  <td>{{testDetail.charges}}</td>
+                  
+                  <td><button type="button" *ngIf="testDetail.charges!=0 || 1" mat-icon-button (click)="deleteAppoinmentServicesDtl(testDetail.id)">
+                      <mat-icon class="col-orange">delete</mat-icon>
+                    </button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

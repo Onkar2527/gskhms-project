@@ -1,0 +1,286 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <div class="modal-about">
+          {{dialogTitle}}
+        </div>
+      </div>
+    </div>
+    <button mat-icon-button (click)="dialogRef.close()" class="modal-close-button" aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <form class="register-form m-4" [formGroup]="otRegistrationForm">
+      <h2 class="card-inside-title">Patient Details(Please select IPD registered patient with mobile number or name)</h2>
+      <div class="row">
+        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Mobile Number</mat-label>
+            <input #filter matInput formControlName="mobileNumber" type="text" pattern="\d*" (input)="loadData()"
+              maxlength="10" minlength="10">
+          </mat-form-field>
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>First name</mat-label>
+            <input matInput formControlName="firstName" (input)="loadData()" required>
+            @if (otRegistrationForm.get('patientDetails')?.get('firstName')?.hasError('required')) {
+            <mat-error>
+              First name is required
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Last name</mat-label>
+            <input matInput formControlName="lastName" (input)="loadData()">
+          </mat-form-field>
+          @if (otRegistrationForm.get('patientDetails')?.get('lastName')?.hasError('required')) {
+          <mat-error>
+            First name is required
+          </mat-error>
+          }
+        </div>
+      </div>
+      
+      <div class="row" *ngIf="searchExisting">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div class="card">
+            <div class="body overflow-auto">
+              <div class="responsive_table">
+                <table mat-table [dataSource]="dataSource" matSort class="mat-cell advance-table">
+                  <!-- ID Column -->
+                  <ng-container matColumnDef="name">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Name
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row"
+                      [matTooltip]="row.namePrefix+' '+row.firstName+' '+row.lastName">{{row.namePrefix}}
+                      {{row.firstName}} {{row.lastName}}</mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="mobileNumber">
+                    <mat-header-cell *matHeaderCellDef>Mobile
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row" [matTooltip]="row.mobileNumber"> <span class="mobile-label">Mobile:</span>
+                      {{row.mobileNumber}}
+                    </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="address">
+                    <mat-header-cell *matHeaderCellDef>Address
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row" [matTooltip]="row.address"> <span
+                        class="mobile-label">Address:</span>{{row.address}}
+                    </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="gender">
+                    <mat-header-cell *matHeaderCellDef>Gender</mat-header-cell>
+                    <mat-cell *matCellDef="let row" [matTooltip]="row.gender">
+                      <span class="truncate-text"><span class="mobile-label">Gender:</span>{{row.gender}}</span>
+                    </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="dob">
+                    <mat-header-cell *matHeaderCellDef>DOB</mat-header-cell>
+                    <mat-cell *matCellDef="let row" [matTooltip]="row.dob">
+                      <span class="truncate-text"><span class="mobile-label">DOB:</span>{{row.dob | date:'MMM d,
+                        y'}}</span>
+                    </mat-cell>
+                  </ng-container>
+                  <!-- actions -->
+                  <ng-container matColumnDef="actions">
+                    <mat-header-cell class="pr-0" *matHeaderCellDef>Actions</mat-header-cell>
+                    <mat-cell *matCellDef="let row; let i=index;" class="pr-0">
+                      <button mat-icon-button (click)="$event.preventDefault();selectCell(row)" class="tbl-action-btn">
+                        <app-feather-icons [icon]="'plus'" [class]="'tbl-fav-edit'"></app-feather-icons>
+                      </button>
+                    </mat-cell>
+                  </ng-container>
+                  <mat-header-row *matHeaderRowDef="displayedColumns">
+                  </mat-header-row>
+                  <mat-row *matRowDef="let row; columns: displayedColumns;" [style.cursor]="'pointer'" matRipple>
+                  </mat-row>
+                </table>
+                @if (!exampleDatabase?.isTblLoading) {
+                <div class="no-results pt-2 pl-2" [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
+                  <mat-error>
+                    No History Available, Please start Fresh Registration.
+                  </mat-error>
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12 mb-3">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Prefix</mat-label>
+            <mat-select formControlName="namePrefix" required>
+              <mat-option [value]="'Mr.'">
+                Mr.
+              </mat-option>
+              <mat-option [value]="'Miss.'">
+                Miss.
+              </mat-option>
+              <mat-option [value]="'Mrs.'">
+                Mrs.
+              </mat-option>
+              <mat-option [value]="'Ms.'">
+                Ms.
+              </mat-option>
+              <mat-option [value]="'Mx.'">
+                Mx.
+              </mat-option>
+              <mat-option [value]="'Sir'">
+                Sir
+              </mat-option>
+              <mat-option [value]="'Dr.'">
+                Dr.
+              </mat-option>
+            </mat-select>
+            @if (otRegistrationForm.get('patientDetails')?.get('namePrefix')?.hasError('required')) {
+            <mat-error>
+              Name Prefix is required
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 mb-3">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Gender</mat-label>
+            <mat-select formControlName="gender" required>
+              <mat-option [value]="'M'">
+                Male
+              </mat-option>
+              <mat-option [value]="'F'">
+                Female
+              </mat-option>
+              <mat-option [value]="'O'">
+                Other
+              </mat-option>
+            </mat-select>
+            @if (otRegistrationForm.get('patientDetails')?.get('gender')?.hasError('required')) {
+            <mat-error>
+              Gender is required
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 mb-3">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Adhar No</mat-label>
+            <input matInput formControlName="aadharNumber" maxlength="12">
+          </mat-form-field>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Address</mat-label>
+            <textarea matInput formControlName="address"></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Date Of Birth</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="dob" required>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            @if (otRegistrationForm.get('patientDetails')?.get('dob')?.hasError('required')) {
+            <mat-error>
+              Please select date
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+      
+      <h2 class="card-inside-title">Operation Details</h2>
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 ">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Operation Name</mat-label>
+            <input matInput formControlName="operationTypeName" required>
+            <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>turned_in_not</mat-icon>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 ">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Operation Theater</mat-label>
+            <mat-select formControlName="otMasterId" required>
+              <mat-option [value]="1">
+                OT1, Ground Floor
+              </mat-option>
+              <mat-option [value]="2">
+                OT2, First Floor
+              </mat-option>
+              <mat-option [value]="3">
+                OT3, Third Floor
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 ">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Start date</mat-label>
+            <input matInput formControlName="inDate" [owlDateTimeTrigger]="inDate" [owlDateTime]="inDate"
+              placeholder="Choose a date" required>
+            <mat-icon matSuffix [owlDateTimeTrigger]="inDate" class="date-icon">today</mat-icon>
+            <owl-date-time #inDate></owl-date-time>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 ">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>End date</mat-label>
+            <input matInput formControlName="outDate" [owlDateTimeTrigger]="outDate" [owlDateTime]="outDate"
+              placeholder="Choose a date" required>
+            <mat-icon matSuffix [owlDateTimeTrigger]="outDate" class="date-icon">today</mat-icon>
+            <owl-date-time #outDate></owl-date-time>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Operation Surgeons</mat-label>
+            <textarea matInput formControlName="operatingSurgeons"></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Implants Used</mat-label>
+            <textarea matInput formControlName="implantsUsed"></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Anaesthesia Induced By</mat-label>
+            <textarea matInput formControlName="anaesthesiaInducedBy"></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-10 col-lg-10 col-md-12 col-sm-12">
+          <div class="example-button-row">
+            <button mat-raised-button color="primary" [type]="submit" [disabled]="!otRegistrationForm.valid"
+              (click)="confirmAdd()">Save</button>
+            <button mat-raised-button color="warn" (click)="dialogRef.close()" tabindex="-1">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

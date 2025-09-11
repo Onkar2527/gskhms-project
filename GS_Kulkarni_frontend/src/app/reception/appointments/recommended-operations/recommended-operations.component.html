@@ -1,0 +1,133 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb [title]="'Recommended Operations'" [items]="['Appointments']" [active_item]="'Recommended Operations'">
+      </app-breadcrumb>
+    </div>
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="materialTableHeader">
+            <div class="left">
+              <ul class="header-buttons-left ms-0">
+                <li class="tbl-title">
+                  <h2>Recommended Operations</h2>
+                </li>
+                <li class="tbl-search-box">
+                  <label for="search-input"><i class="material-icons search-icon">search</i></label>
+                  <input placeholder="Search" type="text" #filter class="browser-default search-field"
+                    aria-label="Search box">
+                </li>
+              </ul>
+            </div>
+            <div class="right">
+              <ul class="tbl-export-btn">
+                <li class="tbl-header-btn">
+                  <div class="m-l-5">
+                      <mat-form-field style="width: 9rem !important;">
+                          <mat-label>Start Date</mat-label>
+                          <input matInput [matDatepicker]="picker" [(ngModel)]="startDate" required>
+                          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                          <mat-datepicker #picker></mat-datepicker>   
+                        </mat-form-field>
+                  </div>
+                </li>
+                <li class="tbl-header-btn">
+                  <div class="m-l-5">
+                      <mat-form-field style="width: 9rem !important;">
+                          <mat-label>End Date</mat-label>
+                          <input matInput [matDatepicker]="picker1" [(ngModel)]="endDate" required>
+                          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                          <mat-datepicker #picker1></mat-datepicker>  
+                        </mat-form-field>
+                  </div>
+                </li>
+                <li class="tbl-header-btn">
+                  <div class="m-l-10" matTooltip="REFRESH">
+                    <button mat-mini-fab color="primary" (click)="refresh()">
+                      <mat-icon class="col-white">refresh</mat-icon>
+                    </button>
+                  </div>
+                </li>
+                <li>
+                  <div class="export-button m-l-10" matTooltip="XLSX">
+                    <img src="assets/images/icons/xlsx.png" alt="" (click)="exportExcel()" />
+                  </div>
+                </li>
+                <li>
+                  <div class="export-button m-l-5" matTooltip="PDF">
+                      <img src="assets/images/icons/pdf.png" alt="" (click)="exportPDF()" />
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="body overflow-auto">
+            <div class="responsive_table">
+              <table mat-table [dataSource]="dataSource" matSort class="mat-cell advance-table">
+                <ng-container matColumnDef="name">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+                  <mat-cell *matCellDef="let row" [matTooltip]="row.namePrefix+' '+row.firstName+' '+row.lastName"> <span class="mobile-label">Type:</span>{{row.namePrefix}} {{row.firstName}} {{row.lastName}}
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="mobileNumber">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Mobile Number
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let row" [matTooltip]="row.mobileNumber"> <span class="truncate-text"><span class="mobile-label">Mobile
+                        Number:</span>{{row.mobileNumber}}</span></mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="gender">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Gender
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let row" [matTooltip]="row.gender"> <span class="truncate-text"><span
+                        class="mobile-label">Gender:</span>{{row.gender}}</span></mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="dob">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>DOB
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let row" [matTooltip]="datepipe.transform(row.dob, 'MMM d, y') ?? ''"> <span class="truncate-text"><span
+                        class="mobile-label">DOB:</span>{{row.dob | date:'MMM d, y'}}</span></mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="address">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Address
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let row" [matTooltip]="row.address"> <span class="truncate-text"><span class="mobile-label">Address
+                        :</span>{{row.address}}</span></mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="appointmentDate">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Date</mat-header-cell>
+                  <mat-cell *matCellDef="let row" [matTooltip]="datepipe.transform(row.appointmentDate, 'MMM d, y, h:mm:ss a')??''"> <span class="truncate-text"><span class="mobile-label">Appointment Date
+                        :</span>{{datepipe.transform(row.appointmentDate, 'MMM d, y, h:mm:ss a')}}</span></mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="operationDetails">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Operation Details
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let row" [matTooltip]="row.operationDetails"> <span class="truncate-text"><span class="mobile-label">Operation Details
+                        :</span>{{row.operationDetails}}</span></mat-cell>
+                </ng-container>
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+              </table>
+              <!-- Loading spinner -->
+              @if (exampleDatabase?.isTblLoading) {
+              <div class="tbl-spinner">
+                <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
+                </mat-progress-spinner>
+              </div>
+              }
+              @if (!exampleDatabase?.isTblLoading) {
+              <div class="no-results" [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
+                No results
+              </div>
+              }
+              <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0" [pageSize]="10"
+                [pageSizeOptions]="[5, 10, 25, 100]">
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

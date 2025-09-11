@@ -1,0 +1,56 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <div class="modal-about">
+          {{dialogTitle}}
+        </div>
+      </div>
+    </div>
+    <button mat-icon-button (click)="dialogRef.close()" class="modal-close-button" aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <form class="register-form m-4" [formGroup]="dialogForm" (ngSubmit)="submit">
+      <div class="row">
+        <!-- <div class="col-xl-20 col-lg-20 col-md-14 col-sm-14 mb-4"> -->
+          <div class="col-xl-50 col-lg-50 col-md-50 col-sm-50 mb-10">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Section name</mat-label>
+            <input matInput formControlName="name" required>
+            <!-- <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>face</mat-icon> -->
+            @if (dialogForm.get('name')?.hasError('name')) {
+            <mat-error>
+              Role Name is required
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="m-b-20">
+            <mat-label class="msr-3">Status:</mat-label>
+            <mat-radio-group aria-label="Select status" formControlName="status" required>
+              <mat-radio-button value="Active">Active</mat-radio-button>
+              <mat-radio-button value="Inactive">Inactive</mat-radio-button>
+              @if (dialogForm.get('status')?.hasError('required')) {
+              <mat-error>
+                Select status
+              </mat-error>
+              }
+            </mat-radio-group>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="example-button-row">
+            <button mat-raised-button color="primary" [disabled]="!dialogForm.valid" [mat-dialog-close]="1"
+              (click)="confirmAdd()">Save</button>
+            <button mat-raised-button color="warn" (click)="onNoClick()" tabindex="-1">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

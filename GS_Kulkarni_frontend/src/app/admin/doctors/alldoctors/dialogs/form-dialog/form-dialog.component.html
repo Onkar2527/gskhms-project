@@ -1,0 +1,121 @@
+<div class="addContainer" >
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <!-- <img [src]='doctors.img' alt="avatar"> -->
+        <div class="modal-about">
+          {{dialogTitle}}
+        </div>
+      </div>
+    </div>
+    <button mat-icon-button (click)="dialogRef.close()" class="modal-close-button" aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div>
+    <section style="margin: 15px !important;">
+      <div class="content-block">
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+              <div class="materialTableHeader">
+                <div class="left">
+                  <ul class="header-buttons-left ms-0">
+                    <li class="tbl-title">
+                      <h2>{{doctors.firstName}} {{doctors.lastName}}</h2>
+                    </li>
+                    <li class="tbl-search-box">
+                      <label for="search-input"><i class="material-icons search-icon">search</i></label>
+                      <input placeholder="Search" type="text" #filter class="browser-default search-field"
+                        aria-label="Search box">
+                    </li>
+                    <li class="tbl-title">
+                      <span *ngIf="errorMsg" style="color: red;">{{errorMsg}}</span>
+                      <span *ngIf="successMsg" style="color: green;">{{successMsg}}</span>
+                    </li>
+                  </ul>
+                </div>
+                <div class="right">
+                  <ul class="tbl-export-btn">
+                    <li class="tbl-header-btn">
+                      <div class="m-l-10" matTooltip="REFRESH">
+                        <button mat-mini-fab color="primary" (click)="refresh()">
+                          <mat-icon class="col-white">refresh</mat-icon>
+                        </button>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="body overflow-auto">
+                <div class="responsive_table">
+                  <table mat-table [dataSource]="dataSource" matSort class="mat-cell advance-table">
+                    <ng-container matColumnDef="serviceName">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Service Name</mat-header-cell>
+                      <mat-cell *matCellDef="let row"><span class="mobile-label">Service Name:</span> {{row.serviceName}}
+                      </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="existingRate">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Existing Service Rate</mat-header-cell>
+                      <mat-cell *matCellDef="let row"><span class="mobile-label">Existing Service Rate:</span> {{row.oldServiceRate}}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="startDate">
+                      <mat-header-cell style="width: 25rem !important;" *matHeaderCellDef mat-sort-header>Service Start Date</mat-header-cell>
+                      <mat-cell style="width: 25rem !important;" *matCellDef="let row"> 
+                        <mat-form-field class="mt-4" appearance="fill">
+                          <!-- <mat-label>Start Date</mat-label> -->
+                          <input matInput [matDatepicker]="picker" [(ngModel)]="row.startDate" [min]="todaysDate">
+                          <!-- <mat-hint>MM/DD/YYYY</mat-hint> -->
+                          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                          <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                      </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="serviceRate">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>New Service Rate</mat-header-cell>
+                      <mat-cell *matCellDef="let row">
+                        <mat-form-field class="mt-4" appearance="outline">
+                          <input matInput [(ngModel)]="row.serviceRate">
+                        </mat-form-field>
+                      </mat-cell>
+                    </ng-container>
+                    <!-- actions -->
+                    <ng-container matColumnDef="actions">
+                      <mat-header-cell class="pr-0" *matHeaderCellDef>Actions</mat-header-cell>
+                      <mat-cell *matCellDef="let row; let i=index;" class="pr-0">
+                        <button mat-stroked-button (click)="$event.stopPropagation()" (click)="addServiceRates(row)" [disabled]="!row.serviceRate"
+                          class="tbl-action-btn"> Add
+                          <!-- <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'"></app-feather-icons> -->
+                        </button>
+                        <!-- <button mat-icon-button (click)="$event.stopPropagation()" (click)="deleteItem(row)"
+                          class="tbl-action-btn">
+                          <app-feather-icons [icon]="'trash-2'" [class]="'tbl-fav-delete'"></app-feather-icons>
+                        </button> -->
+                      </mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="$event.stopPropagation()"
+                      [style.cursor]="'pointer'" matRipple>
+                    </mat-row>
+                  </table>
+                  <!-- Loading spinner -->
+                  @if (isTblLoading) {
+                  <div class="tbl-spinner">
+                    <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
+                    </mat-progress-spinner>
+                  </div>
+                  }
+                  @if (isTblLoading) {
+                  <div class="no-results pt-2"  [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
+                    No results
+                  </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

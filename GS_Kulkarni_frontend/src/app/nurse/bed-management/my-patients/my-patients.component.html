@@ -1,0 +1,76 @@
+<section class="content">
+    <div class="content-block">
+      <div class="block-header">
+        <!-- breadcrumb -->
+        <app-breadcrumb [title]="'Bed Management'" [items]="[]" [active_item]="'Bed Management'"></app-breadcrumb>
+      </div>
+  
+    <cdk-accordion class="example-accordion">
+      @for (obj of floorData; track obj; let index = $index) {
+        <cdk-accordion-item
+        #accordionItem="cdkAccordionItem"
+        class="example-accordion-item"
+        role="button"
+        tabindex="0"
+        [attr.id]="'accordion-header-' + index"
+        [attr.aria-expanded]="accordionItem.expanded"
+        [attr.aria-controls]="'accordion-body-' + index">
+        <div class="example-accordion-item-header" (click)="accordionItem.toggle()">
+          {{ obj.name }}
+          <span class="example-accordion-item-description">
+            Click to {{ accordionItem.expanded ? 'close' : 'open' }}
+          </span>
+        </div>
+        <div
+          class="example-accordion-item-body"
+          role="region"
+          [style.display]="accordionItem.expanded ? '' : 'none'"
+          [attr.id]="'accordion-body-' + index"
+          [attr.aria-labelledby]="'accordion-header-' + index">
+          <div class="row" *ngFor="let room of obj.rooms">
+            <b>Room Name - {{room.name}}</b>
+            <br>
+            <mat-grid-list cols="4" rowHeight="3:2.5">
+              <mat-grid-tile [ngClass]="selectColor(bed)" *ngFor="let bed of room.beds">
+                <div  style="text-align: center !important;" class="flex">
+                  <span><b>Bed No - {{bed.name}}</b></span>
+                  <br>
+                  <span *ngIf="bed.status == 'R'">
+                    <b>
+                      {{bed.note}}
+                    </b>
+                  </span>
+                  <span *ngIf="bed.status == 'B'">
+                    <b>
+                      {{bed?.patient?.firstName}}  {{bed?.patient?.lastName}}
+                      <br>
+                      {{bed?.patient?.mobileNumber}}
+                    </b>
+                  </span>
+                  <br>
+                  <span *ngIf="bed.status == 'A'">
+                    <button class="m-1" mat-raised-button color="primary" (click)="reserve(bed)">Reserve</button>
+                   </span>
+                  <span *ngIf="bed.status == 'A' || bed.status == 'R'">
+                   <button class="m-1" mat-raised-button color="primary" (click)="allocate(bed)">Allocate</button>
+                  </span>              
+                  <br>
+                  <span *ngIf="bed.status == 'B'">
+                    <button class="m-1" (click)="update(bed)" mat-raised-button color="primary">Update</button>
+                    <button class="m-1" (click)="addDetails(bed)" mat-raised-button color="primary">Add Details</button>
+                    <button class="m-1" (click)="discharge(bed)" mat-raised-button color="primary">Discharge</button>
+                   </span>
+                </div>
+              </mat-grid-tile>
+            </mat-grid-list>
+            <br>
+            <span class="pb-2"></span>
+            
+          </div>
+        </div>
+      </cdk-accordion-item>
+      }
+    </cdk-accordion>
+      
+    </div>
+  </section>

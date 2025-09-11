@@ -1,0 +1,29 @@
+<div class="container">
+    <h3 mat-dialog-title>Bed Discharge</h3>
+    <div mat-dialog-content>
+      <ul class="clearfix">
+        <li *ngIf="billData?.billingStatus === 'PAID'">
+          <p>
+            <br>
+            <mat-form-field class="example-full-width" appearance="outline">
+                <mat-label>Discharge Note</mat-label>
+                <input matInput [(ngModel)]='dischargeNote' [ngModelOptions]="{standalone: true}"
+                  [name]="'dischargeNote'">
+              </mat-form-field>
+          </p>
+        </li>
+        <li  *ngIf="billData?.billingStatus != 'PAID'">
+          <p style="color: red !important;">
+            <br>
+           Please pay all bill
+          </p>
+        </li>
+      </ul>
+    </div>
+    <div mat-dialog-actions>
+      <button mat-flat-button color="warn" [disabled]="!dischargeSummaryData || billData?.billingStatus != 'PAID'" [mat-dialog-close]="1" (click)="confirmDischarge()">
+        Discharge
+      </button>
+      <button mat-flat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
+    </div>
+  </div>

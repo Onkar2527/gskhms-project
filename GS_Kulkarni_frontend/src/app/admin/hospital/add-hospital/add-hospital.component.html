@@ -1,0 +1,194 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb [title]="panleTitle" [items]="['Hospitals']" [active_item]="panleTitle"></app-breadcrumb>
+    </div>
+    <div class="row clearfix">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="header">
+            <h2>{{panleTitle}}</h2>
+          </div>
+          <div class="body">
+            <form class="m-4" [formGroup]="hospitalForm" (ngSubmit)="onSubmit()">
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Hospital Code</mat-label>
+                    <input matInput formControlName="hospitalCode" required>
+                    @if (hospitalForm.get('hospitalCode')?.hasError('required')) {
+                    <mat-error>
+                      Hospital Code is required
+                    </mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Hospital Name</mat-label>
+                    <input matInput formControlName="name" required>
+                    @if (hospitalForm.get('name')?.hasError('required')) {
+                    <mat-error>
+                      Hospital Name is required
+                    </mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Registration Number</mat-label>
+                    <input matInput formControlName="regNo" required>
+                    @if (hospitalForm.get('regNo')?.hasError('required')) {
+                    <mat-error>
+                      Registration Number is required
+                    </mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>License Number</mat-label>
+                    <input matInput formControlName="licNo" required>
+                    @if (hospitalForm.get('licNo')?.hasError('required')) {
+                    <mat-error>
+                      License Number is required
+                    </mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Phone Number</mat-label>
+                    <input matInput formControlName="mobileNumber" type="number" required>
+                    @if (hospitalForm.get('mobileNumber')?.hasError('required')) {
+                      <mat-error>
+                        Phone Number is required
+                      </mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Email</mat-label>
+                    <input matInput formControlName="email" required>
+                    @if (hospitalForm.get('email')?.hasError('email') && hospitalForm.get('email')?.touched) {
+                    <mat-error>
+                      Please enter a valid email address
+                    </mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Status</mat-label>
+                    <mat-select formControlName="status" required>
+                      <mat-option [value]="'Active'">
+                        Active
+                      </mat-option>
+                      <mat-option [value]="'Inactive'">
+                        Inactive
+                      </mat-option>
+                    </mat-select>
+                    @if (hospitalForm.get('status')?.hasError('required')) {
+                    <mat-error>
+                      Status is required
+                    </mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 mb-4">
+                    <mat-checkbox color="primary" formControlName="labServices">
+                      Lab Service Available
+                    </mat-checkbox>
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 mb-4">
+                    <mat-checkbox color="primary" formControlName="xrayServices">
+                      X-Ray Service Available
+                    </mat-checkbox>
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 mb-4">
+                  <mat-checkbox color="primary" formControlName="ipdServices">
+                    IPD Available
+                  </mat-checkbox>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 mb-4">
+                    <mat-checkbox color="primary" formControlName="discountApplicable">
+                      Discount Applicable
+                    </mat-checkbox>
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 mb-4">
+                    <mat-checkbox color="primary" formControlName="insuranceAvailable">
+                      Insurance Available
+                    </mat-checkbox>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-1">
+                  <h3><strong> Address</strong></h3>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Area</mat-label>
+                    <input matInput formControlName="area">
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <label></label>
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Taluka</mat-label>
+                    <input matInput formControlName="taluka">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>District</mat-label>
+                    <input matInput formControlName="district">
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>State</mat-label>
+                    <input matInput formControlName="state">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Pin code</mat-label>
+                    <input matInput formControlName="pinCode">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-1">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Address</mat-label>
+                    <input matInput formControlName="address">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                  <button class="btn-space" [disabled]="!hospitalForm.valid" mat-raised-button color="primary">Submit</button>
+                  <button type="button" mat-raised-button color="warn" (click)="cancel()">Cancel</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

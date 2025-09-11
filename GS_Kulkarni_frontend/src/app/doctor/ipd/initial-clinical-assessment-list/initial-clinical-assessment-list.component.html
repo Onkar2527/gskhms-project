@@ -1,0 +1,165 @@
+<section class="content">
+    <div class="content-block">
+      <div class="block-header">
+        <!-- breadcrumb -->
+        <app-breadcrumb [title]="'Recommended IPDs'" [items]="['Recommended IPDs']" [active_item]="'Recommended IPDs'">
+        </app-breadcrumb>
+      </div>
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div class="card">
+            <div class="materialTableHeader">
+              <div class="left">
+                <ul class="header-buttons-left ms-0">
+                  <li class="tbl-title">
+                    <h2>Recommended IPDs</h2>
+                  </li>
+                  <li class="tbl-search-box">
+                    <label for="search-input"><i class="material-icons search-icon">search</i></label>
+                    <input placeholder="Search" type="text" #filter class="browser-default search-field"
+                      aria-label="Search box">
+                  </li>
+                </ul>
+              </div>
+              <div class="right">
+                <ul class="tbl-export-btn">
+                  <!-- <li class="tbl-header-btn">
+                    <div class="m-l-10">
+                        <mat-form-field style="width: 9rem !important;">
+                            <mat-label>Start Date</mat-label>
+                            <input matInput [matDatepicker]="picker" [(ngModel)]="startDate" required>
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>   
+                          </mat-form-field>
+                    </div>
+                  </li>
+                  <li class="tbl-header-btn">
+                    <div class="m-l-10">
+                        <mat-form-field style="width: 9rem !important;">
+                            <mat-label>End Date</mat-label>
+                            <input matInput [matDatepicker]="picker1" [(ngModel)]="endDate" required>
+                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <mat-datepicker #picker1></mat-datepicker>  
+                          </mat-form-field>
+                    </div>
+                  </li> -->
+                  <li class="tbl-header-btn">
+                    <div class="m-l-10" matTooltip="REFRESH">
+                      <button mat-mini-fab color="primary" (click)="refresh()">
+                        <mat-icon class="col-white">refresh</mat-icon>
+                      </button>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="export-button m-l-10" matTooltip="XLSX">
+                      <img src="assets/images/icons/xlsx.png" alt="" (click)="exportExcel()" />
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="body overflow-auto">
+              <div class="responsive_table">
+                <table mat-table [dataSource]="dataSource" matSort class="mat-cell advance-table">
+
+                  <!-- ID Column -->
+                  <!-- <ng-container matColumnDef="id">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Appoinment No
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row" [matTooltip]="row.documentNumber">{{row.documentNumber}}</mat-cell>
+                  </ng-container> -->
+                  <ng-container matColumnDef="name">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Patient Name
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row" [matTooltip]="row.patientDetails.firstName+''+row.patientDetails.lastName"><span class="mobile-label">Patient Name:</span> {{row.patientDetails.firstName}}  {{row.patientDetails.lastName}}
+                    </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="dateTime">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Date & Time
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row" [matTooltip]="datepipe.transform(row.admissionDate, 'MMM d, y ,h:mm a')?? ''">
+                      <span class="mobile-label">Date & Time:</span> {{row.admissionDate | date: 'MM/dd/yyyy, H:mm a'}}
+                    </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="mobile">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Mobile
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row" [matTooltip]="row.patientDetails.mobileNumber"> <span class="mobile-label">Mobile:</span> {{row.patientDetails.mobileNumber}}
+                    </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="address">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Address
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row" [matTooltip]="row.patientDetails.address" class="column-nowrap"> <span
+                        class="mobile-label">Address:</span>{{row.patientDetails.address}}
+                    </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="chiefComplaint">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Complaint</mat-header-cell>
+                    <mat-cell *matCellDef="let row" [matTooltip]="row.chiefComplaint">
+                      <span class="truncate-text"><span class="mobile-label">Complaint:</span>{{row.chiefComplaint}}</span>
+                    </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="admitStatus">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
+                    <mat-cell *matCellDef="let row" [matTooltip]="row.admitStatus">
+                      <span class="truncate-text"><span class="mobile-label">Status:</span>{{row.admitStatus}}</span>
+                    </mat-cell>
+                  </ng-container>
+
+                  <!-- actions -->
+                  <ng-container matColumnDef="actions">
+                    <mat-header-cell class="psl-3 tbl-col-width-per-10" *matHeaderCellDef>Actions
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row; let i=index;" class="psl-3 tbl-col-width-per-10">
+                      <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
+                        <mat-icon>more_vert</mat-icon>
+                      </button>
+                      <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="editCall(row)">
+                            <i class="material-icons-outlined align-middle msr-2">edit</i>
+                            <span>Update</span>
+                        </button>
+                        @if (row?.admitStatus  == 'Recommended' || row?.admitStatus == null) {
+                          <button mat-menu-item (click)="admit(row)">
+                            <i class="material-icons-outlined align-middle msr-2">book_online</i>
+                            <span>Admit</span>
+                        </button>
+                        }
+
+                        <button mat-menu-item (click)="package(row)">
+                          <i class="material-icons-outlined align-middle msr-2">book_online</i>
+                          <span>Package Details</span>
+                      </button>
+                      </mat-menu>
+                    </mat-cell>
+                  </ng-container>
+
+                  <mat-header-row *matHeaderRowDef="displayedColumns">
+                  </mat-header-row>
+                  <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="detailsCall(row)"
+                    [style.cursor]="'pointer'" matRipple>
+                  </mat-row>
+                </table>
+                <!-- Loading spinner -->
+                @if (exampleDatabase?.isTblLoading) {
+                <div class="tbl-spinner">
+                  <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
+                  </mat-progress-spinner>
+                </div>
+                }
+                @if (!exampleDatabase?.isTblLoading) {
+                <div class="no-results" [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
+                  No results
+                </div>
+                }
+                <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0" [pageSize]="10"
+                  [pageSizeOptions]="[5, 10, 25, 100, dataSource.filteredData.length]">
+                </mat-paginator>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

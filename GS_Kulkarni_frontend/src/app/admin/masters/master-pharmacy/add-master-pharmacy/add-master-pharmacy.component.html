@@ -1,0 +1,114 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb [title]="panleTitle" [items]="['Pharmacy']" [active_item]="panleTitle"></app-breadcrumb>
+    </div>
+    <div class="row clearfix">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="header">
+            <h2>{{panleTitle}}</h2>
+          </div>
+          <div class="body">
+            <form class="m-4" [formGroup]="pharmacyForm" (ngSubmit)="onSubmit()">
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Medecine Name</mat-label>
+                    <input matInput formControlName="medecineName" required>
+                    @if (pharmacyForm.get('medecineName')?.hasError('required')) {
+                    <mat-error>
+                      Medecine Name is required
+                    </mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Unit Name</mat-label>
+                    <input #input type="text"
+                    placeholder="Pick one"
+                    aria-label="Number"
+                    matInput
+                    formControlName="unitName"
+                    [matAutocomplete]="auto"
+                    (input)="filter()"
+                    (focus)="filter()">
+             <mat-autocomplete #auto="matAutocomplete">
+               @for (option of filteredOptions; track option) {
+                 <mat-option [value]="option.name">{{option.name}}</mat-option>
+               }
+             </mat-autocomplete>
+                    @if (pharmacyForm.get('unitName')?.hasError('required')) {
+                      <mat-error>
+                        Unit Name is required
+                      </mat-error>
+                      }
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Frequency</mat-label>
+                    <input matInput formControlName="frequency" required>
+                    @if (pharmacyForm.get('frequency')?.hasError('required')) {
+                    <mat-error>
+                      Frequency is required
+                    </mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Dosage </mat-label>
+                    <input matInput formControlName="dosage" >
+                    
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label> Till Day  </mat-label>
+                    <input matInput formControlName="tillDays" >
+                    
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label> Quantity  </mat-label>
+                    <input matInput formControlName="quantity" >
+                    
+                  </mat-form-field>
+                </div>
+
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Diagnosis</mat-label>
+                    
+                    <textarea matInput formControlName="diagnosis"></textarea>
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Remark</mat-label>
+                    
+                    <textarea matInput formControlName="remark"></textarea>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                  <button class="btn-space" [disabled]="!pharmacyForm.valid" mat-raised-button color="primary">Submit</button>
+                  <button type="button" mat-raised-button color="warn" (click)="cancel()">Cancel</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

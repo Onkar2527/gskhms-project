@@ -1,0 +1,62 @@
+<h2 mat-dialog-title>{{ data ? 'Edit Entry' : 'Add Entry' }}</h2>
+
+<mat-dialog-content [formGroup]="form">
+
+  <mat-form-field appearance="fill" class="w-full">
+     <mat-label>Date</mat-label>
+    <input matInput [matDatepicker]="picker" formControlName="entry_date">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+
+
+  <mat-form-field appearance="fill" class="w-full">
+    <mat-label>Time</mat-label>
+    <input matInput type="time" formControlName="entry_time">
+  </mat-form-field>
+
+
+  <!-- <mat-form-field appearance="fill" class="w-full">
+    <mat-label>Time</mat-label>
+    <input matInput [ngxMatTimepicker]="picker" formControlName="entry_time">
+    <ngx-mat-timepicker #picker></ngx-mat-timepicker>
+  </mat-form-field> -->
+
+  <mat-form-field appearance="fill" class="w-full">
+    <mat-label>Description</mat-label>
+    <input matInput formControlName="description">
+  </mat-form-field>
+
+  <mat-radio-group formControlName="transaction_type">
+    <mat-radio-button value="INCOME">Income</mat-radio-button>
+    <mat-radio-button value="EXPENSE">Expense</mat-radio-button>
+  </mat-radio-group>
+
+  <mat-form-field appearance="fill" class="w-full">
+    <mat-label>Amount</mat-label>
+    <input matInput type="number" formControlName="amount">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="w-full">
+    <mat-label>Payment Mode</mat-label>
+    <mat-select formControlName="payment_mode">
+      <mat-option value="CASH">Cash</mat-option>
+      <mat-option value="CARD">Card</mat-option>
+      <mat-option value="ONLINE">Online</mat-option>
+      <mat-option value="CHEQUE">Cheque</mat-option>
+      <mat-option value="UPI">UPI</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="w-full">
+    <mat-label>Reference No.</mat-label>
+    <input matInput formControlName="reference_no">
+  </mat-form-field>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" (click)="save()">Save</button>
+</mat-dialog-actions>

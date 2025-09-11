@@ -1,0 +1,5 @@
+<div class="file-drop-area">
+  <button mat-raised-button color="primary" (click)="fileUpload.click()">Choose file</button>
+  <span>&nbsp;&nbsp;{{fileName ? fileName : 'or drag and drop file here' }}</span>
+  <input class="file-input" id="file" type="file" [accept]="requiredFileType" (change)="onFileSelected($event)" #fileUpload>
+</div>

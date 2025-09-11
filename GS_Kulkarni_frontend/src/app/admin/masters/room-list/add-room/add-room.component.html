@@ -1,0 +1,76 @@
+<section class="content">
+    <div class="content-block">
+      <div class="block-header">
+        <!-- breadcrumb -->
+        <app-breadcrumb [title]="panleTitle" [items]="['Room']" [active_item]="panleTitle"></app-breadcrumb>
+      </div>
+      <div class="row clearfix">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+          <div class="card">
+            <div class="header">
+              <h2>{{panleTitle}}</h2>
+            </div>
+            <div class="body">
+              <form class="m-4" [formGroup]="roomForm" (ngSubmit)="onSubmit()">
+                <div class="row">
+                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Name</mat-label>
+                      <input matInput formControlName="name" required>
+                      @if (roomForm.get('name')?.hasError('required')) {
+                      <mat-error>
+                        Name is required
+                      </mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width " appearance="outline">
+                    <mat-label>Room Type</mat-label>
+                    <mat-select formControlName="roomTypeId" required >
+                      <mat-option value=0>
+                        Select
+                      </mat-option>
+                      <mat-option *ngFor="let roomType of roomTypeOptions" [value]="roomType.id">{{roomType.name}}
+                      </mat-option>
+                    </mat-select>
+                    @if (roomForm.get('roomTypeId')?.hasError('required')) {
+                      <mat-error>
+                        Room Type is required
+                      </mat-error>
+                      }
+                  </mat-form-field>
+                </div>
+                </div>
+                <div class="row">
+                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width " appearance="outline">
+                      <mat-label>Floor</mat-label>
+                      <mat-select formControlName="floorId" required >
+                        <mat-option value=0>
+                          Select
+                        </mat-option>
+                        <mat-option *ngFor="let floor of floorOptions" [value]="floor.id">{{floor.name}}
+                        </mat-option>
+                      </mat-select>
+                      @if (roomForm.get('floorId')?.hasError('required')) {
+                        <mat-error>
+                          Floor is required
+                        </mat-error>
+                        }
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                    <button class="btn-space" [disabled]="!roomForm.valid" mat-raised-button color="primary">Submit</button>
+                    <button type="button" mat-raised-button color="warn" (click)="cancel()">Cancel</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

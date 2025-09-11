@@ -1,0 +1,148 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb [title]="'Dashboad'" [items]="[]" [active_item]="'Dashboad'"></app-breadcrumb>
+    </div>
+    <!-- Widgets -->
+    <div class="row">
+      <div class="col-lg-3 col-sm-6">
+        <div class="info-box7 l-bg-card1 order-info-box7">
+          <div class="info-box7-block">
+            <h3 class="m-b-15">Todays Registrations</h3>
+            <h2 class="text-end"><i class="fas fa-user-injured float-start"></i><span class="font-30"> {{dashboardData?.todayRegistrations}}</span></h2>
+            <!-- <p class="m-b-0">New Patients 100</p>
+            <p class="m-b-0">Follow Up 22</p> -->
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-sm-6">
+        <div class="info-box7 l-bg-card2 order-info-box7">
+          <div class="info-box7-block">
+            <h3 class="m-b-15">Registration Confirm</h3>
+            <h2 class="text-end"><i class="far fa-calendar-check float-start"></i><span class="font-30"> {{dashboardData?.todayRegistrationConfirmed}}</span></h2>
+            <!-- <p class="m-b-0">21% Higher Than Yesterday</p> -->
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-sm-6">
+        <div class="info-box7 l-bg-card3 order-info-box7">
+          <div class="info-box7-block">
+            <h3 class="m-b-15">Registration Waiting</h3>
+            <h2 class="text-end"><i class="fas fa-pause float-start"></i><span class="font-30"> {{dashboardData?.todayRegistrationWaiting}}</span></h2>
+            <!-- <p class="m-b-0">37% Higher Than Yesterday</p> -->
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-sm-6">
+        <div class="info-box7 l-bg-card4 order-info-box7">
+          <div class="info-box7-block">
+            <h3 class="m-b-15">Todays Revenue</h3>
+            <h2 class="text-end">Rs.<i class="fas fa-solid fa-wallet float-start"></i><span class="font-30"> {{dashboardData?.todayEarning}}</span>
+            </h2>
+            <p class="m-b-0">By Cash Rs. {{dashboardData?.todayEarningCash}}</p>
+            <p class="m-b-0">Online Rs. {{dashboardData?.todayEarningOnline}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- #END# Widgets -->
+    <div class="row clearfix">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="card">
+          <div class="header">
+            <h2>
+              Todays Registration
+            </h2>
+          </div>
+          <div class="tableBody">
+            <div class="table-responsive">
+              <table class="table table-hover ">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Patient Name</th>
+                    <th>Gender</th>
+                    <th>Registration Confirm</th>
+                    <th>Registration Waiting</th>
+                    <th>Assign Assistant Doctor</th>
+                    <th> Doctors</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="table-img">
+                      <img src="assets/images/user/user1.jpg" alt="">
+                    </td>
+                    <td>John Doe</td>
+                    <td>Male</td>
+                    <td><div class="badge badge-solid-green">Yes</div> </td>
+                    <td><div class="badge badge-solid-red">No </div></td>
+                    <td>Dr.Mehta </td>
+                    <td>-</td>
+                  </tr>
+                  <tr>
+                    <td class="table-img">
+                      <img src="assets/images/user/user2.jpg" alt="">
+                    </td>
+                    <td>Sarah Smith</td>
+                    <td>Female</td>
+                    <td><div class="badge badge-solid-green">Yes</div> </td>
+                    <td><div class="badge badge-solid-red">No </div></td>
+                    <td>Dr.Kulkarni </td>
+                    <td>-</td>
+                  </tr>
+                  <tr>
+                    <td class="table-img">
+                      <img src="assets/images/user/user3.jpg" alt="">
+                    </td>
+                    <td>Airi Satou</td>
+                    <td>Male</td>
+                    <td><div class="badge badge-solid-green">Yes</div> </td>
+                    <td><div class="badge badge-solid-red">No </div></td>
+                    <td>Dr.Nimbarte</td>
+                    <td>-</td>
+                  </tr>
+                  <tr>
+                    <td class="table-img">
+                      <img src="assets/images/user/user4.jpg" alt="">
+                    </td>
+                    <td>Angelica Ramos</td>
+                    <td>Female</td>
+                    <td><div class="badge badge-solid-red">No </div></td>
+                    <td><div class="badge badge-solid-green">Yes</div> </td>
+                    <td>Dr.Chirag </td>
+                    <td>-</td>
+                  </tr>
+                  <tr>
+                    <td class="table-img">
+                      <img src="assets/images/user/user5.jpg" alt="">
+                    </td>
+                    <td>Ashton Cox</td>
+                    <td>Female</td>
+                    <td><div class="badge badge-solid-red">No </div></td>
+                    <td><div class="badge badge-solid-green">Yes</div> </td>
+                    <td>Dr.Jay </td>
+                    <td>-</td>
+                  </tr>
+                  <tr>
+                    <td class="table-img">
+                      <img src="assets/images/user/user8.jpg" alt="">
+                    </td>
+                    <td>Cara Stevens</td>
+                    <td>Male</td>
+                    <td><div class="badge badge-solid-red">No </div></td>
+                    <td><div class="badge badge-solid-green">Yes</div> </td>
+                    <td>Dr. Sona</td>
+                    <td>-</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,156 @@
+<section class="content">
+    <div class="content-block">
+      <div class="block-header">
+        <!-- breadcrumb -->
+        <app-breadcrumb [title]="'Hospital List'" [items]="['Hospitals']" [active_item]="'Hospital List'">
+        </app-breadcrumb>
+      </div>
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div class="card">
+            <div class="materialTableHeader">
+              <div class="left">
+                <ul class="header-buttons-left ms-0">
+                  <li class="tbl-title">
+                    <h2>Hospital</h2>
+                  </li>
+                  <li class="tbl-search-box">
+                    <label for="search-input"><i class="material-icons search-icon">search</i></label>
+                    <input placeholder="Search" type="text" #filter class="browser-default search-field"
+                      aria-label="Search box">
+                  </li>
+                </ul>
+              </div>
+              <div class="right">
+                <ul class="tbl-export-btn">
+                  <li class="tbl-header-btn">
+                    <div class="m-l-10" matTooltip="ADD">
+                      <button mat-mini-fab color="primary" (click)="addNew()">
+                        <mat-icon class="col-white">add</mat-icon>
+                      </button>
+                    </div>
+                  </li>
+                  <li class="tbl-header-btn">
+                    <div class="m-l-10" matTooltip="REFRESH">
+                      <button mat-mini-fab color="primary" (click)="refresh()">
+                        <mat-icon class="col-white">refresh</mat-icon>
+                      </button>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="export-button m-l-10" matTooltip="XLSX">
+                      <img src="assets/images/icons/xlsx.png" alt="" (click)="exportExcel()" />
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="body overflow-auto">
+              <div class="responsive_table">
+                <table mat-table [dataSource]="dataSource" matSort class="mat-cell advance-table">
+                  <ng-container matColumnDef="id">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'tbl-col-width-per-6'">Id
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row" [matTooltip]="row.id" [ngClass]="'tbl-col-width-per-6'"> <span
+                        class="mobile-label">#:</span>{{row.id}}</mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="name">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Hospital Name</mat-header-cell>
+                    <mat-cell *matCellDef="let row" [matTooltip]="row.name"> <span class="mobile-label">Hospital Name:</span>{{row.name}}
+                    </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="hospitalCode">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Hospital Code</mat-header-cell>
+                    <mat-cell *matCellDef="let row" [matTooltip]="row.hospitalCode" > <span class="mobile-label">Hospital Code:</span>{{row.hospitalCode}}
+                    </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="regNo">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Registration Number</mat-header-cell>
+                    <mat-cell *matCellDef="let row" [matTooltip]="row.regNo"> <span class="mobile-label">Registration Number:</span>{{row.regNo}}
+                    </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="licNo">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>License Number</mat-header-cell>
+                    <mat-cell *matCellDef="let row" [matTooltip]="row.licNo"> <span class="mobile-label">License Number:</span>{{row.licNo}}
+                    </mat-cell>
+                  </ng-container>
+                   <ng-container matColumnDef="mobileNumber">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'tbl-col-width-per-100'">Phone Number
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row" [matTooltip]="row.mobileNumber"> <span class="truncate-text" [ngClass]="'tbl-col-width-per-80'"><span
+                          class="mobile-label">Phone Number:</span>{{row.mobileNumber}}</span></mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="email">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'tbl-col-width-per-100'">Email
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row" [matTooltip]="row.email"> <span class="truncate-text" [ngClass]="'tbl-col-width-per-80'"><span
+                          class="mobile-label">Email:</span>{{row.email}}</span></mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="address">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'tbl-col-width-per-100'">Address
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row" [matTooltip]="row.address"> <span class="truncate-text" [ngClass]="'tbl-col-width-per-80'"><span
+                          class="mobile-label">Address :</span>{{row.address}}</span></mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="status">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Status
+                    </mat-header-cell>
+                    <mat-cell mat-cell *matCellDef="let row" [matTooltip]="row.status">
+                      <span class="mobile-label">Status:</span>
+                      @if (row.status==='Active') {
+                      <div>
+                        <span class="badge badge-solid-green">
+                          {{row.status}}</span>
+                      </div>
+                      }
+                      @if (row.status==='Inactive') {
+                      <div>
+                        <span class="badge badge-solid-orange">
+                          {{row.status}}</span>
+                      </div>
+                      }
+                    </mat-cell>
+                  </ng-container> 
+                 <!-- actions -->
+                  <ng-container matColumnDef="actions">
+                    <mat-header-cell class="pr-0" *matHeaderCellDef>Actions</mat-header-cell>
+                    <mat-cell *matCellDef="let row; let i=index;" class="pr-0">
+                        <button mat-icon-button (click)="$event.stopPropagation()" (click)="editCall(row)"
+                        class="tbl-action-btn">
+                        <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'"></app-feather-icons>
+                      </button>
+                      <!-- <button mat-icon-button (click)="$event.stopPropagation()" (click)="deleteItem(row)"
+                        class="tbl-action-btn">
+                        <app-feather-icons [icon]="'trash-2'" [class]="'tbl-fav-delete'"></app-feather-icons>
+                      </button> -->
+                    </mat-cell>
+                  </ng-container>
+                  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                  <!-- <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row> -->
+                  <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="editCall(row)"
+                    [style.cursor]="'pointer'" matRipple>
+                  </mat-row>
+                </table>
+                <!-- Loading spinner -->
+                @if (exampleDatabase?.isTblLoading) {
+                <div class="tbl-spinner">
+                  <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
+                  </mat-progress-spinner>
+                </div>
+                }
+                @if (!exampleDatabase?.isTblLoading) {
+                <div class="no-results" [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
+                  No results
+                </div>
+                }
+                <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0" [pageSize]="10"
+                  [pageSizeOptions]="[5, 10, 25, 100]">
+                </mat-paginator>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+   

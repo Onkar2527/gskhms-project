@@ -1,0 +1,11 @@
+::ng-deep .mat-mdc-table mat-header-row.mat-mdc-header-row, .mat-mdc-table mat-row.mat-mdc-row, .mat-mdc-table mat-footer-row.mat-mdc-footer-cell {
+    height: 50px !important;
+}
+
+::ng-deep .mat-mdc-text-field-wrapper {
+    height: 40px !important;
+}
+
+::ng-deep .mat-mdc-form-field-flex {
+    margin-top: -7px !important;
+}

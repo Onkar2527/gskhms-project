@@ -1,0 +1,78 @@
+// // cashbook-form.component.scss
+
+// $form-gap: 16px;
+
+// .form-container {
+//   display: grid;
+//   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+//   gap: $form-gap;
+
+//   mat-form-field {
+//     width: 100%;
+//   }
+
+//   .full-width {
+//     grid-column: span 2;
+//   }
+
+//   .button-group {
+//     grid-column: span 2;
+//     display: flex;
+//     justify-content: flex-end;
+//     gap: 12px;
+
+//     button {
+//       min-width: 100px;
+//     }
+//   }
+// }
+
+// // Optional: Dialog title style
+// ::ng-deep .mat-dialog-title {
+//   font-weight: 600;
+//   font-size: 20px;
+//   padding-bottom: 8px;
+// }
+
+// .card-inside-title {
+//     margin-top: 0 !important;
+// }
+
+// cashbook-form.component.scss
+
+mat-dialog-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px; // Spacing between fields
+    padding-top: 8px;  // Slight breathing space
+  
+    mat-form-field {
+      width: 100%;
+    }
+  
+    mat-radio-group {
+      display: flex;
+      gap: 16px;
+      padding: 4px 0;
+  
+      mat-radio-button {
+        flex: 1; // Distribute evenly
+        white-space: nowrap;
+      }
+    }
+  }
+  
+  mat-dialog-actions {
+    padding-top: 16px;
+    button {
+      min-width: 80px;
+    }
+  }
+  
+  // Optional: style dialog title for cleaner spacing
+  h2[mat-dialog-title] {
+    margin-bottom: 0;
+    font-size: 20px;
+    font-weight: 600;
+  }
+  

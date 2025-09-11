@@ -1,0 +1,67 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        
+        <div class="modal-about">
+          {{dialogTitle}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div mat-dialog-content>
+     <div *ngFor="let ele of reportData$?.labTestHeaderList;let i =index">
+      <div class="row"  >
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <h3 style="text-align: center;">{{ele.serviceName}}</h3>
+        </div>
+      </div>
+      <div class="row" style="font-weight: bold;" >
+        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+          Parameters
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12 mb-2">
+          Result
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+          Reference Range
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12 mb-2">
+          Units
+        </div>
+      </div>
+      
+      <div class="row" *ngFor="let dtl of ele?.labTestDetailsList;let j =index">
+        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+          {{dtl.serviceDetailedName}}
+          <button mat-stroked-button color="primary" *ngIf="dtl.formula && action !='view'" type="button" 
+          (click)="evaluateResults(ele, dtl);$event.preventDefault()"
+            >Evaluate</button>
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12 mb-2">
+          <input matInput [(ngModel)]="dtl.value" [disabled]="action==='view'">
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-2">
+          <span *ngIf="dtl.descriptiveRange">{{dtl.descriptiveRange}}</span>
+          <span *ngIf="!dtl.descriptiveRange">{{dtl.normalMin}}-{{dtl.normalMax}}</span>
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12 mb-2" >
+          {{dtl.unitName}}
+        </div>
+      </div>
+    </div>
+ 
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="example-button-row">
+            <button mat-raised-button color="primary" *ngIf="action!='view'" type="button" 
+            (click)="submit()"
+              >Save</button>
+            <button type="button" mat-raised-button color="warn" (click)="onNoClick()" tabindex="-1">Cancel</button>
+          </div>
+        </div>
+      </div>
+    
+  </div>
+</div>

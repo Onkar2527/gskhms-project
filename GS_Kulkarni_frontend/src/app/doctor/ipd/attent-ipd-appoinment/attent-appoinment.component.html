@@ -1,0 +1,1217 @@
+<div class="col">
+  <div class="col1">
+    <div mat-dialog-content>
+      <form class="register-form m-4" [formGroup]="appointmentForm" (ngSubmit)="submit()">
+        <div class="example-action-buttons">
+          <button mat-button color="primary" (click)="accordion().openAll()">Expand All</button>
+          <button mat-button color="primary" (click)="accordion().closeAll()">Collapse All</button>
+        </div>
+        <mat-accordion class="example-headers-align" multi>
+          <mat-expansion-panel *ngIf="appointment">
+            <mat-expansion-panel-header>
+              <mat-panel-title> Personal Details </mat-panel-title>
+              <mat-panel-description>
+                <p class="m-0">
+                  <b>Patient Name(Age) : </b> {{appointment.firstName}}
+                  {{appointment.lastName}}({{calculateAge(appointment.dob)}} Y)
+                </p>
+                <mat-icon>account_circle</mat-icon>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <address>
+              <p class="m-0">
+                <b>UHID NO : </b> {{appointment.patientUHIDNumber}}
+              </p>
+              <p class="m-0">
+                <b>Appointment NO : </b> {{appointment.documentNumber}}
+              </p>
+              <p class="m-0">
+                <b>Consulting Doctor : </b> {{appointment.doctorName}}
+              </p>
+              <p class="m-0">
+                <b>Gender : </b> {{appointment.gender}}
+              </p>
+              <p class="m-0">
+                <b>Mobile NO : </b> {{appointment.mobileNumber}}
+              </p>
+              <p class="m-0">
+                <b>Address : </b> {{appointment.address}}
+              </p>
+              <p class="m-0">
+                <b>Date of Birth : </b>
+                <i class="fa fa-calendar"></i> {{appointment.dob | date:'MMMM, d, y'}}
+              </p>
+              <p class="m-0">
+                <b>Appointment Date : </b>
+                <i class="fa fa-calendar"></i> {{appointment.appointmentDate
+                | date:'MMMM d, y'}}
+              </p>
+            </address>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title> Medical History </mat-panel-title>
+              <mat-panel-description>
+                <span *ngIf="!noHistory">
+                  History Available
+                </span>
+                <span *ngIf="noHistory">
+                  History Not Available
+                </span>
+                <mat-icon>history</mat-icon>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <!-- <div class="responsive_table"> -->
+            <table mat-table [dataSource]="dataSource" matSort class="mat-cell advance-table">
+              <!-- ID Column -->
+              <ng-container matColumnDef="id">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Id
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row" [matTooltip]="row.id">{{row.id}}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="name">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Patient Name
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row" [matTooltip]="row.lastName"><span class="mobile-label">Patient
+                    Name:</span>
+                  {{row?.firstName}} {{row?.lastName}}
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="dateTime">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Date & Time
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row" [matTooltip]="row.appointmentDate">
+                  <span class="mobile-label">Date & Time:</span> {{row?.appointmentDate | date: 'MM/dd/yyyy,
+                  HH:mm' }}
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="type">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Type</mat-header-cell>
+                <mat-cell *matCellDef="let row" [matTooltip]="row.type">
+                  <span class="truncate-text"><span class="mobile-label">Type:</span>{{row.type}}</span>
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="disease">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Diagnosis</mat-header-cell>
+                <mat-cell *matCellDef="let row" [matTooltip]="row.remark">
+                  <span class="truncate-text"><span class="mobile-label">Diagnosis:</span>{{row.remark}}</span>
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="doctorName">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Doctor Name</mat-header-cell>
+                <mat-cell *matCellDef="let row" [matTooltip]="row.doctorName">
+                  <span class="truncate-text"><span class="mobile-label">Doctor Name:</span>{{row.doctorName}}</span>
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="viewPrescription">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Prescription</mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                  <button mat-raised-button (click)="printPrescription(row)">
+                    <span>View</span>
+                  </button>
+                </mat-cell>
+              </ng-container>
+              <mat-header-row *matHeaderRowDef="displayedColumns">
+              </mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumns;" [style.cursor]="'pointer'" matRipple>
+              </mat-row>
+            </table>
+            <mat-paginator #paginator [length]="dataSource?.filteredData?.length" [pageIndex]="0" [pageSize]="10"
+              [pageSizeOptions]="[5, 10, 25, 100]">
+            </mat-paginator>
+            <!-- </div> -->
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title> Initial Nursing Assessment </mat-panel-title>
+              <mat-panel-description>
+                <span *ngIf="!nursingAssessmentData?.id">Add Nursing Assessment</span>
+                <span *ngIf="nursingAssessmentData?.id">Edit Nursing Assessment</span>
+                <mat-icon>help</mat-icon>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class="body" *ngIf="nursingAssessmentForm && showPrescription">
+              <form class="m-4" [formGroup]="nursingAssessmentForm" (ngSubmit)="$event.preventDefault()">
+                
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Arrived By</mat-label>
+                      <input matInput formControlName="arrivedBy"/>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Height</mat-label>
+                      <input matInput formControlName="height"/>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>BMI</mat-label>
+                      <input matInput formControlName="bmi"/>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Level Of Conciousness</mat-label>
+                      <input matInput formControlName="levelOfConciousness"/>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Medical</mat-label>
+                      <input matInput formControlName="medicalPastHistory"/>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Surgical</mat-label>
+                      <input matInput formControlName="surgicalPastHistory"/>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Bowel Assessment</mat-label>
+                      <input matInput formControlName="bowelAssessment"/>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Bladder Assessment</mat-label>
+                      <input matInput formControlName="bladderAssessment"/>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>History Of Allergy</mat-label>
+                      <textarea matInput formControlName="historyOfAllergy"></textarea>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>If On Any Medication</mat-label>
+                      <textarea matInput formControlName="ifOnAnyMedication"></textarea>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Pressure Sore</mat-label>
+                      <input matInput formControlName="pressureSore"/>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Pressure Score Location</mat-label>
+                      <input matInput formControlName="pressureSoreLocation"/>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Pressure Score Any Deformities</mat-label>
+                      <input matInput formControlName="pressureSoreAnyDeformities"/>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Dentures</mat-label>
+                      <input matInput formControlName="dentures"/>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>ContactLens</mat-label>
+                      <input matInput formControlName="contactLens"/>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Artificial Limbs</mat-label>
+                      <input matInput formControlName="artificialLimbs"/>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Implants</mat-label>
+                      <input matInput formControlName="implants"/>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>On Tubes</mat-label>
+                      <input matInput formControlName="onTubes"/>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Fistula</mat-label>
+                      <input matInput formControlName="fistula"/>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Colostomy</mat-label>
+                      <input matInput formControlName="colostomy"/>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Nephrostomy</mat-label>
+                      <input matInput formControlName="nephrostomy"/>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Nutrition</mat-label>
+                      <input matInput formControlName="nutrition"/>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Colostomy</mat-label>
+                      <input matInput formControlName="colostomy"/>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Nephrostomy</mat-label>
+                      <input matInput formControlName="nephrostomy"/>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Nutrition</mat-label>
+                      <input matInput formControlName="nutrition"/>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Other Details</mat-label>
+                      <input matInput formControlName="otherDetails"/>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Risk Of Fail</mat-label>
+                      <input matInput formControlName="riskOfFail"/>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Pain Score</mat-label>
+                      <mat-select formControlName="painScore" required>
+                        <mat-option [value]="'0'">
+                          0 - No Pain
+                        </mat-option>
+                        <mat-option [value]="'1'">
+                          1 - Just noticeable pain
+                        </mat-option>
+                        <mat-option [value]="'2'">
+                          2 - Mild pain
+                        </mat-option>
+                        <mat-option [value]="'3'">
+                          3 - Uncomfortable pain
+                        </mat-option>
+                        <mat-option [value]="'4'">
+                          4 - Annoying pain
+                        </mat-option>
+                        <mat-option [value]="'5'">
+                          5 - Moderate pain
+                        </mat-option>
+                        <mat-option [value]="'6'">
+                          6 - Just bearable pain
+                        </mat-option>
+                        <mat-option [value]="'7'">
+                          7 - Strong pain
+                        </mat-option>
+                        <mat-option [value]="'8'">
+                          8 - Severe pain
+                        </mat-option>
+                        <mat-option [value]="'9'">
+                          9 - Horrible pain
+                        </mat-option>
+                        <mat-option [value]="'10'">
+                          10 - Worst pain
+                        </mat-option>
+                      </mat-select>
+                      @if (nursingAssessmentForm.get('painScore')?.hasError('required')) {
+                      <mat-error>
+                        Pain Score is required
+                      </mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+                </div>
+                <button class="btn-space" mat-raised-button color="primary" (click)="saveNursingAssessment()">Submit</button>
+              </form>
+            </div>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title> Bed Details </mat-panel-title>
+              <mat-panel-description>
+                <span *ngIf="!bedFacilityData?.id">Add Bed Details</span>
+                <span *ngIf="bedFacilityData?.id">Edit Bed Details</span>
+                <mat-icon>help</mat-icon>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class="body" *ngIf="bedFacilityForm">
+              <form class="m-4" [formGroup]="bedFacilityForm" (ngSubmit)="$event.preventDefault()">
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <strong>Admission</strong>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <strong>Discharge</strong>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <span>1. Bedsheet</span>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <mat-checkbox color="primary" formControlName="bedsheet">
+                    </mat-checkbox>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <mat-checkbox color="primary" formControlName="bedsheetReturned">
+                    </mat-checkbox>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <span>2. Blanket</span>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <mat-checkbox color="primary" formControlName="blanket">
+                    </mat-checkbox>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <mat-checkbox color="primary" formControlName="blanketReturned">
+                    </mat-checkbox>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <span>3. Pillow</span>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <mat-checkbox color="primary" formControlName="pillow">
+                    </mat-checkbox>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <mat-checkbox color="primary" formControlName="pillowReturned">
+                    </mat-checkbox>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <span>4. Pillow Cover</span>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <mat-checkbox color="primary" formControlName="pillowCover">
+                    </mat-checkbox>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <mat-checkbox color="primary" formControlName="pillowCoverReturned">
+                    </mat-checkbox>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <span>5. Mattress</span>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <mat-checkbox color="primary" formControlName="mattress">
+                    </mat-checkbox>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <mat-checkbox color="primary" formControlName="mattressReturned">
+                    </mat-checkbox>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <span>6. Rubber Sheet</span>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <mat-checkbox color="primary" formControlName="rubberSheet">
+                    </mat-checkbox>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <mat-checkbox color="primary" formControlName="rubberSheetReturned">
+                    </mat-checkbox>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <span>7. Kidney Tray</span>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <mat-checkbox color="primary" formControlName="kidneyTray">
+                    </mat-checkbox>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <mat-checkbox color="primary" formControlName="kidneyTrayReturned">
+                    </mat-checkbox>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <span>8. Urine Tray</span>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <mat-checkbox color="primary" formControlName="urineTray">
+                    </mat-checkbox>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <mat-checkbox color="primary" formControlName="urineTrayReturned">
+                    </mat-checkbox>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <span>9. Bed Pan</span>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <mat-checkbox color="primary" formControlName="bedPan">
+                    </mat-checkbox>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <mat-checkbox color="primary" formControlName="bedPanReturned">
+                    </mat-checkbox>
+                  </div>
+                </div>
+                <button class="btn-space" mat-raised-button color="primary" (click)="saveBedFacility()">Submit</button>
+              </form>
+            </div>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title> Add Lab </mat-panel-title>
+              <mat-panel-description>
+                <span>Add Lab Tests</span>
+                <mat-icon>help</mat-icon>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class="body" *ngIf="labForm">
+              <form class="m-4" [formGroup]="labForm" (ngSubmit)="$event.preventDefault()">
+                <div>
+                  <div class="mb-3">
+                    <span><b>Lab Tests</b></span>
+                  </div>
+                  <app-additional-service 
+                    [type]="'T'"
+                    (changeService)="loadAppoinmentLabServiceDetails($event);$event.preventDefault();" 
+                    [appoinment_id]="appointment.id">
+                  </app-additional-service>
+                </div>
+                <button class="btn-space mb-2" mat-raised-button color="primary" (click)="saveLab()">Submit</button>
+              </form>
+            </div>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel *ngIf="labReportFound">
+            <mat-expansion-panel-header>
+              <mat-panel-title> Lab Report </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="tableBody">
+              <div class="table-responsive">
+                <table class="table display product-overview mb-30" id="support_table">
+                  <thead>
+                    <tr>
+                      <th>Report No</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let testDetail of labData$;let i =index">
+                      <td>{{testDetail.labNumber}}</td>
+                      <td>
+                        <span *ngIf="testDetail.approvalStatus == 'A'">Completed</span>
+                        <span *ngIf="testDetail.approvalStatus != 'A'">In Progress</span>
+                      </td>
+                      <td>
+                        <button mat-menu-item (click)="printreport(testDetail.type,testDetail.id,testDetail)">
+                          <i class="material-icons-outlined align-middle msr-2">print</i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title> Add X-Ray </mat-panel-title>
+              <mat-panel-description>
+                <span>Add X-Ray</span>
+                <mat-icon>help</mat-icon>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class="body" *ngIf="xrayForm">
+              <form class="m-4" [formGroup]="xrayForm" (ngSubmit)="$event.preventDefault()">
+                <div>
+                  <div class="mb-3">
+                    <span><b>X-Ray Tests</b></span>
+                  </div>
+                  <app-additional-service 
+                    [type]="'X'"
+                    (changeService)="loadAppoinmentXrayServiceDetails($event);$event.preventDefault();" 
+                    [appoinment_id]="appointment.id">
+                  </app-additional-service>
+                </div>
+                <button class="btn-space mb-2" mat-raised-button color="primary" (click)="saveXray()">Submit</button>
+              </form>
+            </div>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel *ngIf="xrayReportFound">
+            <mat-expansion-panel-header>
+              <mat-panel-title> X-Ray Report</mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="tableBody">
+              <div class="table-responsive">
+                <table class="table display product-overview mb-30" id="support_table">
+                  <thead>
+                    <tr>
+                      <th>Report No</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let testDetail of xrayData$;let i =index">
+                      <td>{{testDetail.labNumber}}</td>
+                      <td>
+                        <span *ngIf="testDetail.status == 'Report Generated'">Completed</span>
+                        <span *ngIf="testDetail.status != 'Report Generated'">In Progress</span>
+                      </td>
+                      <td>
+                        <button mat-menu-item (click)="printreport(testDetail.type,testDetail.id,testDetail)">
+                          <i class="material-icons-outlined align-middle msr-2">print</i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title> Prescription </mat-panel-title>
+              <mat-panel-description>
+                Add Prescription
+                <mat-icon>check_circle</mat-icon>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <app-prescription *ngIf="presdcriptionData"
+              [appoinment]="appointment"
+              [appoinment_id]="appointment.id"
+              (changePrescription)="loadPrescription($event)" 
+              >
+            </app-prescription>
+          </mat-expansion-panel>
+
+
+
+           <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title> Prescription during discharge</mat-panel-title>
+              <mat-panel-description>
+                Add Prescription
+                <mat-icon>check_circle</mat-icon>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <app-disprescription *ngIf="afterPrescriptionData"
+              [appoinment]="appointment"
+              [appoinment_id]="appointment.id"
+              (changePrescription)="AfterloadPrescription($event)" 
+              >
+            </app-disprescription>
+          </mat-expansion-panel>
+
+
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title> Vitals </mat-panel-title>
+              <mat-panel-description>
+                Add Vitals
+                <mat-icon>check_circle</mat-icon>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class="body" *ngIf="vitalsForm">
+              <form class="m-4" [formGroup]="vitalsForm" (keydown.enter)="$event.preventDefault()" (ngSubmit)="$event.preventDefault()">
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Pulse</mat-label>
+                      <input matInput formControlName="pulse">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Tempature</mat-label>
+                      <input matInput formControlName="temperature">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>RR</mat-label>
+                      <input matInput formControlName="rr">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>HR</mat-label>
+                      <input matInput formControlName="hr">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>BP</mat-label>
+                      <input matInput formControlName="bp">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>SPO2</mat-label>
+                      <input matInput formControlName="spo2">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Abd Grith</mat-label>
+                      <input matInput formControlName="abdGrith">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Weight</mat-label>
+                      <input matInput formControlName="weight">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Others</mat-label>
+                      <input matInput formControlName="others">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                 <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>FHS</mat-label>
+                      <input matInput formControlName="fhs">
+                    </mat-form-field>
+                  </div>
+                  </div>
+                <button class="btn-space" mat-raised-button color="primary" (click)="saveVitals()">Submit</button>
+              </form>
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12" style="display: inline-block !important; overflow: scroll !important;">
+                  <table mat-table [dataSource]="vitalDataSource" matSort class="mat-cell advance-table" style="overflow-x: scroll !important; width: 100% !important;">
+                    <!-- ID Column -->
+                    <ng-container matColumnDef="measureTime">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Time
+                      </mat-header-cell>
+                      <mat-cell *matCellDef="let row" [matTooltip]="row.measureTime">{{row.measureTime | date: 'MM/dd/yyyy,
+                        HH:mm'}}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="pulse">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Pulse
+                      </mat-header-cell>
+                      <mat-cell *matCellDef="let row" [matTooltip]="row.pulse"><span class="mobile-label">Pulse:</span>
+                        {{row?.pulse}}
+                      </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="rr">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>RR
+                      </mat-header-cell>
+                      <mat-cell *matCellDef="let row" [matTooltip]="row.rr">
+                        <span class="mobile-label">RR:</span> {{row?.rr}}
+                      </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="bp">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>BP</mat-header-cell>
+                      <mat-cell *matCellDef="let row" [matTooltip]="row.bp">
+                        <span class="truncate-text"><span class="mobile-label">BP:</span>{{row.bp}}</span>
+                      </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="temperature">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Temp</mat-header-cell>
+                      <mat-cell *matCellDef="let row" [matTooltip]="row.temperature">
+                        <span class="truncate-text"><span class="mobile-label">Temp:</span>{{row.temperature}}</span>
+                      </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="hr">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>HR</mat-header-cell>
+                      <mat-cell *matCellDef="let row" [matTooltip]="row.hr">
+                        <span class="truncate-text"><span class="mobile-label">HR:</span>{{row.hr}}</span>
+                      </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="spo2">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>SPO2</mat-header-cell>
+                      <mat-cell *matCellDef="let row" [matTooltip]="row.spo2">
+                        <span class="truncate-text"><span class="mobile-label">SPO2:</span>{{row.spo2}}</span>
+                      </mat-cell>
+                    </ng-container>
+                     <ng-container matColumnDef="fhs">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>FHS</mat-header-cell>
+                      <mat-cell *matCellDef="let row" [matTooltip]="row.fhs">
+                        <span class="truncate-text"><span class="mobile-label">FHS:</span>{{row.fhs}}</span>
+                      </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="abdGrith">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Abd Grith</mat-header-cell>
+                      <mat-cell *matCellDef="let row" [matTooltip]="row.abdGrith">
+                        <span class="truncate-text"><span class="mobile-label">Abd Grith:</span>{{row.abdGrith}}</span>
+                      </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="weight">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Weight</mat-header-cell>
+                      <mat-cell *matCellDef="let row" [matTooltip]="row.weight">
+                        <span class="truncate-text"><span class="mobile-label">Weight:</span>{{row.weight}}</span>
+                      </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="others">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Others</mat-header-cell>
+                      <mat-cell *matCellDef="let row" [matTooltip]="row.others">
+                        <span class="truncate-text"><span class="mobile-label">Others:</span>{{row.others}}</span>
+                      </mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="displayedVitalsColumns">
+                    </mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedVitalsColumns;" [style.cursor]="'pointer'" matRipple>
+                    </mat-row>
+                  </table>
+                  <mat-paginator #paginator [length]="vitalDataSource?.filteredData?.length" [pageIndex]="0" [pageSize]="10"
+                    [pageSizeOptions]="[5, 10, 25, 100, vitalDataSource?.filteredData?.length]">
+                  </mat-paginator>
+                </div>
+              </div>
+            </div>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title> Continuation </mat-panel-title>
+              <mat-panel-description>
+                Continuation Sheet
+                <mat-icon>check_circle</mat-icon>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class="body" *ngIf="continuationForm">
+              <form class="m-4" [formGroup]="continuationForm" (keydown.enter)="$event.preventDefault()" (ngSubmit)="$event.preventDefault()">
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Clinical Notes</mat-label>
+                      <input matInput formControlName="clinicalNotes">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Advice/Orders/Investigations</mat-label>
+                      <input matInput formControlName="advise">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <button class="btn-space" mat-raised-button color="primary" (click)="saveContinuation()">Submit</button>
+              </form>
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12" style="display: inline-block !important; overflow: scroll !important;">
+                  <table mat-table [dataSource]="continuationsDataSource" matSort class="mat-cell advance-table" style="overflow-x: scroll !important; width: 100% !important;">
+                    <!-- ID Column -->
+                    <ng-container matColumnDef="noteTime">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Time
+                      </mat-header-cell>
+                      <mat-cell *matCellDef="let row" [matTooltip]="row.noteTime">{{row.noteTime | date: 'MM/dd/yyyy,
+                        HH:mm'}}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="clinicalNotes">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Clinical Notes
+                      </mat-header-cell>
+                      <mat-cell *matCellDef="let row" [matTooltip]="row.clinicalNotes"><span class="mobile-label">Clinical Notes:</span>
+                        {{row?.clinicalNotes}}
+                      </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="advise">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Advice/Orders/Investigations
+                      </mat-header-cell>
+                      <mat-cell *matCellDef="let row" [matTooltip]="row.advise">
+                        <span class="mobile-label">Advice/Orders/Investigations:</span> {{row?.advise}}
+                      </mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="displayedContinuationsColumns">
+                    </mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedContinuationsColumns;" [style.cursor]="'pointer'" matRipple>
+                    </mat-row>
+                  </table>
+                  <mat-paginator #paginator [length]="continuationsDataSource?.filteredData?.length" [pageIndex]="0" [pageSize]="10"
+                    [pageSizeOptions]="[5, 10, 25, 100, continuationsDataSource?.filteredData?.length]">
+                  </mat-paginator>
+                </div>
+              </div>
+            </div>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title> Medications </mat-panel-title>
+              <mat-panel-description>
+                Order Sheet
+                <mat-icon>check_circle</mat-icon>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class="body" *ngIf="medicationForm">
+              <form class="m-4" [formGroup]="medicationForm" (keydown.enter)="$event.preventDefault()" (ngSubmit)="$event.preventDefault()">
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Medication</mat-label>
+                      <input matInput formControlName="medication">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Dose</mat-label>
+                      <input matInput formControlName="dose">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Route</mat-label>
+                      <input matInput formControlName="route">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Frequency</mat-label>
+                      <input matInput formControlName="frequency">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <button class="btn-space" mat-raised-button color="primary" (click)="saveMedication()">Submit</button>
+              </form>
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12" style="display: inline-block !important; overflow: scroll !important;">
+                  <table mat-table [dataSource]="medicationsDataSource" matSort class="mat-cell advance-table" style="overflow-x: scroll !important; width: 100% !important;">
+                    <!-- ID Column -->
+                    <ng-container matColumnDef="medicationDate">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Time
+                      </mat-header-cell>
+                      <mat-cell *matCellDef="let row" [matTooltip]="row.medicationDate">{{row.medicationDate | date: 'MM/dd/yyyy,
+                        HH:mm'}}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="medication">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Medication
+                      </mat-header-cell>
+                      <mat-cell *matCellDef="let row" [matTooltip]="row.medication"><span class="mobile-label">Medication:</span>
+                        {{row?.medication}}
+                      </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="dose">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Dose
+                      </mat-header-cell>
+                      <mat-cell *matCellDef="let row" [matTooltip]="row.dose">
+                        <span class="mobile-label">Dose:</span> {{row?.dose}}
+                      </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="route">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Route</mat-header-cell>
+                      <mat-cell *matCellDef="let row" [matTooltip]="row.route">
+                        <span class="truncate-text"><span class="mobile-label">Route:</span>{{row.route}}</span>
+                      </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="frequency">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Frequency</mat-header-cell>
+                      <mat-cell *matCellDef="let row" [matTooltip]="row.frequency">
+                        <span class="truncate-text"><span class="mobile-label">Frequency:</span>{{row.frequency}}</span>
+                      </mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="displayedMedicationsColumns">
+                    </mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedMedicationsColumns;" [style.cursor]="'pointer'" matRipple>
+                    </mat-row>
+                  </table>
+                  <mat-paginator #paginator [length]="medicationsDataSource?.filteredData?.length" [pageIndex]="0" [pageSize]="10"
+                    [pageSizeOptions]="[5, 10, 25, 100, medicationsDataSource?.filteredData?.length]">
+                  </mat-paginator>
+                </div>
+              </div>
+            </div>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title> Instructions </mat-panel-title>
+              <mat-panel-description>
+                Mention Special Instructions
+                <mat-icon>note_add</mat-icon>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class="body" *ngIf="appointment">
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Instructions</mat-label>
+                    <input matInput [(ngModel)]='appointment.instruction' [ngModelOptions]="{standalone: true}"
+                      [name]="'instruction'">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                  <mat-checkbox color="primary" [(ngModel)]='appointment.operationRecommended' [ngModelOptions]="{standalone: true}">
+                    Recommend/Suggest Operation
+                  </mat-checkbox>
+                </div>
+                <div *ngIf="appointment.operationRecommended" class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                  <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Operation Details</mat-label>
+                    <input matInput [(ngModel)]='appointment.operationDetails' [ngModelOptions]="{standalone: true}"
+                      [name]="'operationDetails'">
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title> Additional Billing </mat-panel-title>
+              <mat-panel-description>
+                Add additional charges if applicable
+                <mat-icon>payment</mat-icon>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class="body">
+              <form class="m-4" [formGroup]="paymentForm" (ngSubmit)="savePayment()">
+                <div class="row">
+                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Description</mat-label>
+                      <input matInput formControlName="description" required>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Amount</mat-label>
+                      <input matInput formControlName="amount" required>
+                    </mat-form-field>
+                  </div>
+                </div> 
+                 
+                <button class="btn-space" 
+                    [disabled]="paymentForm?.valid" 
+                    mat-raised-button
+                    color="primary">Submit</button>
+              </form>
+               
+          
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12" style="display: inline-block !important; overflow: scroll !important;">
+                  <table mat-table [dataSource]="paymentDataSource" matSort class="mat-cell advance-table" style="overflow-x: scroll !important; width: 100% !important;">
+                    
+                    <ng-container matColumnDef="paymentDate">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Time
+                      </mat-header-cell>
+                      <mat-cell *matCellDef="let row" [matTooltip]="row.paymentDate">{{row.paymentDate | date: 'MM/dd/yyyy,
+                        HH:mm'}}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="description">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Description
+                      </mat-header-cell>
+                      <mat-cell *matCellDef="let row" [matTooltip]="row.description"><span class="mobile-label">Description:</span>
+                        {{row?.description}}
+                      </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="amount">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Amount
+                      </mat-header-cell>
+                      <mat-cell *matCellDef="let row" [matTooltip]="row.amount">
+                        <span class="mobile-label">Amount:</span> {{row?.amount}}
+                      </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="createdBy">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Created By</mat-header-cell>
+                      <mat-cell *matCellDef="let row" [matTooltip]="row.createdBy">
+                        <span class="truncate-text"><span class="mobile-label">Created By:</span>{{row.createdBy}}</span>
+                      </mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="displayedPaymentColumns">
+                    </mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedPaymentColumns;" [style.cursor]="'pointer'" matRipple>
+                    </mat-row>
+                  </table>
+                  <mat-paginator #paginator [length]="paymentDataSource?.filteredData?.length" [pageIndex]="0" [pageSize]="10"
+                    [pageSizeOptions]="[5, 10, 25, 100, paymentDataSource?.filteredData?.length]">
+                  </mat-paginator>
+                </div>
+              </div>
+            </div>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title> Discharge Summary </mat-panel-title>
+              <mat-panel-description>
+                Create Discharge Summary
+                <mat-icon>check_circle</mat-icon>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class="body" *ngIf="dischargeSummaryForm">
+              <form class="m-4" [formGroup]="dischargeSummaryForm" (keydown.enter)="$event.preventDefault()" (ngSubmit)="$event.preventDefault()">
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Summary of key Investigations during Hospitalization</mat-label>
+                      <input matInput formControlName="summaryOfInvestigation">
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Course in the Hospital including complications if any</mat-label>
+                      <input matInput formControlName="courseOfHospitalInv">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Operation Name</mat-label>
+                        <mat-select formControlName="id" required (selectionChange)="onOperationSelect($event.value)">
+                          <mat-option *ngFor="let dept of operations$" [value]="dept.id">
+                            {{ dept.operation_name }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+
+
+                      
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Treatment Given</mat-label>
+                      <input matInput formControlName="treatmentGiven" [value]="selectedProcedureOp"  >
+                    </mat-form-field>
+                  </div>
+                </div>
+                
+                      
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Condition at the time of discharge</mat-label>
+                      <input matInput formControlName="conditionDischargeTime">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Advice on Discharge</mat-label>
+                      <input matInput formControlName="adviseDischargeTime">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>In case of Emergency</mat-label>
+                      <input matInput formControlName="emergencyAfterDischarge">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Follow up Date</mat-label>
+                      <input matInput [matDatepicker]="picker" formControlName="followupDate" required>
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <button class="btn-space" mat-raised-button color="primary" (click)="saveDischargeSummary()">Submit</button>
+                <button *ngIf="dischargeSummaryData" mat-raised-button (click)="printDischargeSummary()">
+                  <span>Print</span>
+                </button>
+              </form>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </form>
+    </div>
+  </div>
+  <div class="col2">
+    <div *ngIf="showPrescription">
+      <app-print-prescription 
+        [appointmentInput]="appointment" 
+        [prescription]="presdcriptionData"
+        [showPrint]="false">
+      </app-print-prescription>
+    </div>
+    <div style="float: inline-end;">
+      <button mat-raised-button color="primary" color="warn" (click)="dialogRef.close()">Close</button>
+      <button *ngIf="appointment && appointment.status == 'Casualty Completed'" mat-raised-button color="primary" class="m-l-10" (click)="completeAndOpenIPDAssessment()">IPD Assessment</button>
+      <button mat-raised-button color="primary" class="m-l-10" (click)="confirmComplete()">Complete</button>
+    </div>
+  </div>
+</div>
+<!-- <div *ngIf="isLoader" class="loading-indicator">
+  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+</div> -->

@@ -1,0 +1,212 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <app-breadcrumb [title]="'Todays Billing'" [items]="[]" [active_item]="'Todays Billing'">
+      </app-breadcrumb>
+    </div>
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="materialTableHeader">
+            <div class="left">
+              <ul class="header-buttons-left ms-0">
+                <li class="tbl-title">
+                  <h2>Todays Billing</h2>
+                </li>
+                <li class="tbl-search-box">
+                  <label for="search-input"><i class="material-icons search-icon">search</i></label>
+                  <input placeholder="Search" type="text" #filter class="browser-default search-field"
+                    aria-label="Search box">
+                </li>
+              </ul>
+            </div>
+            <div class="right">
+              <ul class="tbl-export-btn">
+                <li class="tbl-header-btn">
+                  <div class="m-l-5">
+                    <mat-form-field style="width: 9rem !important;">
+                      <mat-label>Start Date</mat-label>
+                      <input matInput [matDatepicker]="picker" [(ngModel)]="startDate" required>
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                </li>
+                <li class="tbl-header-btn">
+                  <div class="m-l-5">
+                    <mat-form-field style="width: 9rem !important;">
+                      <mat-label>End Date</mat-label>
+                      <input matInput [matDatepicker]="picker1" [(ngModel)]="endDate" required>
+                      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                      <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                </li>
+                <li class="tbl-header-btn">
+                  <div class="m-l-10" matTooltip="REFRESH">
+                    <button mat-mini-fab color="primary" (click)="refresh()">
+                      <mat-icon class="col-white">refresh</mat-icon>
+                    </button>
+                  </div>
+                </li>
+                <li>
+                  <div class="export-button m-l-10" matTooltip="XLSX">
+                    <img src="assets/images/icons/xlsx.png" alt="" (click)="exportExcel()" />
+                  </div>
+                </li>
+                <li>
+                  <div class="export-button m-l-5" matTooltip="PDF">
+                    <img src="assets/images/icons/pdf.png" alt="" (click)="exportPDF()" />
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="body overflow-auto">
+            <div class="responsive_table">
+              <table mat-table [dataSource]="dataSource" matSort class="mat-cell advance-table">
+                <!-- <ng-container matColumnDef="id">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'tbl-col-width-per-6'">Id
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let row" [ngClass]="'tbl-col-width-per-6'"> <span
+                      class="mobile-label">#:</span>{{row.id}}</mat-cell>
+                </ng-container> -->
+                <ng-container matColumnDef="documentNumber">
+                  <th class="resizeDiv" mat-header-cell *matHeaderCellDef mat-sort-header>Invoice Number
+                  </th>
+                  <td mat-cell *matCellDef="let row" [matTooltip]="row.documentNumber"> <span
+                      class="truncate-text">{{row.documentNumber}}</span></td>
+                </ng-container>
+                <ng-container matColumnDef="patientUHIDNumber">
+                  <th class="resizeDiv" mat-header-cell *matHeaderCellDef mat-sort-header>UHID</th>
+                  <td mat-cell *matCellDef="let row" [matTooltip]="row.patientUHIDNumber"> <span
+                      class="truncate-text">{{row.patientUHIDNumber}}</span>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="patientName">
+                  <th class="resizeDiv" mat-header-cell *matHeaderCellDef mat-sort-header>Patient Name</th>
+                  <td mat-cell *matCellDef="let row" [matTooltip]="row.patientName"> <span class="mobile-label">Patient
+                      Name:</span>{{row.patientName}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="address">
+                  <th class="resizeDiv" mat-header-cell *matHeaderCellDef mat-sort-header>Address</th>
+                  <td mat-cell *matCellDef="let row" [matTooltip]="row.address"> <span
+                      class="mobile-label">Address:</span>{{row.address}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="doctorName">
+                  <th class="resizeDiv" mat-header-cell *matHeaderCellDef mat-sort-header>Doctor Name</th>
+                  <td mat-cell *matCellDef="let row" [matTooltip]="row.doctorName"> <span class="mobile-label">Doctor
+                      Name:</span>{{row.doctorName}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="billingDate">
+                  <th class="resizeDiv" mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+                  <td mat-cell *matCellDef="let row"
+                    [matTooltip]="datepipe.transform(row.billingDate, 'MMM d, y ,h:mm a')?? ''"> <span
+                      class="mobile-label">Date:</span>{{datepipe.transform(row.billingDate, 'MMM d, y')}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="mobileNumber">
+                  <th class="resizeDiv" mat-header-cell *matHeaderCellDef mat-sort-header>Mobile Number
+                  </th>
+                  <td mat-cell *matCellDef="let row" [matTooltip]="row.mobileNumber"><span
+                      class="truncate-text">{{row.mobileNumber}}</span></td>
+                </ng-container>
+                <ng-container matColumnDef="paidAmount">
+                  <th class="resizeDiv" mat-header-cell *matHeaderCellDef mat-sort-header>Paid Amount</th>
+                  <td mat-cell *matCellDef="let row" [matTooltip]="row.paidAmount"> <span class="mobile-label">Paid
+                      Amount:</span>{{row.paidAmount}}</td>
+                </ng-container>
+                <ng-container matColumnDef="taxableAmount">
+                  <th class="resizeDiv" mat-header-cell *matHeaderCellDef mat-sort-header>Taxable Amount</th>
+                  <td mat-cell *matCellDef="let row" [matTooltip]="row.taxableAmount"> <span
+                      class="mobile-label">Taxable
+                      Amount:</span>{{row.taxableAmount}}</td>
+                </ng-container>
+                <!-- <ng-container matColumnDef="totalTax">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Tax </mat-header-cell>
+                  <mat-cell *matCellDef="let row" [matTooltip]="row.totalTax"> <span class="mobile-label">Tax :</span>{{row.totalTax}}</mat-cell>
+                </ng-container> -->
+                <ng-container matColumnDef="balanceAmount">
+                  <th class="resizeDiv" mat-header-cell *matHeaderCellDef mat-sort-header>Unpaid Amount </th>
+                  <td mat-cell *matCellDef="let row" [matTooltip]="row.balanceAmount">
+                    <span class="mobile-label">Unpaid Amount:</span>
+                    @if (row.balanceAmount != 0) {
+                    <span style="color: red;"> {{row.balanceAmount}}</span>
+                    }
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="grandTotal">
+                  <th class="resizeDiv" mat-header-cell *matHeaderCellDef mat-sort-header>Total </th>
+                  <td mat-cell *matCellDef="let row" [matTooltip]="row.grandTotal"> <span class="mobile-label">Total
+                      :</span>{{row.grandTotal}}</td>
+                </ng-container>
+                <ng-container matColumnDef="billingStatus">
+                  <th class="resizeDiv" mat-header-cell *matHeaderCellDef mat-sort-header>Payment Status
+                  </th>
+                  <td mat-cell *matCellDef="let row" [matTooltip]="row.billingStatus">
+                    @if (row.billingStatus==='PAID') {
+                    <div>
+                      <!-- <span class="badge badge-solid-green">
+                              {{row.billingStatus}}</span> -->
+
+                      <span class="label label-success">
+                        {{row.billingStatus}}</span>
+
+                    </div>
+                    }
+                    @if (row.billingStatus==='UNPAID') {
+                    <div>
+                      <span class="label label-danger">
+                        {{row.billingStatus}}</span>
+                    </div>
+                    }
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="createdBy">
+                  <th class="resizeDiv" mat-header-cell *matHeaderCellDef mat-sort-header>Created By</th>
+                  <td mat-cell *matCellDef="let row" [matTooltip]="row.createdBy"> <span class="mobile-label">Created By
+                      :</span>{{row.createdBy}}</td>
+                </ng-container>
+                <!-- actions -->
+                <ng-container matColumnDef="actions">
+                  <th class="resizeDiv" mat-header-cell class="psl-3 tbl-col-width-per-10" *matHeaderCellDef>Actions
+                  </th>
+                  <td mat-cell *matCellDef="let row; let i=index;" class="psl-3 tbl-col-width-per-10">
+                    <button mat-icon-button (click)="$event.stopPropagation()" (click)="printBill(row)"
+                      class="tbl-action-btn">
+                      <app-feather-icons [icon]="'printer'" [class]="'tbl-fav-edit'">
+                      </app-feather-icons>
+                    </button>
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                <!-- <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="editCall1(row)"
+                  [style.cursor]="'pointer'" matRipple>
+                </mat-row> -->
+                <!-- Loading spinner -->
+              </table>
+              @if (exampleDatabase?.isTblLoading) {
+              <div class="tbl-spinner">
+                <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate">
+                </mat-progress-spinner>
+              </div>
+              }
+              @if (!exampleDatabase?.isTblLoading) {
+              <div class="no-results" [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
+                No results
+              </div>
+              }
+              <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0" [pageSize]="10"
+                [pageSizeOptions]="[5, 10, 25, 100, dataSource.filteredData.length]">
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

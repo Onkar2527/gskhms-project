@@ -1,0 +1,486 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb [title]="panleTitle" [items]="['Doctors']" [active_item]="panleTitle"></app-breadcrumb>
+    </div>
+    <div class="row clearfix">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="header">
+            <h2>{{panleTitle}}</h2>
+          </div>
+          <div class="body">
+            <form class="m-4" [formGroup]="employeeForm" (ngSubmit)="$event.preventDefault()">
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Select Hospital Name</mat-label>
+                    <mat-select formControlName="hospitalId" required>
+                      <mat-option *ngFor="let hospital of hospital$"
+                        [value]="hospital.id">{{hospital.name}}</mat-option>
+                    </mat-select>
+                    @if (employeeForm.get('hospitalId')?.hasError('required')) {
+                    <mat-error>
+                      Hospital Name is required
+                    </mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Employee Type</mat-label>
+                    <mat-select formControlName="userType" required>
+                      <mat-option [value]="'D'">
+                        Doctor
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>First name</mat-label>
+                    <input matInput formControlName="firstName" required>
+                    @if (employeeForm.get('firstName')?.hasError('required')) {
+                    <mat-error>
+                      First name is required
+                    </mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Middle name</mat-label>
+                    <input matInput formControlName="middleName" required>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Last name</mat-label>
+                    <input matInput formControlName="lastName" required>
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Registration No.</mat-label>
+                    <input matInput formControlName="userRegNumber">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Mobile</mat-label>
+                    <input matInput formControlName="mobileNumber" required type="number" [maxlength]="10">
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Alt. Mobile</mat-label>
+                    <input matInput formControlName="altMobileNumber" required type="number" [maxlength]="10">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Gender</mat-label>
+                    <mat-select formControlName="gender" required>
+                      <mat-option [value]="'M'">
+                        Male
+                      </mat-option>
+                      <mat-option [value]="'F'">
+                        Female
+                      </mat-option>
+                    </mat-select>
+                    @if (employeeForm.get('gender')?.hasError('required')) {
+                    <mat-error>
+                      Gender is required
+                    </mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Select Designation</mat-label>
+                    <mat-select formControlName="designationId" required>
+                      <mat-option *ngFor="let designation of designation$"
+                        [value]="designation.id">{{designation.name}}</mat-option>
+                    </mat-select>
+                    @if (employeeForm.get('designationId')?.hasError('required')) {
+                    <mat-error>
+                      Select Any Designation
+                    </mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+              </div>
+              <!-- <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Password</mat-label>
+                        <input matInput formControlName="password" type="password" required>
+                        @if (employeeForm.get('password')?.hasError('required')) {
+                        <mat-error>
+                          password is required
+                        </mat-error>
+                        }
+                      </mat-form-field>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Re-Enter Password</mat-label>
+                        <input matInput formControlName="conformPassword" type="password" required>
+                        @if (employeeForm.get('conformPassword')?.hasError('required')) {
+                        <mat-error>
+                          Re-Enter password is required
+                        </mat-error>
+                        }
+                      </mat-form-field>
+                    </div>
+                  </div> -->
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Email</mat-label>
+                    <input matInput formControlName="emailId" required>
+                    @if (employeeForm.get('emailId')?.hasError('emailId') && employeeForm.get('emailId')?.touched) {
+                    <mat-error>
+                      Please enter a valid email address
+                    </mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Date Of Birth</mat-label>
+                    <input matInput [matDatepicker]="dobpicker" formControlName="dob" required>
+                    <mat-datepicker-toggle matSuffix [for]="dobpicker"></mat-datepicker-toggle>
+                    <mat-datepicker #dobpicker></mat-datepicker>
+                    @if (employeeForm.get('dob')?.hasError('required')) {
+                    <mat-error>
+                      Please select date
+                    </mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Mother Name</mat-label>
+                    <input matInput formControlName="motherName">
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Maritial status</mat-label>
+                    <mat-select formControlName="maritalStatus" required>
+                      <mat-option [value]="'M'">
+                        Married
+                      </mat-option>
+                      <mat-option [value]="'S'">
+                        Single
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Blood Group</mat-label>
+                    <input matInput formControlName="bloodGroup">
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Date Of Joining</mat-label>
+                    <input matInput [matDatepicker]="dojpicker" formControlName="dateOfJoining" required>
+                    <mat-datepicker-toggle matSuffix [for]="dojpicker"></mat-datepicker-toggle>
+                    <mat-datepicker #dojpicker></mat-datepicker>
+                    @if (employeeForm.get('dateOfJoining')?.hasError('required')) {
+                    <mat-error>
+                      Please select date
+                    </mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Probation Period</mat-label>
+                    <input matInput formControlName="probationPeriod">
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Confirmation Date</mat-label>
+                    <input matInput [matDatepicker]="codpicker" formControlName="confirmationDate" required>
+                    <mat-datepicker-toggle matSuffix [for]="codpicker"></mat-datepicker-toggle>
+                    <mat-datepicker #codpicker></mat-datepicker>
+                    @if (employeeForm.get('confirmationDate')?.hasError('required')) {
+                    <mat-error>
+                      Please select date
+                    </mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>UAN No</mat-label>
+                    <input matInput formControlName="uanNumber" required type="number" [maxlength]="12">
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Select Specialization</mat-label>
+                    <mat-select formControlName="specializationId">
+                      <mat-option *ngFor="let specialization of specialization$"
+                        [value]="specialization.id">{{specialization.name}}</mat-option>
+                    </mat-select>
+                    @if (employeeForm.get('specializationId')?.hasError('required')) {
+                    <mat-error>
+                      Select Any Specialization
+                    </mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-1">
+                  <h3><strong>Education</strong></h3>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Degree</mat-label>
+                    <input matInput formControlName="degree">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-1">
+                  <h3><strong>Current Address</strong></h3>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Area</mat-label>
+                    <input matInput formControlName="currentArea">
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <label></label>
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Taluka</mat-label>
+                    <input matInput formControlName="currentTaluka">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>District</mat-label>
+                    <input matInput formControlName="currentDistrict">
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>State</mat-label>
+                    <input matInput formControlName="currentState">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Pin code</mat-label>
+                    <input matInput formControlName="currentPincode">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Address</mat-label>
+                    <textarea matInput formControlName="currentAddress"></textarea>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-1">
+                  <strong>Permanent Address</strong>
+                  <mat-checkbox color="primary" formControlName="isChecked" (change)="checkValue()">
+                    same as current
+                  </mat-checkbox>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Area</mat-label>
+                    <input matInput formControlName="permanentArea">
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <label></label>
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Taluka</mat-label>
+                    <input matInput formControlName="permanentTaluka">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>District</mat-label>
+                    <input matInput formControlName="permanentDistrict">
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>State</mat-label>
+                    <input matInput formControlName="permanentState">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Pin code</mat-label>
+                    <input matInput formControlName="permanentPincode">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Address</mat-label>
+                    <textarea matInput formControlName="permanantAddress"></textarea>
+                  </mat-form-field>
+                </div>
+              </div>
+<!-- 
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-5">
+                  <mat-label>Upload</mat-label>
+                  <app-file-upload [requiredFileType]="'image/*'"></app-file-upload>
+                </div>
+              </div> -->
+
+              <div  [formGroup]="employeeForm.get('payoutDetails')">
+                <div class="row">
+                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Payout Type</mat-label>
+                      <mat-select formControlName="payoutType" required>
+                        <mat-option [value]="'S'">
+                          Salaried
+                        </mat-option>
+                        <mat-option [value]="'SI'">
+                          Salary Plus Insentive
+                        </mat-option>
+                        <mat-option [value]="'CS'">
+                          Collection Share
+                        </mat-option>
+                        <mat-option [value]="'OC'">
+                          On Call
+                        </mat-option>
+                      </mat-select>
+                      @if (employeeForm.get('payoutDetails')['payoutType']?.hasError('required')) {
+                      <mat-error>
+                        Payout Type is required
+                      </mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                    @if (employeeForm.get('payoutDetails').get('payoutType').value === 'S') {
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Salary</mat-label>
+                        <input matInput formControlName="salary" type="number" [maxlength]="12">
+                      </mat-form-field>
+                    }
+                    @if (employeeForm.get('payoutDetails').get('payoutType').value == 'SI') {
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Incentive Based On</mat-label>
+                        <mat-select formControlName="incentiveBasedOn">
+                          <mat-option [value]="'P'">
+                            Patient Count
+                          </mat-option>
+                          <mat-option [value]="'C'">
+                            Collection Limit
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    }
+                    @if (employeeForm.get('payoutDetails').get('payoutType').value === 'CS') {
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Collection Share Percentage</mat-label>
+                        <input matInput formControlName="revenuePercentageShare" type="number" [maxlength]="12">
+                      </mat-form-field>
+                    }
+                    @if (employeeForm.get('payoutDetails').get('payoutType').value === 'OC') {
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>On Call Charge</mat-label>
+                        <input matInput formControlName="onCallServiceCharges" type="number" [maxlength]="12">
+                      </mat-form-field>
+                    }
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                    @if (employeeForm.get('payoutDetails').get('incentiveBasedOn').value === 'P') {
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Patient Count</mat-label>
+                        <input matInput formControlName="patientCount" type="number" [maxlength]="12">
+                      </mat-form-field>
+                    }
+                    @if (employeeForm.get('payoutDetails').get('incentiveBasedOn').value === 'C') {
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Collection Limit</mat-label>
+                        <input matInput formControlName="collectionLimit" type="number" [maxlength]="12">
+                      </mat-form-field>
+                    }
+                  </div>
+                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                    @if (employeeForm.get('payoutDetails').get('incentiveBasedOn').value === 'P') {
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Per Patient Amount</mat-label>
+                        <input matInput formControlName="perPatientAmount" type="number" [maxlength]="12">
+                      </mat-form-field>
+                    }
+                    @if (employeeForm.get('payoutDetails').get('incentiveBasedOn').value === 'C') {
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Collection Percentage</mat-label>
+                        <input matInput formControlName="collectionPercentage" type="number" [maxlength]="12">
+                      </mat-form-field>
+                    }
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                  <button class="btn-space" [disabled]="!employeeForm.valid" mat-raised-button color="primary"
+                    (click)="onSubmit()">Submit</button>
+                  <button type="button" mat-raised-button color="warn" (click)="cancel()">Cancel</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

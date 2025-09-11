@@ -1,0 +1,162 @@
+<form [formGroup]="templateForm" (ngSubmit)="$event.preventDefault()">
+  <div class="row">
+    <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5">
+      <mat-form-field  appearance="outline">
+        <mat-label>Template</mat-label>
+        <mat-select formControlName="templateId">
+          <mat-option *ngFor="let template of templateCombo$" [value]="template.id">{{template.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 mt-2">
+      <button type="button" class="btn-space" (click)="addTemplateDetails()" mat-raised-button color="primary">Add
+        Template</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Medicine Name</mat-label>
+        <input #input1 type="text" placeholder="Pick one" aria-label="Number" matInput formControlName="medicineName"
+          [matAutocomplete]="auto1" (input)="filterMedicine()" (focus)="filterMedicine()">
+        <mat-autocomplete #auto1="matAutocomplete" (optionSelected)='pharmacySelected($event.option.value)'>
+          @for (option of filteredOptionsPharmacy; track option) {
+          <mat-option [value]="option.medecineName">{{option.medecineName}}</mat-option>
+          }
+        </mat-autocomplete>
+        @if (templateForm.get('medecineName')?.hasError('required')) {
+        <mat-error>
+          Medicine Name is required
+        </mat-error>
+        }
+      </mat-form-field>
+    </div>
+    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12">
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Unit Name</mat-label>
+        <input #input type="text" placeholder="Pick one" aria-label="Number" matInput formControlName="unitName"
+          [matAutocomplete]="auto" (input)="filter()" (focus)="filter()">
+        <mat-autocomplete #auto="matAutocomplete">
+          @for (option of filteredOptions; track option) {
+          <mat-option [value]="option.name">{{option.name}}</mat-option>
+          }
+        </mat-autocomplete>
+        @if (templateForm.get('unitName')?.hasError('required')) {
+        <mat-error>
+          Unit Name is required
+        </mat-error>
+        }
+      </mat-form-field>
+    </div>
+    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12">
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Frequency</mat-label>
+        <input matInput formControlName="frequency">
+        @if (templateForm.get('frequency')?.hasError('required')) {
+        <mat-error>
+          Frequency is required
+        </mat-error>
+        }
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12">
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Dosage </mat-label>
+        <input matInput formControlName="dosage">
+      </mat-form-field>
+    </div>
+    <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12">
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label> Till Day </mat-label>
+        <input matInput formControlName="tillDays">
+      </mat-form-field>
+    </div>
+    <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12">
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label> Quantity </mat-label>
+        <input matInput formControlName="quantity">
+      </mat-form-field>
+    </div>
+    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mt-2">
+      <button type="button" class="btn-space" (click)="addDetails()" mat-raised-button color="primary">Add
+        Details</button>
+    </div>
+  </div>
+  <div class="row clearfix">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <div class="card">
+        <div class="header">
+          <h2>Add Prescription</h2>
+        </div>
+        <div class="tableBody">
+          <div class="table-responsive">
+            <table class="table display product-overview mb-30" id="support_table">
+              <thead>
+                <tr>
+                  <th>Medicine</th>
+                  <th>Unit Name</th>
+                  <th>Frequency</th>
+                  <th>Dosage</th>
+                  <th>Till Days</th>
+                  <th>Quantity</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let testDetail of prescriptionDetailsAfter;let i =index">
+                  <td>{{testDetail.medicineName}}</td>
+                  <td>{{testDetail.unitName}}</td>
+                  <td>{{testDetail.frequency}}</td>
+                  <td>{{testDetail.dosage}}</td>
+                  <td>{{testDetail.tillDay}}</td>
+                  <td>{{testDetail.quantity}}</td>
+                  <td><button type="button" mat-icon-button (click)="deleteTemplateDtl(testDetail)">
+                    <mat-icon class="col-orange">delete</mat-icon>
+                  </button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="btn-space" [disabled]="prescriptionDetailsAfter.length == 0" mat-raised-button color="primary" (click)="onSubmit()">Submit</button>
+</form>
+<div class="row clearfix pt-3">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <div class="card">
+      <div class="header">
+        <h2>Existing Prescription Details</h2>
+      </div>
+      <div class="tableBody">
+          <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+            <ng-container *ngFor="let column of columns; let i = index" matColumnDef="{{ column.field }}">
+              <mat-header-cell *matHeaderCellDef>{{ column.name }}
+              </mat-header-cell>
+              <mat-cell *matCellDef="let row">{{ row[column.field] }}</mat-cell>
+            </ng-container>
+          
+            <mat-header-row mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+          
+            <!-- Group header -->
+            <ng-container matColumnDef="groupHeader">
+              <mat-cell colspan="999" *matCellDef="let group">
+                <strong>{{groupByColumns[group.level-1]}} = {{group[groupByColumns[group.level-1]]}} ({{group.totalCounts}})</strong>
+                <span style="padding: inherit !important;">
+                  <button mat-raised-button (click)="printPrescription(group[groupByColumns[group.level-1]])">
+                  <span>View</span>
+                  </button>
+                </span>
+              </mat-cell>
+            </ng-container>
+          
+            <mat-row *matRowDef="let row; columns: ['groupHeader']; when: isGroup" (click)="groupHeaderClick(row)"> </mat-row>
+          </mat-table>
+      </div>
+    </div>
+  </div>
+</div>

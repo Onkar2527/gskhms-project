@@ -1,0 +1,238 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <div class="modal-about">
+          {{dialogTitle}}
+        </div>
+      </div>
+    </div>
+    <button mat-icon-button (click)="dialogRef.close()" class="modal-close-button" aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div  mat-dialog-content>
+    
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <mat-tab-group>
+            <mat-tab label="Normal Ranges">
+              <form class="register-form m-4" [formGroup]="ambulanceCallListForm" >
+              <!-- <div class="row" style="height: 15px !important;">
+              </div> -->
+              <div class="row mt-5">
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                 Male Range
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Lower Range</mat-label>
+                    <input matInput formControlName="m_n_r_l">
+                  </mat-form-field>
+                 </div>
+                 <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Upper Range</mat-label>
+                    <input matInput formControlName="m_n_r_u">
+                  </mat-form-field>
+                 </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                 Female Range
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Lower Range</mat-label>
+                    <input matInput formControlName="f_n_r_l">
+                  </mat-form-field>
+                 </div>
+                 <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Upper Range</mat-label>
+                    <input matInput formControlName="f_n_r_u">
+                  </mat-form-field>
+                 </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                <button mat-raised-button color="primary" type="button" (click)="saveDetails()"
+                >Save Details</button>
+              </div>
+              </div>
+            </form>
+            </mat-tab>
+
+            <mat-tab label="Descriptive Ranges">
+              <form class="register-form m-4" [formGroup]="ambulanceCallListForm" >
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                   Male Range
+                  </div>
+                  <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Range</mat-label>
+                      <input matInput formControlName="descriptiveRangeM">
+                    </mat-form-field>
+                   </div>
+                </div>
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                   Female Range
+                  </div>
+                  <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Range</mat-label>
+                      <input matInput formControlName="descriptiveRangeF">
+                    </mat-form-field>
+                   </div>
+                </div>
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                  <button mat-raised-button color="primary" type="button" (click)="saveDetails()"
+                  >Save Details</button>
+                </div>
+                </div>
+              </form>
+            </mat-tab>
+
+            <mat-tab label="Age Based Ranges">
+              <form class="m-4" [formGroup]="pathologyTestForm" >
+                <div class="row" #ageTestForm>
+                  <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Min Age (Days)</mat-label>
+                      <input (keydown.space)="$event.preventDefault();" matInput formControlName="ageMin">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Max Age (Days)</mat-label>
+                      <input (keydown.space)="$event.preventDefault();" matInput formControlName="ageMax">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Normal Min</mat-label>
+                      <input (keydown.space)="$event.preventDefault();" matInput formControlName="normalMin">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Normal Max</mat-label>
+                      <input (keydown.space)="$event.preventDefault();" matInput formControlName="normalMax">
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row" >
+                  <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Male Normal Range Min</mat-label>
+                      <input (keydown.space)="$event.preventDefault();" matInput formControlName="maleNormalRangeMin">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Male Normal Range Max</mat-label>
+                      <input (keydown.space)="$event.preventDefault();" matInput formControlName="maleNormalRangeMax">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Female Normal Range Min</mat-label>
+                      <input (keydown.space)="$event.preventDefault();" matInput formControlName="femaleNormalRangeMin">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Female Normal Range Max</mat-label>
+                      <input (keydown.space)="$event.preventDefault();" matInput formControlName="femaleNormalRangeMax">
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row" >
+                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Male Descriptive Range</mat-label>
+                      <input (keydown.space)="$event.preventDefault();" matInput formControlName="descriptiveRangeM">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Female Descriptive Range</mat-label>
+                      <input (keydown.space)="$event.preventDefault();" matInput formControlName="descriptiveRangeF">
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 pb-2">
+                    <button type="button" class="btn-space" (click)="addDetails()" mat-raised-button color="primary">Add
+                      Details
+                    </button>
+                  </div>
+                </div>
+                
+                <div class="row clearfix"  >
+                  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="card">
+                      <div class="header">
+                        <h2>Details</h2>
+                      </div>
+                      <div class="tableBody">
+                        <div class="table-responsive">
+                          <table class="table display product-overview mb-30" id="support_table">
+                            <thead>
+                              <tr>
+                                <th>Min Age (Days)</th>
+                                <th>Max Age (Days)</th>
+                                <th>Normal Min</th>
+                                <th>Normal Max</th>
+                                <th>Male Normal Range Min</th>
+                                <th>Male Normal Range Max</th>
+                                <th>Female Normal Range Min</th>
+                                <th>Female Normal Range Max</th>
+                                <th>Male Descriptive Range</th>
+                                <th>Female Descriptive Range</th>
+                                <th>Action</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let testDetail of testDetails$;let i =index">
+                                <td>{{testDetail.ageMin}}</td>
+                                <td>{{testDetail.ageMax}}</td>
+                                <td>{{testDetail.normalMin}}</td>
+                                <td>{{testDetail.normalMax}}</td>
+                                <td>{{testDetail.maleNormalRangeMin}}</td>
+                                <td>{{testDetail.maleNormalRangeMax}}</td>
+                                <td>{{testDetail.femaleNormalRangeMin}}</td>
+                                <td>{{testDetail.femaleNormalRangeMax}}</td>
+                                <td>{{testDetail.descriptiveRangeM}}</td>
+                                <td>{{testDetail.descriptiveRangeF}}</td>
+                                <td>
+                                  <button type="button" mat-icon-button (click)="editRow(testDetail)">
+                                    <mat-icon class="col-blue">edit</mat-icon>
+                                  </button>
+                                  <button type="button" mat-icon-button (click)="deleteAgeBasedRanges(testDetail.id)">
+                                    <mat-icon class="col-orange">delete</mat-icon>
+                                  </button>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </mat-tab>
+          </mat-tab-group>
+        </div>
+      </div>
+     
+   
+  </div>
+</div>

@@ -1,0 +1,54 @@
+<section class="content">
+    <div class="content-block">
+      <div class="block-header">
+        <!-- breadcrumb -->
+        <app-breadcrumb [title]="panleTitle" [items]="['X-Ray']" [active_item]="panleTitle"></app-breadcrumb>
+      </div>
+      <div class="row clearfix">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+          <div class="card">
+            <div class="header">
+              <h2>{{panleTitle}}</h2>
+            </div>
+            <div class="body">
+              <form class="m-4" [formGroup]="pathologyTestForm" (ngSubmit)="onSubmit()">
+                <div class="row">
+                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Name</mat-label>
+                      <input matInput formControlName="name" required  >
+                      @if (pathologyTestForm.get('name')?.hasError('required')) {
+                      <mat-error>
+                        Name is required
+                      </mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Charges</mat-label>
+                      <input matInput formControlName="charges" required >
+                      @if (pathologyTestForm.get('charges')?.hasError('required')) {
+                      <mat-error>
+                        Charges is required
+                      </mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+                </div>
+                
+                   
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                    <button class="btn-space" [disabled]="!pathologyTestForm.valid" mat-raised-button color="primary">Save</button>
+                    <button type="button" mat-raised-button color="warn" (click)="cancel()">Cancel</button>
+                  </div>
+                </div>
+               
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

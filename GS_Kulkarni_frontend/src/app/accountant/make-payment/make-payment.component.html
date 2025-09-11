@@ -1,0 +1,187 @@
+<section class="content">
+    <div class="content-block">
+        <div class="block-header">
+            <!-- breadcrumb -->
+            <app-breadcrumb [title]="panleTitle" [items]="['Appointment']" [active_item]="panleTitle"></app-breadcrumb>
+        </div>
+        <div class="row clearfix">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>{{panleTitle}}</h2>
+                    </div>
+                    <div class="body">
+                        <form class="m-4" [formGroup]="paymentForm" (ngSubmit)="$event.preventDefault()">
+                            <div class="row" *ngIf="appointment">
+                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                        <mat-label>First name</mat-label>
+                                        <input matInput formControlName="firstName" required [disabled]="true">
+                                        @if (paymentForm.get('firstName')?.hasError('required')) {
+                                        <mat-error>
+                                            First name is required
+                                        </mat-error>
+                                        }
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                        <mat-label>Last name</mat-label>
+                                        <input matInput formControlName="lastName" [disabled]="true">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row" >
+                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                        <mat-label>Consulting Doctor</mat-label>
+                                        <mat-select formControlName="doctorId" required aria-disabled="true">
+                                            <mat-option *ngFor="let data of doctors$" [value]="data.employeeId">Dr.
+                                                {{data.firstName}} {{data.lastName}}</mat-option>
+                                        </mat-select>
+                                        @if (paymentForm.get('doctorId')?.hasError('required')) {
+                                        <mat-error>
+                                            Select Any Doctor
+                                        </mat-error>
+                                        }
+                                    </mat-form-field>
+                                </div>
+                                
+                            
+                            
+                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                        <mat-label>Appointment Type</mat-label>
+                                        <mat-select formControlName="type" required aria-disabled="true">
+                                            <mat-option [value]="'opd'">
+                                                OPD
+                                            </mat-option>
+                                            <mat-option [value]="'ipd'">
+                                                IPD
+                                            </mat-option>
+                                        </mat-select>
+                                        @if (paymentForm.get('type')?.hasError('required')) {
+                                        <mat-error>
+                                            Appointment Type is required
+                                        </mat-error>
+                                        }
+                                    </mat-form-field>
+                                </div>
+                                </div>
+                                <div class="row" >
+                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                        <mat-label>Date Of Appointment</mat-label>
+                                        <input matInput [matDatepicker]="picker1" formControlName="appointmentDate"
+                                            required [disabled]="true">
+                                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker1></mat-datepicker>
+                                        @if (paymentForm.get('appointmentDate')?.hasError('required')) {
+                                        <mat-error>
+                                            Please select a date
+                                        </mat-error>
+                                        }
+                                    </mat-form-field>
+                                </div>
+                            
+                           
+                            
+                            
+                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                                <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                <mat-label>Payment Mode</mat-label>
+                                <mat-select formControlName="paymentMode" required (selectionChange)="onPaymentModeChange($event.value)">
+                                    <mat-option [value]="'cash'">Cash</mat-option>
+                                    <mat-option [value]="'online'">Online</mat-option>
+                                    <mat-option [value]="'partial'">Partial</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="paymentForm.get('paymentMode')?.hasError('required')">
+                                    Payment Mode is required
+                                </mat-error>
+                                </mat-form-field>
+                            </div>
+                            
+                             </div>
+                             
+                            <!-- Show partial payment inputs only when Partial is selected -->
+                            <div *ngIf="isPartialPayment" class="row">
+                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                                <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                <mat-label>Cash Amount</mat-label>
+                                <input matInput type="number" formControlName="cashAmount" min="0" />
+                                <mat-error *ngIf="paymentForm.get('cashAmount')?.hasError('required')">
+                                    Cash Amount is required
+                                </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                                <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                <mat-label>Online Amount</mat-label>
+                                <input matInput type="number" formControlName="onlineAmount" min="0" />
+                                <mat-error *ngIf="paymentForm.get('onlineAmount')?.hasError('required')">
+                                    Online Amount is required
+                                </mat-error>
+                                </mat-form-field>
+                                </div>
+                            
+                            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                        <mat-label>Transaction Number</mat-label>
+                                        <input matInput formControlName="transactionNumber">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            
+                            
+                           
+
+                            <!-- The total amount field remains disabled but shows the sum -->
+                            <div class="row">
+                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                                <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                <mat-label>Amount</mat-label>
+                                <input matInput type="number" formControlName="amount" [disabled]="true" />
+                                </mat-form-field>
+                            </div>
+                            </div>
+
+                            <div class="row" *ngIf="payment">
+                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                        <mat-label>Description</mat-label>
+                                        <input matInput formControlName="description">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row" *ngIf="paymentForm.get('paymentMode')?.value =='online'">
+                                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                        <mat-label>Transaction Number</mat-label>
+                                        <input matInput formControlName="transactionNumber">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            
+                                <div class="row">
+                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                                    <button
+                                        (click)="onSubmit()"
+                                        [disabled]="!paymentForm.valid || isSubmitting"
+                                        mat-raised-button
+                                        color="primary">
+                                        {{ isSubmitting ? 'Submitting...' : 'Submit' }}
+                                    </button>
+                                    <button type="button" mat-raised-button color="warn" (click)="cancel()">
+                                        Cancel
+                                    </button>
+                                    </div>
+                                </div>
+                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

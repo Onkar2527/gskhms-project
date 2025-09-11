@@ -1,0 +1,263 @@
+{
+  "MENUITEMS": {
+    "MAIN": {
+      "TEXT": "Main"
+    },
+    "DASHBOARD": {
+      "TEXT": "Dashboard",
+      "LIST": {
+        "DASHBOARD1": "Dashboard 1",
+        "DASHBOARD2": "Dashboard 2",
+        "DOCTOR-DASHBOARD": "Doctor Dashboard",
+        "PATIENT-DASHBOARD": "Patient Dashboard"
+      }
+    },
+    "APPOINTMENTS": {
+      "TEXT": "Appointments",
+      "LIST": {
+        "VIEW-APPOINTMENT": "View Appointment",
+        "BOOK-APPOINTMENT": "Book Appointment",
+        "EDIT-APPOINTMENT": "Edit Appointment"
+      }
+    },
+    "REGISTRATIONS": {
+      "TEXT": "Registrations",
+      "LIST": {
+        "REGISTRATION": "Lab Registration",
+        "REGISTRATION_PENDING": "Pending Lab Registration",
+        "REGISTRATION_APPROVE": "Approved Lab Registration",
+        "X-RAY_REGISTRATION": "X-Ray Registration",
+        "SONOGRAPHY_REGISTRATION": "Sonography Registration"
+      }
+    },
+    "DOCTORS": {
+      "TEXT": "Doctors",
+      "LIST": {
+        "ALL-DOCTOR": "All Doctors",
+        "ADD-DOCTOR": "Add Doctor",
+        "EDIT-DOCTOR": "Edit Doctor",
+        "PROFILE": "Doctor Profile"
+      }
+    },
+    "EMPLOYEES": {
+      "TEXT": "Employees",
+      "LIST": {
+        "ALL-EMPLOYEE": "All Employees",
+        "ADD-EMPLOYEE": "Add Employee",
+        "EDIT-EMPLOYEE": "Edit Employee",
+        "PROFILE": "Employee Profile"
+      }
+    },
+    "PATIENTS": {
+      "TEXT": "Patients",
+      "LIST": {
+        "ALL-PATIENT": "All Patients",
+        "ADD-PATIENT": "Add Patient",
+        "EDIT-PATIENT": "Edit Patient",
+        "PROFILE": "Patient Profile"
+      }
+    },
+    "PATIENTS-CATEGORY": {
+      "TEXT": "Patients-Category",
+      "LIST": {
+        "ALL-PATIENT-CATEGORY": "All Patients Category"
+      }
+    },
+    "ROOMS": {
+      "TEXT": "Room Allotment",
+      "LIST": {
+        "ALLOTED-ROOMS": "Alloted Rooms",
+        "NEW-ALLOTMENT": "New Allotment",
+        "EDIT-ALLOTMENT": "Edit Allotment"
+      }
+    },
+    "BILLING": {
+      "TEXT": "Billing",
+      "LIST": {
+        "BILL-LIST": "Bill List",
+        "ADD-BILL": "Add Bill",
+        "INVOICE": "Invoice"
+      }
+    },
+    "RECORDS": {
+      "TEXT": "Records",
+      "LIST": {
+        "BIRTH-RECORDS": "Birth Records",
+        "DEATH-RECORDS": "Death Records"
+      }
+    },
+    "AMBULANCE": {
+      "TEXT": "Ambulance",
+      "LIST": {
+        "AMBULANCE-CALL-LIST": "Ambulance Call List",
+        "AMBULANCE-LIST": "Ambulance List"
+      }
+    },
+    "PHARMACY": {
+      "TEXT": "Pharmacy",
+      "LIST": {
+        "MEDICINE-LIST": "Medicine List",
+        "ADD-MEDICINE": "Add Medicine"
+      }
+    },
+   
+    "INVENTORY": {
+      "TEXT": "Inventory",
+      "LIST": {
+        "ITEM-STOCK-LIST": "Item Stock List",
+        "ISSUED-ITEMS": "Issued Items"
+      }
+    },
+    "DOCTOR": {    
+        "DASHBOARD": "Dashboard",
+        "APPOINTMENTS": "Appointments",
+        "DOCTORS": "Doctors",
+        "PATIENTS": "Patients",
+        "SETTINGS": "Settings",
+        "CHAT": "Chat"
+    },
+    "PATIENT": {    
+      "TEXT": "Patient",
+      "DASHBOARD": "Dashboard",
+      "APPOINTMENTS": {
+        "TEXT": "Appointments",
+        "LIST": {
+          "BOOK-APPOINTMENT": "Book Appointment",
+          "TODAY": "Today Appointments",
+          "UPCOMING": "Upcoming Appointments",
+          "PAST": "Past Appointments"
+        }
+      },
+      "PRESCRIPTIONS": "Prescriptions",
+      "MEDICAL-RECORD": "Medical Record",
+      "BILLING": "Billing",
+      "CHAT": "Chat",
+      "SETTINGS": "Settings"
+    },
+    "APPS": {
+      "TEXT": "-- Apps"
+    },
+    "CALENDAR": {
+      "TEXT": "Calendar"
+    },
+    "TASK": {
+      "TEXT": "Task"
+    },
+    "CONTACTS": {
+      "TEXT": "Contacts"
+    },
+  "DEPARTMENTS": {
+    "TEXT": "Departments",
+    "LIST": {
+      "DEPARTMENT-LIST": "Department List",
+      "ADD-DEPARTMENT": "Add Department"
+    }
+  },
+  "MASTER": {
+    "TEXT": "Master"   
+  },"BED-MANAGEMENT": {
+    "TEXT": "Bed Management"   
+  },
+  "PATIENT-COMPANY": {
+    "TEXT": "Patient Company",
+    "LIST": {
+      "PATIENT-COMPANY-LIST": "Patient Company List"
+    }
+  },
+  "RATE-TYPE": {
+    "TEXT": "Rate-Type"
+  },
+  "BANK": {
+    "TEXT": "Bank"
+  },
+  "ROLE": {
+    "TEXT": "Role"
+  },
+  "SPECIALIZATION": {
+    "TEXT": "Specialization"
+  },
+  "SERVICEGROUP": {
+    "TEXT": "Service Group"
+  },
+  "SERVICES": {
+    "TEXT": "Services"
+  },
+  "USERDEPARTMENT": {
+    "TEXT": "User Department"
+  },
+  "USERROLE": {
+    "TEXT": "User Role"
+  },
+  "SUBDEPARTMENT": {
+    "TEXT": "Sub-Departments"
+  },
+  "DESIGNATION": {
+    "TEXT": "Designation"
+  },
+  "SECTION": {
+    "TEXT": "Section"
+  },
+  "UNIT": {
+    "TEXT": "Unit"
+  },
+  "FLOOR": {
+    "TEXT": "Floor"
+  },
+  "BILLING_CLASS": {
+    "TEXT": "Billing Class"
+  },
+  "BED": {
+    "TEXT": "Bed"
+  },
+  "ROOM": {
+    "TEXT": "Room"
+  },
+  "ROOM_TYPE": {
+    "TEXT": "Room Type"
+  },
+  "PATHOLOGYTEST": {
+    "TEXT": "Pathology Test"
+  },
+  "X-RAY": {
+    "TEXT": "X-Ray"
+  },
+  "SONOGRAPHY": {
+    "TEXT": "Sonography Test"
+  },
+  "NOTE-TEMPLATE": {
+    "TEXT": "Note Template"
+  },
+  "PACKAGEMASTER": {
+    "TEXT": "Package Master"
+  },
+  "TEMPLATE": {
+    "TEXT": "Template"
+  },"Gynecology-TEMPLATE": {
+    "TEXT": "Gynecology-Template"
+  },"OPERATIONTYPE": {
+    "TEXT": "Operation Type"
+  },"ANESTHESIA": {
+    "TEXT": "Anesthesia Type"
+  },
+  "HOSPITALS": {
+    "TEXT": "Hospitals",
+    "LIST": {
+      "ADD-HOSPITAL": "Add Hospital",
+      "EDIT-HOSPITAL":"Edit Hospital",
+      "ALL-HOSPITAL": "Hospital List"
+    }
+  },
+  "ROUTE": {
+    "TEXT": "Route"
+  },
+  "CONSUME": {
+    "TEXT": "Consume"
+  },
+  "DOSES": {
+    "TEXT": "Doses"
+  },
+  "QUANTITY": {
+    "TEXT": "Quantity"
+  }
+}
+}

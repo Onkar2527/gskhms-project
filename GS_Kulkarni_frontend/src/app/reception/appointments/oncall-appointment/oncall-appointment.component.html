@@ -1,0 +1,465 @@
+<section class="content">
+    <div class="content-block">
+      <div class="block-header">
+        <!-- breadcrumb -->
+        <app-breadcrumb [title]="panleTitle" [items]="['Appointment']" [active_item]="panleTitle"></app-breadcrumb>
+      </div>
+      <div class="row clearfix">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+          <div class="card">
+            <div class="header">
+              <h2>{{panleTitle}}</h2> 
+            </div>
+            <div class="body">
+              <form class="m-4" [formGroup]="bookingForm" (ngSubmit)="$event.preventDefault()">
+                <div class="row">
+                 
+                   <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>First name</mat-label>
+                      <input matInput formControlName="firstName" (input)="loadData()" required>
+                      @if (bookingForm.get('firstName')?.hasError('required')) {
+                      <mat-error>
+                        First name is required
+                      </mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+                  
+                   <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Husband's Name</mat-label>
+                      <input matInput formControlName="husbandName">
+                      <!-- @if (bookingForm.get('husbandName')) {
+                      <mat-error>
+                        Husband's name is required
+                      </mat-error>
+                      } -->
+                    </mat-form-field>
+                  </div>
+
+                 
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Last name</mat-label>
+                      <input matInput formControlName="lastName" (input)="loadData()">
+                    </mat-form-field>
+                    <!-- @if (bookingForm.get('lastName')?.hasError('required')) {
+                      <mat-error>
+                        First name is required
+                      </mat-error>
+                      } -->
+                  </div>
+                </div>
+  
+                <div class="row" *ngIf="searchExisting">
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                      <div class="body overflow-auto">
+                        <div class="responsive_table">
+                          <table mat-table [dataSource]="dataSource" matSort class="mat-cell advance-table">
+                            <!-- ID Column -->
+                            <ng-container matColumnDef="name">
+                              <mat-header-cell *matHeaderCellDef mat-sort-header>Name
+                              </mat-header-cell>
+                              <mat-cell *matCellDef="let row"
+                                [matTooltip]="row.namePrefix+' '+row.firstName+' '+row.lastName">{{row.namePrefix}}
+                                {{row.firstName}} {{row.lastName}}</mat-cell>
+                            </ng-container>
+                            <!-- <ng-container matColumnDef="firstName">
+                              <mat-header-cell *matHeaderCellDef>First Name
+                              </mat-header-cell>
+                              <mat-cell *matCellDef="let row" [matTooltip]="row.firstName"><span class="mobile-label">First Name:</span> {{row.firstName}}
+                              </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="lastName">
+                              <mat-header-cell *matHeaderCellDef>Last Name
+                              </mat-header-cell>
+                              <mat-cell *matCellDef="let row" [matTooltip]="row.lastName"><span class="mobile-label">Last Name:</span> {{row.lastName}}
+                              </mat-cell>
+                            </ng-container> -->
+                            <ng-container matColumnDef="mobileNumber">
+                              <mat-header-cell *matHeaderCellDef>Mobile
+                              </mat-header-cell>
+                              <mat-cell *matCellDef="let row" [matTooltip]="row.mobileNumber"> <span
+                                  class="mobile-label">Mobile:</span> {{row.mobileNumber}}
+                              </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="address">
+                              <mat-header-cell *matHeaderCellDef>Address
+                              </mat-header-cell>
+                              <mat-cell *matCellDef="let row" [matTooltip]="row.address"> <span
+                                  class="mobile-label">Address:</span>{{row.address}}
+                              </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="gender">
+                              <mat-header-cell *matHeaderCellDef>Gender</mat-header-cell>
+                              <mat-cell *matCellDef="let row" [matTooltip]="row.gender">
+                                <span class="truncate-text"><span class="mobile-label">Gender:</span>{{row.gender}}</span>
+                              </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="dob">
+                              <mat-header-cell *matHeaderCellDef>DOB</mat-header-cell>
+                              <mat-cell *matCellDef="let row" [matTooltip]="row.dob">
+                                <span class="truncate-text"><span class="mobile-label">DOB:</span>{{row.dob | date:'MMM d,
+                                  y'}}</span>
+                              </mat-cell>
+                            </ng-container>
+                            
+                            <ng-container matColumnDef="serviceName">
+                                    <th class="resizeDiv" mat-header-cell *matHeaderCellDef mat-sort-header>Service Name
+                                    </th>
+                                    <td mat-cell *matCellDef="let row" [matTooltip]="row.serviceName"> <span class="truncate-text"><span
+                                        class="mobile-label">Service Name:</span>{{row.description ?? row.serviceName}}</span>
+                                    </td>
+                                    <td mat-footer-cell *matFooterCellDef>
+                                    </td>
+                                </ng-container>
+                            
+                          
+                            <!-- actions -->
+                            <ng-container matColumnDef="actions">
+                              <mat-header-cell class="pr-0" *matHeaderCellDef>Actions</mat-header-cell>
+                              <mat-cell *matCellDef="let row; let i=index;" class="pr-0">
+                                <button mat-icon-button (click)="$event.preventDefault();selectCell(row)"
+                                  class="tbl-action-btn">
+                                  <app-feather-icons [icon]="'plus'" [class]="'tbl-fav-edit'"></app-feather-icons>
+                                </button>
+                              </mat-cell>
+                            </ng-container>
+                            <mat-header-row *matHeaderRowDef="displayedColumns">
+                            </mat-header-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumns;" [style.cursor]="'pointer'"
+                              matRipple>
+                            </mat-row>
+                          </table>
+                          @if (!exampleDatabase?.isTblLoading) {
+                          <div class="no-results pt-2 pl-2"
+                            [style.display]="dataSource.renderedData.length === 0 ? '' : 'none'">
+                            <mat-error>
+                              No History Available, Please start Fresh Registration.
+                            </mat-error>
+                          </div>
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="row">
+                 <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Mobile Number</mat-label>
+                      <input #filter matInput formControlName="mobileNumber" type="text" pattern="\d*"
+                        (input)="loadData()" maxlength="10" minlength="10">
+                    </mat-form-field>
+                  </div>
+  
+                
+                  <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Maiden Name</mat-label>
+                      <input matInput formControlName="maidenName">
+                      <!-- @if (bookingForm.get('maidenName')){
+                      <mat-error>
+                        maiden name is required
+                      </mat-error>
+                      } -->
+                    </mat-form-field>
+                  </div>
+  
+                 
+  
+                  <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Father's Name</mat-label>
+                      <input matInput formControlName="fatherName">
+  
+                      <!-- Father's name is required
+                    </mat-error>
+                    @if (bookingForm.get('fatherName')?.hasError('required')) {
+                    <mat-error>
+                      Father's name is required
+                    </mat-error> -->
+  
+                    </mat-form-field>
+                  </div>
+  
+                  <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Abha Number</mat-label>
+                      <input #filter matInput formControlName="abhaNumber" type="text" pattern="\d*" maxlength="14"
+                        minlength="1">
+                    </mat-form-field>
+                  </div>
+  
+                </div>
+  
+  
+  
+  
+                <div class="row">
+                  <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Prefix</mat-label>
+                      <mat-select formControlName="namePrefix">
+                        <mat-option [value]="'Mr.'">
+                          Mr.
+                        </mat-option>
+                        <mat-option [value]="'Miss.'">
+                          Miss.
+                        </mat-option>
+                        <mat-option [value]="'Mrs.'">
+                          Mrs.
+                        </mat-option>
+                        <mat-option [value]="'Ms.'">
+                          Ms.
+                        </mat-option>
+                        <mat-option [value]="'Mx.'">
+                          Mx.
+                        </mat-option>
+                        <mat-option [value]="'Sir'">
+                          Sir
+                        </mat-option>
+                        <mat-option [value]="'Dr.'">
+                          Dr.
+                        </mat-option>
+                      </mat-select>
+                      <!-- @if (bookingForm.get('type')?.hasError('required')) {
+                      <mat-error>
+                        Appointment Type is required
+                      </mat-error>
+                      } -->
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Gender</mat-label>
+                      <mat-select formControlName="gender" required>
+                        <mat-option [value]="'M'">
+                          Male
+                        </mat-option>
+                        <mat-option [value]="'F'">
+                          Female
+                        </mat-option>
+                        <mat-option [value]="'O'">
+                          Other
+                        </mat-option>
+                      </mat-select>
+                      <!-- @if (bookingForm.get('gender')?.hasError('required')) {
+                      <mat-error>
+                        Gender is required
+                      </mat-error>
+                      } -->
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Adhar No</mat-label>
+                      <input matInput formControlName="aadharNumber" maxlength="12">
+                    </mat-form-field>
+                  </div>
+                </div>
+  
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Address</mat-label>
+                      <textarea matInput formControlName="address"></textarea>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Date Of Birth(yyyy-mm-dd)</mat-label>
+                      <input matInput [matDatepicker]="picker" formControlName="dob">
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                      <!-- @if (bookingForm.get('dob')?.hasError('required')) {
+                      <mat-error>
+                        Please select date
+                      </mat-error>
+                      } -->
+                    </mat-form-field>
+                  </div>
+                <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Age</mat-label>
+                      <input matInput formControlName="age" type="number">
+                    </mat-form-field>
+                  </div>
+                
+                  <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Date Of Appointment</mat-label>
+                      <input matInput [matDatepicker]="picker1" formControlName="appointmentDate">
+                      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                      <mat-datepicker #picker1></mat-datepicker>
+                      <!-- @if (bookingForm.get('appointmentDate')?.hasError('required')) {
+                      <mat-error>
+                        Please select a date
+                      </mat-error>
+                      } -->
+                    </mat-form-field>
+                  </div>
+          </div>
+                <h2 class="card-inside-title">Appointment Details</h2>
+                <div class="row">
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Consulting Doctor</mat-label>
+                      <!-- <mat-select formControlName="doctorId" required>
+                        <mat-option [value]="'1'">
+                          Dr. John Doe
+                        </mat-option>
+                        <mat-option [value]="'2'">
+                          Dr. Jane Smith
+                        </mat-option>
+                        <mat-option [value]="'3'">
+                          Dr. Emily Johnson
+                        </mat-option>
+                      </mat-select> -->
+                      <mat-select formControlName="doctorId">
+                        <mat-option *ngFor="let data of doctors$" [value]="data.employeeId"> {{data.firstName}}
+                          {{data.lastName}}</mat-option>
+                      </mat-select>
+                      <!-- @if (bookingForm.get('doctorId')?.hasError('required')) {
+                      <mat-error>
+                        Select Any Doctor
+                      </mat-error>
+                      } -->
+                    </mat-form-field>
+                  </div>
+  
+  
+  
+  
+                 
+  
+  
+                  
+                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Department Name</mat-label>
+                        <mat-select formControlName="deptId" required>
+                          <mat-option *ngFor="let dept of departments$"
+                            [value]="dept.deptId">{{dept.deptName}}</mat-option>
+                        </mat-select>
+                        <!-- @if (listForm.get('deptId')?.hasError('required')) {
+                        <mat-error>
+                          Select Any Departmenet
+                        </mat-error>
+                        } -->
+                      </mat-form-field>
+                    </div>
+  
+                  
+  
+  
+  
+  
+  
+  
+  
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Consulting Service</mat-label>
+                      <!-- <mat-select formControlName="serviceId" required>
+                        <mat-option [value]="'1'">
+                         Consultation
+                        </mat-option>
+                        <mat-option [value]="'2'">
+                          Followup
+                        </mat-option>
+                        <mat-option [value]="'3'">
+                          Test
+                        </mat-option>
+                      </mat-select> -->
+  
+  
+                      <mat-select formControlName="serviceId">
+                        <mat-option *ngFor="let data of services$" [value]="data.id">{{data.name}}</mat-option>
+                      </mat-select>
+                      <!-- @if (bookingForm.get('serviceId')?.hasError('required')) {
+                      <mat-error>
+                        Select Any Service
+                      </mat-error>
+                      } -->
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
+
+
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Appointment Type</mat-label>
+                      <mat-select formControlName="priority">
+                        <mat-option [value]="'Child'">
+                          Child
+                        </mat-option>
+                        <mat-option [value]="'VIP'">
+                          VIP Patient
+                        </mat-option>
+                        <mat-option [value]="'Normal'">
+                          Normal
+                        </mat-option>
+    
+                      </mat-select>
+    
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Referred by</mat-label>
+                      <input matInput formControlName="referredBy">
+    
+                    </mat-form-field>
+                  </div>
+
+
+                </div>
+
+
+
+
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Complaint/Note</mat-label>
+                      <textarea matInput formControlName="remark"></textarea>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <!-- <div class="row"> -->
+                <!-- <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+                      <mat-label>Note</mat-label>
+                      <textarea matInput formControlName="note"></textarea>
+                    </mat-form-field>
+                  </div>
+                </div> -->
+                <!-- <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-5">
+                    <label>Upload Reports</label>
+                    <app-file-upload formControlName="uploadFile"></app-file-upload>
+                  </div>
+                </div> -->
+                <div class="row">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-3">
+                    <button (click)="onSubmit()" class="btn-space" [disabled]="!bookingForm.valid" mat-raised-button
+                      color="primary">Submit</button>
+                    <button type="button" mat-raised-button color="warn" (click)="cancel()">Cancel</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </section>
