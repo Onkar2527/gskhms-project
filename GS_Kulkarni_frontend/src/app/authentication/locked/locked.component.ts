@@ -66,6 +66,8 @@ export class LockedComponent implements OnInit {
         this.router.navigate(['/nurse/dashboard']);
       } else if (role === Role.Lab) {
         this.router.navigate(['/lab/dashboard']);
+      }else if(role === Role.RMO){
+        this.router.navigate(['/doctor/dashboard']);
       } else {
         this.router.navigate(['/authentication/signin']);
       }

@@ -7,4 +7,5 @@ export enum Role {
   Accountant = 'Accountant',
   Lab = 'Lab',
   Nurse = 'Nurse',
+  RMO = 'RMO'
 }

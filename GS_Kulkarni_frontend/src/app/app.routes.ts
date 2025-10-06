@@ -25,7 +25,7 @@ export const APP_ROUTE: Route[] = [
                 path: 'doctor',
                 canActivate: [AuthGuard],
                 data: {
-                    role: [Role.Doctor, Role.Nurse]
+                    role: [Role.Doctor, Role.Nurse,Role.RMO]
                 },
                 loadChildren: () =>
                     import('./doctor/doctor.routes').then((m) => m.DOCTOR_ROUTE),
@@ -52,7 +52,7 @@ export const APP_ROUTE: Route[] = [
                 path: 'nurse',
                 canActivate: [AuthGuard],
                 data: {
-                    role: [Role.Doctor, Role.Nurse]
+                    role: [Role.Doctor, Role.Nurse,]
                 },
                 loadChildren: () =>
                     import('./nurse/nurse.routes').then((m) => m.NURSE_ROUTE),

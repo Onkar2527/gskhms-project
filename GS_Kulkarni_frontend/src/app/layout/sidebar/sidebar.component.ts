@@ -113,7 +113,10 @@ export class SidebarComponent extends UnsubscribeOnDestroyAdapter implements OnI
         this.userType = Role.Lab;
       } else if (userRole === Role.Nurse) {
         this.userType = Role.Nurse;
-      } else {
+      }else if (userRole === Role.RMO) {
+        this.userType === Role.RMO
+      }
+      else {
         this.userType = Role.Admin;
       }
     }

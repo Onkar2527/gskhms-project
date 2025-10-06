@@ -1004,6 +1004,63 @@ export const ROUTES: RouteInfo[] = [
     ],
   },
 
+
+//RMO module
+
+  // Doctor Modules
+  {
+    path: '/doctor/dashboard',
+    title: 'MENUITEMS.DOCTOR.DASHBOARD',
+    iconType: 'material-icons-outlined',
+    icon: 'space_dashboard',
+    class: '',
+    groupTitle: false,
+    badge: '',
+    badgeClass: '',
+    role: ['RMO'],
+    submenu: [],
+  },
+  {
+    path: '',
+    title: 'OPD',
+    iconType: 'material-icons-outlined',
+    icon: 'shopping_bag',
+    class: 'menu-toggle',
+    groupTitle: false,
+    badge: '',
+    badgeClass: '',
+    role: ['RMO'],
+    submenu: [
+      {
+        path: '/doctor/casualty-appointments',
+        title: 'Waiting for Casualty',
+        iconType: 'material-icons-outlined',
+        icon: 'assignment',
+        class: '',
+        groupTitle: false,
+        badge: '',
+        badgeClass: '',
+        role: ['RMO'],
+        submenu: [],
+      }
+    ]
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   // Doctor Modules
   {
     path: '/doctor/dashboard',

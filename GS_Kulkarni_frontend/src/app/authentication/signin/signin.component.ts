@@ -92,6 +92,11 @@ export class SigninComponent
     this.authForm.get('username')?.setValue('testnurse@hospital.org');
     this.authForm.get('password')?.setValue('testadmin');
   }
+  rmoSet() {
+    this.selectedRole = Role.RMO;
+    this.authForm.get('username')?.setValue('milind@hospital.org');
+    this.authForm.get('password')?.setValue('testadmin');
+  }
 
   labSet() {
     this.selectedRole = Role.Lab;
@@ -157,6 +162,8 @@ export class SigninComponent
                     user.role = Role.Lab;
                   }else if(data?.userList[0].userType == 'N'){
                     user.role = Role.Nurse;
+                  }else if(data?.userList[0].userType== 'RM'){
+                    user.role = Role.RMO;
                   }
                   if (user) {
                     this.loginService.logCurrentUserData(user);
@@ -192,7 +199,9 @@ export class SigninComponent
                   this.router.navigate(['/nurse/dashboard']);
                 } else if (role === Role.Lab) {
                   this.router.navigate(['/lab/dashboard']);
-                } else {
+                } else if(role === Role.RMO){
+                  this.router.navigate(['/doctor/dashboard']);
+                }else {
                   this.router.navigate(['/authentication/signin']);
                 }
             } else {
