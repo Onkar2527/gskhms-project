@@ -26,7 +26,7 @@ import java.util.Objects;
 @RequestMapping("/mastermanager")
 @Slf4j
 public class AnesthesiaTypeController {
-
+// yes
 	@Autowired
 	AnesthesiaTypeService service;
 
