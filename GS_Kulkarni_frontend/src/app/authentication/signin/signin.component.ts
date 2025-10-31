@@ -94,7 +94,7 @@ export class SigninComponent
   }
   rmoSet() {
     this.selectedRole = Role.RMO;
-    this.authForm.get('username')?.setValue('milind@hospital.org');
+    this.authForm.get('username')?.setValue('doctor@hospital.org');
     this.authForm.get('password')?.setValue('testadmin');
   }
 

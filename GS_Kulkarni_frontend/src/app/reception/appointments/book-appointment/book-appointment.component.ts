@@ -19,7 +19,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DataSource, SelectionModel } from '@angular/cdk/collections';
-import { BehaviorSubject, Observable, catchError, map, merge } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, map, merge, of } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UnsubscribeOnDestroyAdapter } from '../../../shared';
 import { Patient } from '../../../../app/admin/patients/allpatients/patient.model';
@@ -78,7 +78,7 @@ export class BookAppointmentComponent extends UnsubscribeOnDestroyAdapter {
 
   filterToggle = false;
   displayedColumns = [
-    'name',
+    'name', 
     // 'firstName',
     // 'lastName',
     'mobileNumber',
@@ -128,12 +128,12 @@ export class BookAppointmentComponent extends UnsubscribeOnDestroyAdapter {
     this.hospitalId = currentUser.hospitalId;
     this.bookingForm = this.fb.group({
       id: [null],
-      namePrefix: ['Mrs.', [Validators.required]],
+      // namePrefix: ['', [Validators.required]],
       mobileNumber: ['', [Validators.required]],
       firstName: ['', [Validators.required, Validators.pattern('[a-zA-Z]+')]],
-      lastName: ['',[Validators.required]],
+      lastName: ['',[Validators.required, Validators.pattern('[a-zA-Z]+')]],
       aadharNumber: [''],
-      gender: ['F'],
+      gender: [''],
       type: ['opd'],
       address: [''],
       dob: [''],
@@ -148,7 +148,7 @@ export class BookAppointmentComponent extends UnsubscribeOnDestroyAdapter {
       subDocType:[''],
       hospitalId: [this.hospitalId],
       maidenName: [''],
-      husbandName: [''],
+      husbandName: ['',Validators.pattern('[a-zA-Z]+')],
       abhaNumber: [''],
       fatherName: [''],
       deptId: [''],
@@ -181,6 +181,22 @@ export class BookAppointmentComponent extends UnsubscribeOnDestroyAdapter {
     this.getServices();
     this.getDoctors();
     this.getDepartments();
+
+     this.bookingForm.get('dob')?.valueChanges.subscribe((dob) => {
+      this.updateAgeFromDOB(dob);
+    });
+  }
+
+   updateAgeFromDOB(dob: Date | null) {
+    if (dob) {
+      const age = this.calculateAge(dob);
+      this.bookingForm.get('age')?.setValue(age, { emitEvent: false });
+    } else {
+      this.bookingForm.get('age')?.setValue('', { emitEvent: false });
+    }
+  }
+  calculateAge(dob: Date): number {
+    return moment().diff(moment(dob), 'years');
   }
 
   getServices() {
@@ -209,13 +225,13 @@ export class BookAppointmentComponent extends UnsubscribeOnDestroyAdapter {
       this.doctors$ = result.data;
     });
   }
-   calculateAge(dob : Date){
-       if(dob){
-         return moment().diff(dob, 'years');
-       }else{
-         return 0;
-       }
-     }
+  //  calculateAge(dob : Date){
+  //      if(dob){
+  //        return moment().diff(dob, 'years');
+  //      }else{
+  //        return 0;
+  //      }
+  //    }
    
 
    getDepartments() {
@@ -255,56 +271,123 @@ export class BookAppointmentComponent extends UnsubscribeOnDestroyAdapter {
 
   
 
-  onSubmit() {
-  if (this.bookingForm.invalid || this.isSubmitting) {
-    return;
-  }
+//   onSubmit() {
+//   if (this.bookingForm.invalid || this.isSubmitting) {
+//     return;
+//   }
 
-  this.isSubmitting = true;
+//   this.isSubmitting = true;
 
-  if (this.appointmentId == -1) {
-    this.appointmentsService.addAppointments(this.bookingForm.value).pipe(
-      catchError(() => {
-        this.openSnackBar('Error occurred to add');
+//   if (this.appointmentId == -1) {
+//     this.appointmentsService.addAppointments(this.bookingForm.value).pipe(
+//       catchError(() => {
+//         this.openSnackBar('Error occurred to add');
+//         this.isSubmitting = false;
+//         return '';
+//       })
+//     ).subscribe((result: any) => {
+//       this.isSubmitting = false;
+//       if (result['message'] === 'Data Saved Successfully') {
+//         let tempDirection: Direction = localStorage.getItem('isRtl') === 'true' ? 'rtl' : 'ltr';
+
+//         this.dialog.open(PrintTokenComponentComponent, {
+//           data: { appoinment: result['data'] },
+//           direction: tempDirection,
+//           height: '80%',
+//           width: '80%'
+//         }).afterClosed().subscribe(() => {
+//           this.router.navigate(['/reception/appointments/today']);
+//         });
+
+//       } else {
+//         this.openSnackBar('Failed to save appointment.');
+//       }
+//     });
+//   } else {
+//     this.appointmentsService.updateAppointments(this.bookingForm.value).pipe(
+//       catchError(() => {
+//         this.openSnackBar('Error occurred to update');
+//         this.isSubmitting = false;
+//         return '';
+//       })
+//     ).subscribe((result: any) => {
+//       this.isSubmitting = false;
+//       if (result['message'] === 'Data Modified Successfully') {
+//         this.openSnackBar(result['message']);
+//         history.back();
+//       } else {
+//         this.openSnackBar(result['message']);
+//       }
+//     });
+//   }
+// }
+
+
+ onSubmit() {
+    if (this.bookingForm.invalid || this.isSubmitting) return;
+
+    this.isSubmitting = true;
+
+    const formValue = this.bookingForm.value;
+    const appointmentDateStr = new Date(formValue.appointmentDate).toISOString().split('T')[0];
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') ?? '{}');
+
+    const searchPayload = {
+      hospitalId: currentUser.hospitalId,
+      appointmentDate: appointmentDateStr,
+      mobileNumber: formValue.mobileNumber,
+    };
+
+
+    this.appointmentsService.getAllAppoinment(searchPayload).subscribe((res: any) => {
+      const existing = res?.data;
+      console.log('list', existing);
+      const isDuplicate = existing.some((a: any) =>
+        a.patientId === formValue.patientId
+
+      );
+      console.log('isfound', isDuplicate);
+
+      if (isDuplicate && this.appointmentId === -1) {
+        this.openSnackBar('Appointment already exists for today!');
         this.isSubmitting = false;
-        return '';
-      })
-    ).subscribe((result: any) => {
-      this.isSubmitting = false;
-      if (result['message'] === 'Data Saved Successfully') {
-        let tempDirection: Direction = localStorage.getItem('isRtl') === 'true' ? 'rtl' : 'ltr';
-
-        this.dialog.open(PrintTokenComponentComponent, {
-          data: { appoinment: result['data'] },
-          direction: tempDirection,
-          height: '80%',
-          width: '80%'
-        }).afterClosed().subscribe(() => {
-          this.router.navigate(['/reception/appointments/today']);
-        });
-
-      } else {
-        this.openSnackBar('Failed to save appointment.');
+        return;
       }
-    });
-  } else {
-    this.appointmentsService.updateAppointments(this.bookingForm.value).pipe(
-      catchError(() => {
-        this.openSnackBar('Error occurred to update');
+
+      const request$ = this.appointmentId === -1
+        ? this.appointmentsService.addAppointments(formValue)
+        : this.appointmentsService.updateAppointments(formValue);
+
+      request$.pipe(
+        catchError(() => {
+          this.openSnackBar('Error during submission');
+          this.isSubmitting = false;
+          return of(null);
+        })
+      ).subscribe((result: any) => {
         this.isSubmitting = false;
-        return '';
-      })
-    ).subscribe((result: any) => {
-      this.isSubmitting = false;
-      if (result['message'] === 'Data Modified Successfully') {
-        this.openSnackBar(result['message']);
-        history.back();
-      } else {
-        this.openSnackBar(result['message']);
-      }
+
+        if (result?.message?.includes('Successfully')) {
+          if (this.appointmentId === -1) {
+            const dir = localStorage.getItem('isRtl') === 'true' ? 'rtl' : 'ltr';
+            this.dialog.open(PrintTokenComponentComponent, {
+              data: { appoinment: result.data },
+              direction: dir,
+              height: '80%',
+              width: '80%',
+            }).afterClosed().subscribe(() => {
+              this.router.navigate(['/reception/appointments/today']);
+            });
+          } else {
+            this.openSnackBar(result.message);
+            history.back();
+          }
+        } else {
+          this.openSnackBar('Failed to save appointment.');
+        }
+      });
     });
   }
-}
 
 
   selectCell(row: any){
@@ -333,14 +416,14 @@ export class BookAppointmentComponent extends UnsubscribeOnDestroyAdapter {
       // this.bookingForm.get('firstName')?.patchValue(null);
       this.bookingForm.get('aadharNumber')?.patchValue(null);
       // this.bookingForm.get('lastName')?.patchValue(null);
-      this.bookingForm.get('gender')?.patchValue('F');
+      // this.bookingForm.get('gender')?.patchValue('F');
       this.bookingForm.get('address')?.patchValue(null);
       this.bookingForm.get('dob')?.patchValue(null);
       this.bookingForm.get('maidenName')?.patchValue(null);
       //this.bookingForm.get('husbandName')?.patchValue(null);
-      this.bookingForm.get('abhaNumber')?.patchValue(null);
-      this.bookingForm.get('fatherName')?.patchValue(null);
-      this.bookingForm.get('referredBy')?.patchValue(null); 
+      // this.bookingForm.get('abhaNumber')?.patchValue(null);
+      // this.bookingForm.get('fatherName')?.patchValue(null);
+      // this.bookingForm.get('referredBy')?.patchValue(null); 
       
       
       this.exampleDatabase = new PatientService(this.httpClient, this.config);
