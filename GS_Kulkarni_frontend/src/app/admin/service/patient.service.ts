@@ -55,7 +55,7 @@ export class PatientService extends UnsubscribeOnDestroyAdapter {
     return this.httpClient.post<any>(this.apiBaseUrl + 'patient/search', req)
   }
 
-  getAllPatientsByMNumberFnameLname(mobile: any, firstName: any, lastName: any){
+  getAllPatientsByMNumberFnameLname(mobile: any, firstName: any){
     const req = new Patient();
     const currentUser = JSON.parse(localStorage.getItem('currentUser') ?? '{}');
     req.hospitalId = currentUser.hospitalId;
@@ -65,9 +65,9 @@ export class PatientService extends UnsubscribeOnDestroyAdapter {
     if(firstName){
       req.firstName = firstName;
     }
-    if(lastName){
-      req.lastName = lastName;
-    }
+    // if(lastName){
+    //   req.lastName = lastName;
+    // }
     return this.httpClient.post<any>(this.apiBaseUrl + 'patient/search', req)
   }
 

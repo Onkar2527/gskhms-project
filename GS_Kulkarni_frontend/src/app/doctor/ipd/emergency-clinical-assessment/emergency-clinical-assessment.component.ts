@@ -226,7 +226,7 @@ export class EmergencyClinicalAssessmentComponent extends UnsubscribeOnDestroyAd
       this.bookingForm.get('patientDetails').get('address')?.patchValue(null);
       this.bookingForm.get('patientDetails').get('dob')?.patchValue(null);
       this.exampleDatabase = new PatientService(this.httpClient, this.config);
-      this.exampleDatabase.getAllPatientsByMNumberFnameLname(this.bookingForm.get('patientDetails').get('mobileNumber')?.value, this.bookingForm.get('patientDetails').get('firstName')?.value, this.bookingForm.get('patientDetails').get('lastName')?.value).pipe(
+      this.exampleDatabase.getAllPatientsByMNumberFnameLname(this.bookingForm.get('patientDetails').get('mobileNumber')?.value, this.bookingForm.get('patientDetails').get('firstName')?.value).pipe(
         catchError(() => {
           return '';
         })

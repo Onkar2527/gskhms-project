@@ -6,20 +6,20 @@ import { APP_ID } from "@angular/core";
 
 export const environment = {
   production: false,
- //apiUrl: 'http://192.168.31.190:8076/mastermanager/',
+//  apiUrl: 'http://192.168.31.119:8076/mastermanager/',
   apiUrl: 'http://gskbackendjava.kredpool.in/mastermanager/',
-  //apiUrl:'http:// 192.168.31.190/mastermanager/',
+  // apiUrl:'http:// 192.168.31.190/mastermanager/',
   // nodeApiUrl: 'http://192.168.1.2:3000/',
   // apiUrl: 'http://192.168.1.4:8076/mastermanager/',
- //apiUrl: 'http://192.168.226.226:8076/mastermanager/',
+//  apiUrl: 'http://192.168.31.119:8076/mastermanager/',
 
 
 
   // apiUrl: 'http://192.168.1.31:8076/mastermanager/',
-  // nodeApiUrl: 'http://192.168.31.119:3000/',
+  // nodeApiUrl: 'http://192.168.31.119:5000/',
   nodeApiUrl: 'http://gskbackend.kredpool.in/'
 
-  // nodeApiUrl: 'http://192.168.226.48:3000/'
+  // nodeApiUrl: 'http://192.168.31.119:5000/'
 }
 
 /*

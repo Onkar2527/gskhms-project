@@ -275,6 +275,11 @@ export class AppointmentsService extends UnsubscribeOnDestroyAdapter {
     return this.httpClient.put(`${this.nodeApiUrl}specialcases/${appointmentId}`, data);
   }
 
+
+  getNextRegNo() {
+  return this.httpClient.get(this.nodeApiUrl + 'regno/next-regno');
+}
+
   // getSpecialCase(data: any) {
   //   return this.httpClient.post(this.apiBaseUrl + 'specialcases/get', data);
   // }

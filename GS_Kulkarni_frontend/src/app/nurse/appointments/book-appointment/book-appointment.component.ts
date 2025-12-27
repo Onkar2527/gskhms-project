@@ -294,7 +294,7 @@ export class BookAppointmentComponent extends UnsubscribeOnDestroyAdapter {
       this.bookingForm.get('address')?.patchValue(null);
       this.bookingForm.get('dob')?.patchValue(null);
       this.exampleDatabase = new PatientService(this.httpClient, this.config);
-      this.exampleDatabase.getAllPatientsByMNumberFnameLname(this.bookingForm.get('mobileNumber')?.value, this.bookingForm.get('firstName')?.value, this.bookingForm.get('lastName')?.value).pipe(
+      this.exampleDatabase.getAllPatientsByMNumberFnameLname(this.bookingForm.get('mobileNumber')?.value, this.bookingForm.get('firstName')?.value).pipe(
         catchError(() => {
           return '';
         })

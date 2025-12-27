@@ -51,7 +51,7 @@ public class SecurityConfiguration {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://192.168.31.190:4200", "http://gsk.kredpool.in/","https://gsk.kredpool.in/","http://localhost:4200"));
+        configuration.setAllowedOrigins(List.of("http://192.168.31.119:4200", "http://gsk.kredpool.in/","https://gsk.kredpool.in/","http://localhost:4200"));
         configuration.setAllowedMethods(List.of("GET","POST","PATCH", "PUT", "DELETE", "OPTIONS", "HEAD"));
         configuration.setAllowedHeaders(List.of("Authorization","Content-Type"));
 

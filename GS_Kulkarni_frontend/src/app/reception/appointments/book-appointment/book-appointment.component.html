@@ -14,10 +14,31 @@
                         <form class="m-4" [formGroup]="bookingForm" (ngSubmit)="$event.preventDefault()">
                             <div class="row">
 
-                                <!-- <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-3">
+                                <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-3">
                                     <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                        <mat-label>Registration ID</mat-label>
+                                        <input matInput formControlName="regNo">
+
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 mb-3">
+                                    <mat-form-field class="example-full-width mb-3" appearance="outline">
+
                                         <mat-label>Prefix</mat-label>
-                                        <mat-select formControlName="namePrefix">
+                                        <mat-select formControlName="namePrefix" (selectionChange)="onPrefixChange($event.value)">
+                                            <mat-option value="Mr">Mr.</mat-option>
+                                            <mat-option value="Mrs">Mrs.</mat-option>
+                                            <mat-option value="Miss">Miss.</mat-option>
+                                            <mat-option value="Dr">Dr.</mat-option>
+                                        </mat-select>
+
+
+
+
+
+                                        <!-- <mat-label>Prefix</mat-label>
+                                        <mat-select formControlName="namePrefix" (selectionChange)="onPrefixChange($event.value)">
                                             <mat-option [value]="'Mr.'">
                                                 Mr.
                                             </mat-option>
@@ -33,53 +54,40 @@
                                             <mat-option [value]="'Mx.'">
                                                 Mx.
                                             </mat-option>
-                                            <mat-option [value]="'Sir'">
-                                                Sir
-                                            </mat-option>
-                                            <mat-option [value]="'Dr.'">
-                                                Dr.
-                                            </mat-option>
-                                        </mat-select>
+
+                                        </mat-select> -->
 
                                     </mat-form-field>
-                                </div> -->
+                                </div>
 
 
 
-                                <div class="col-xl-4 col-lg-3 col-md-12 col-sm-12 mb-3">
+                                <div class="col-xl-6 col-lg-3 col-md-12 col-sm-12 mb-3">
                                     <mat-form-field class="example-full-width mb-3" appearance="outline">
-                                        <mat-label>First Name</mat-label>
+                                        <mat-label>Full Name</mat-label>
                                         <input matInput formControlName="firstName" (input)="loadData()" required> @if (bookingForm.get('firstName')?.hasError('required')) {
                                         <mat-error>
-                                            First name is required
+                                            Full Name is required
                                         </mat-error>
                                         }
                                     </mat-form-field>
                                 </div>
                                 <!-- hasband -->
-                                <div class="col-xl-4 col-lg-3 col-md-12 col-sm-12 mb-3">
+                                <!-- <div class="col-xl-4 col-lg-3 col-md-12 col-sm-12 mb-3">
                                     <mat-form-field class="example-full-width mb-3" appearance="outline">
                                         <mat-label>Middle Name</mat-label>
                                         <input matInput formControlName="husbandName" required>
-                                        <!-- @if (bookingForm.get('husbandName')) {
-                    <mat-error>
-                      Husband's name is required
-                    </mat-error>
-                    } -->
+                      
                                     </mat-form-field>
-                                </div>
+                                </div> 
 
                                 <div class="col-xl-4 col-lg-3 col-md-12 col-sm-12 mb-3">
                                     <mat-form-field class="example-full-width mb-3" appearance="outline">
                                         <mat-label>Last Name</mat-label>
                                         <input matInput formControlName="lastName" (input)="loadData()">
                                     </mat-form-field>
-                                    <!-- @if (bookingForm.get('lastName')?.hasError('required')) {
-                    <mat-error>
-                      First name is required
-                    </mat-error>
-                    } -->
-                                </div>
+                         
+                                </div> -->
                             </div>
 
                             <div class="row" *ngIf="searchExisting">
@@ -89,23 +97,31 @@
                                             <div class="responsive_table">
                                                 <table mat-table [dataSource]="dataSource" matSort class="mat-cell advance-table">
                                                     <!-- ID Column -->
+
+                                                    <ng-container matColumnDef="id">
+                                                        <mat-header-cell *matHeaderCellDef mat-sort-header>Registration ID
+                                                        </mat-header-cell>
+                                                        <mat-cell *matCellDef="let row" [matTooltip]="row.id">{{row.id}}</mat-cell>
+                                                    </ng-container>
+
+
                                                     <ng-container matColumnDef="name">
                                                         <mat-header-cell *matHeaderCellDef mat-sort-header>Name
                                                         </mat-header-cell>
                                                         <mat-cell *matCellDef="let row" [matTooltip]="row.namePrefix+' '+row.firstName+' '+row.lastName">{{row.namePrefix}} {{row.firstName}} {{row.lastName}}</mat-cell>
                                                     </ng-container>
-                                                    <!-- <ng-container matColumnDef="firstName">
-                            <mat-header-cell *matHeaderCellDef>First Name
-                            </mat-header-cell>
-                            <mat-cell *matCellDef="let row" [matTooltip]="row.firstName"><span class="mobile-label">First Name:</span> {{row.firstName}}
-                            </mat-cell>
-                          </ng-container>
-                          <ng-container matColumnDef="lastName">
-                            <mat-header-cell *matHeaderCellDef>Last Name
-                            </mat-header-cell>
-                            <mat-cell *matCellDef="let row" [matTooltip]="row.lastName"><span class="mobile-label">Last Name:</span> {{row.lastName}}
-                            </mat-cell>
-                          </ng-container> -->
+                                                    <ng-container matColumnDef="firstName">
+                                                        <mat-header-cell *matHeaderCellDef>First Name
+                                                        </mat-header-cell>
+                                                        <mat-cell *matCellDef="let row" [matTooltip]="row.firstName"><span class="mobile-label">First Name:</span> {{row.firstName}}
+                                                        </mat-cell>
+                                                    </ng-container>
+                                                    <ng-container matColumnDef="lastName">
+                                                        <mat-header-cell *matHeaderCellDef>Last Name
+                                                        </mat-header-cell>
+                                                        <mat-cell *matCellDef="let row" [matTooltip]="row.lastName"><span class="mobile-label">Last Name:</span> {{row.lastName}}
+                                                        </mat-cell>
+                                                    </ng-container>
                                                     <ng-container matColumnDef="mobileNumber">
                                                         <mat-header-cell *matHeaderCellDef>Mobile
                                                         </mat-header-cell>
@@ -173,8 +189,18 @@
 
                             <div class="row">
                                 <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+
+
                                     <mat-form-field class="example-full-width mb-3" appearance="outline">
                                         <mat-label>Gender</mat-label>
+                                        <mat-select formControlName="gender">
+                                            <mat-option [value]="'M'">Male</mat-option>
+                                            <mat-option [value]="'F'">Female</mat-option>
+                                            <mat-option [value]="'O'">Other</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+
+                                    <!-- <mat-label>Gender</mat-label>
                                         <mat-select formControlName="gender">
                                             <mat-option [value]="'M'">
                                                 Male
@@ -185,9 +211,9 @@
                                             <mat-option [value]="'O'">
                                                 Other
                                             </mat-option>
-                                        </mat-select>
+                                        </mat-select> -->
 
-                                    </mat-form-field>
+
                                 </div>
 
                                 <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
@@ -259,7 +285,7 @@
 
 
 
-                                <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 mb-3">
+                                <!-- <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 mb-3">
                                     <mat-form-field class="example-full-width mb-3" appearance="outline">
                                         <mat-label>Date Of Birth(yyyy-mm-dd)</mat-label>
                                         <input matInput [matDatepicker]="picker" formControlName="dob">
@@ -267,15 +293,67 @@
                                         <mat-datepicker #picker></mat-datepicker>
 
                                     </mat-form-field>
-                                </div>
+                                </div> -->
 
-                                <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12 mb-3">
+                                <!-- <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12 mb-3">
                                     <mat-form-field class="example-full-width mb-3" appearance="outline">
                                         <mat-label>Age</mat-label>
 
                                         <input matInput formControlName="age" type="number">
                                     </mat-form-field>
+                                </div> -->
+
+
+
+                                <div class="row">
+
+                                    <div class="row">
+
+                                        <!-- DOB -->
+                                        <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                                            <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                                <mat-label>Date of Birth</mat-label>
+                                                <input matInput [matDatepicker]="picker" formControlName="dob" (dateChange)="onDobChange($event.value)">
+                                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                                <mat-datepicker #picker></mat-datepicker>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <!-- Age in Years -->
+                                        <div class="col-xl-2 col-lg-2 col-md-4 col-sm-12 mb-3">
+                                            <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                                <mat-label>Years</mat-label>
+                                                <input matInput formControlName="ageYears" type="number" min="0" yy>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <!-- Age in Months -->
+                                        <div class="col-xl-2 col-lg-2 col-md-4 col-sm-12 mb-3">
+                                            <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                                <mat-label>Months</mat-label>
+                                                <input matInput formControlName="ageMonths" type="number" min="0" max="11">
+                                            </mat-form-field>
+                                        </div>
+
+                                        <!-- Age in Days -->
+                                        <div class="col-xl-2 col-lg-2 col-md-4 col-sm-12 mb-3">
+                                            <mat-form-field class="example-full-width mb-3" appearance="outline">
+                                                <mat-label>Days</mat-label>
+                                                <input matInput formControlName="ageDays" type="number" min="0" max="31">
+                                            </mat-form-field>
+                                        </div>
+
+                                    </div>
+
+
                                 </div>
+
+
+
+
+
+
+
 
 
 

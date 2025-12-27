@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, Inject, Optional } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -32,11 +32,19 @@ import { ServiceRate } from 'app/admin/model/servicerate.model';
 import { PaymentsService } from '../payments.service';
 import { Direction } from '@angular/cdk/bidi';
 import { PrintPaymentReceiptComponent } from '../print-payment-receipt/print-payment-receipt.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { Payment } from '../todays-payments/Payment.model';
 import { MasterService } from 'app/admin/service/master.service';
 import { AdditionalServiceComponent } from 'app/doctor/opd/appointments/additional-service/additional-service.component';
 import { Appointments } from 'app/doctor/opd/appointments/appointments.model';
+import { AppointmentsService } from 'app/doctor/opd/appointments/appointments.service';
+
+
+export interface DialogData {
+  id: number;
+  action: string;
+  appointments: Appointments;
+}
 
 @Component({
   selector: 'app-make-payment',
@@ -72,6 +80,7 @@ import { Appointments } from 'app/doctor/opd/appointments/appointments.model';
 })
 export class MakePaymentComponent extends UnsubscribeOnDestroyAdapter {
   paymentForm: UntypedFormGroup;
+  casualtyForm: any
   hide3 = true;
   agree3 = false;
   isDisabled = true;
@@ -92,13 +101,27 @@ export class MakePaymentComponent extends UnsubscribeOnDestroyAdapter {
   appoinmentServices: any[] = [];
   isSubmitting = false;
 
+  showServices = false;
+  labServices = false;
+  xrayServices = false;
+  sonoServices = false;
+  patientId: number = 0;
+  newlyAddedServices: any[] = [];
+
+
+
+
   constructor(
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: any,
+
     private fb: UntypedFormBuilder,
     public httpClient: HttpClient,
     private _snackBar: MatSnackBar,
     private route: ActivatedRoute,
     public paymentService: PaymentsService,
     public serviceRateService: ServiceRateService,
+    public appointmentsService: AppointmentsService,
+
     public masterService: MasterService,
     private router: Router,
     public dialog: MatDialog,
@@ -107,6 +130,7 @@ export class MakePaymentComponent extends UnsubscribeOnDestroyAdapter {
     super();
     const currentUser = JSON.parse(localStorage.getItem('currentUser') ?? '{}');
     this.hospitalId = currentUser.hospitalId;
+    // this.patientId = data.appointments.patientId;
     this.paymentForm = this.fb.group({
       appointmentId: [null],
       firstName: [''],
@@ -122,32 +146,142 @@ export class MakePaymentComponent extends UnsubscribeOnDestroyAdapter {
       status: ['Waiting'],
       hospitalId: [this.hospitalId],
       transactionNumber: [''],
-      paymentMode: ['', [Validators.required]],
+      paymentMode: [''],
       amount: [],
       cashAmount: [0],
       onlineAmount: [0],
       description: [],
       paymentStatus: ['PAID'],
-      appointmentServiceList: []
+      appointmentServiceList: [],
+      labServices: [false],
+      xrayServices: [false],
+      sonoServices: [false],
     });
   }
 
+
+
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      if (params['appointment']) {
-        this.appointment = JSON.parse(params['appointment']);
-        this.populateAppointment();
-      }
+
+      // ===== EDIT PAYMENT FLOW =====
       if (params['payment']) {
         this.payment = JSON.parse(params['payment']);
         this.populatePayment();
+
+        if (this.payment?.appointmentId) {
+          this.loadAppointmentFromPayment(this.payment.appointmentId);
+        }
+        return;
+      }
+
+      // ===== NEW PAYMENT FLOW =====
+      if (params['appointment']) {
+        this.appointment = JSON.parse(params['appointment']);
+        this.appointmentId = this.appointment.id;
+        this.patientId = this.appointment.patientId;
+
+        this.populateAppointment();
+
+        this.loadAppoinmentLabServiceDetails(true);
+        this.loadAppoinmentXrayServiceDetails(true);
+        this.loadAppoinmentSonographyServiceDetails(true);
       }
     });
-    this.getServices();
+
     this.getDoctors();
-    this.getAmount(this.appointment?.doctorId, this.appointment?.serviceId);
-    this.getAppoinmentPayment(this.appointment?.id);
+    this.getServices();
   }
+
+
+
+
+  // ngOnInit(): void {
+
+  //   this.route.queryParams.subscribe(params => {
+
+  //   /* ================= EDIT PAYMENT FLOW ================= */
+  //   if (params['payment']) {
+  //     this.payment = JSON.parse(params['payment']);
+  //     this.populatePayment();
+
+  //     // 🔥 LOAD APPOINTMENT USING appointmentId FROM PAYMENT
+  //     if (this.payment?.appointmentId) {
+  //       this.loadAppointmentFromPayment(this.payment.appointmentId);
+  //     }
+  //     return;
+  //   }
+
+  //   /* ================= NEW PAYMENT FLOW ================= */
+  //   if (params['appointment']) {
+  //     this.appointment = JSON.parse(params['appointment']);
+  //     this.appointmentId = this.appointment.id;
+  //     this.patientId = this.appointment.patientId;
+
+  //     this.populateAppointment();
+
+  //     this.loadAppoinmentLabServiceDetails(true);
+  //     this.loadAppoinmentXrayServiceDetails(true);
+  //     this.loadAppoinmentSonographyServiceDetails(true);
+  //   }
+
+  // });
+
+
+
+
+
+  //   // this.route.queryParams.subscribe(params => {
+  //   //   if (params['appointment']) {
+  //   //     this.appointment = JSON.parse(params['appointment']);
+  //   //     this.populateAppointment();
+  //   //   }
+  //   //   if (params['payment']) {
+  //   //     this.payment = JSON.parse(params['payment']);
+  //   //     this.populatePayment();
+  //   //   }
+  //   // });
+  //   this.getServices();
+  //   this.getDoctors();
+  //   this.getAmount(this.appointment?.doctorId, this.appointment?.serviceId);
+
+  //   if (this.data?.appointments) {
+  //     this.appointment = this.data.appointments;
+  //     this.patientId = this.appointment.patientId;
+  //     this.appointmentId = this.appointment.id;
+  //     this.populateAppointment();
+  //   }
+
+  //   /* CASE 2: Opened via Route (Accountant flow) */
+  //   this.route.queryParams.subscribe(params => {
+  //     if (params['appointment']) {
+  //       this.appointment = JSON.parse(params['appointment']);
+  //       this.patientId = this.appointment.patientId;
+  //       this.appointmentId = this.appointment.id;
+  //       this.populateAppointment();
+  //     }
+  //     if (params['payment']) {
+  //       this.payment = JSON.parse(params['payment']);
+  //       this.populatePayment();
+  //     }
+  //   });
+
+  //   this.getDoctors();
+  //   this.getServices();
+
+  //   /* 🔴 LOAD SERVICES AFTER appointmentId IS READY */
+  //   if (this.appointmentId) {
+  //     this.loadAppoinmentLabServiceDetails(true);
+  //     this.loadAppoinmentXrayServiceDetails(true);
+  //     this.loadAppoinmentSonographyServiceDetails(true);
+  //   }
+
+
+
+
+
+
+  // }
 
   onPaymentModeChange(mode: string) {
     this.isPartialPayment = mode === 'partial';
@@ -210,62 +344,181 @@ export class MakePaymentComponent extends UnsubscribeOnDestroyAdapter {
     });
   }
 
+
+
   onSubmit() {
-  if (this.isSubmitting) return;
 
-  if (this.paymentForm.invalid) {
-    this.openSnackBar('Please fill all required fields');
-    return;
-  }
-
-  this.isSubmitting = true;
-
-  if (this.paymentForm.get('paymentMode')?.value === 'partial') {
-    const cash = Number(this.paymentForm.get('cashAmount')?.value) || 0;
-    const online = Number(this.paymentForm.get('onlineAmount')?.value) || 0;
-    this.paymentForm.patchValue({ amount: cash + online });
-  }
-
-  const callback = (result: any) => {
-    this.isSubmitting = false;
-    if (result['message'] === 'Data Saved Successfully') {
-      const direction: Direction = localStorage.getItem('isRtl') === 'true' ? 'rtl' : 'ltr';
-      this.dialog.open(PrintPaymentReceiptComponent, {
-        data: { payment: result['data'] },
-        direction,
-        height: '80%',
-        width: '80%'
-      }).afterClosed().subscribe(() => {
-        this.router.navigate(['/accountant/todays-payments']);
-      });
+    // 🔴 HARD GUARD – MUST EXIST
+    if (!this.appointment || !this.appointment.id || !this.appointment.patientId) {
+      this.openSnackBar('Appointment not loaded. Please reopen payment screen.');
+      this.isSubmitting = false;
+      return;
     }
-  };
 
-  const errorHandler = () => {
-    this.isSubmitting = false;
-    this.openSnackBar('Error occurred to add');
-    return '';
-  };
+    // ✅ FORCE SET CORRECT IDs
+    this.appointmentId = this.appointment.id;
+    this.patientId = this.appointment.patientId;
 
-  if (this.payment) {
-    this.payment = {
-      ...this.payment,
-      paymentStatus: 'PAID',
-      paymentMode: this.paymentForm.get('paymentMode')?.value,
-      transactionNumber: this.paymentForm.get('transactionNumber')?.value
+    if (this.isSubmitting) return;
+
+    if (this.paymentForm.invalid) {
+      this.openSnackBar('Please fill all required fields');
+      return;
+    }
+
+    this.isSubmitting = true;
+
+    /* ================= PARTIAL PAYMENT HANDLING ================= */
+    if (this.paymentForm.get('paymentMode')?.value === 'partial') {
+      const cash = Number(this.paymentForm.get('cashAmount')?.value) || 0;
+      const online = Number(this.paymentForm.get('onlineAmount')?.value) || 0;
+      this.paymentForm.patchValue({ amount: cash + online });
+    }
+
+    const successCallback = (result: any) => {
+      this.isSubmitting = false;
+
+      if (result?.message === 'Data Saved Successfully') {
+        const direction: Direction =
+          localStorage.getItem('isRtl') === 'true' ? 'rtl' : 'ltr';
+
+        this.dialog.open(PrintPaymentReceiptComponent, {
+          data: { payment: result.data },
+          direction,
+          height: '80%',
+          width: '80%',
+        }).afterClosed().subscribe(() => {
+          this.router.navigate(['/accountant/todays-payments']);
+        });
+      }
     };
-    this.paymentService.makePayment(this.payment)
-      .pipe(catchError(errorHandler))
-      .subscribe(callback);
-  } else {
-    if (this.appoinmentServices.length > 0) {
-      this.paymentForm.patchValue({ appointmentServiceList: this.appoinmentServices });
+
+    const errorHandler = () => {
+      this.isSubmitting = false;
+      this.openSnackBar('Error occurred while saving payment');
+      return '';
+    };
+
+    /* ============================================================
+       CASE 1: NEW SERVICES ADDED → CREATE NEW PAYMENT ENTRY
+       ============================================================ */
+    if (this.appoinmentServices && this.appoinmentServices.length > 0) {
+
+      const newServicePayment = {
+        appointmentId: this.appointmentId,
+        patientId: this.patientId,
+        hospitalId: this.hospitalId,
+        paymentMode: this.paymentForm.get('paymentMode')?.value,
+        transactionNumber: this.paymentForm.get('transactionNumber')?.value,
+        amount: this.paymentForm.get('amount')?.value,
+        paymentStatus: 'PAID',
+
+        appointmentServiceList: this.appoinmentServices.map(s => ({
+          serviceId: s.serviceId,
+          charges: s.charges,
+          type: s.type
+        }))
+      };
+
+      this.paymentService.makePayment(newServicePayment)
+        .pipe(catchError(errorHandler))
+        .subscribe(successCallback);
+
+      return;
     }
+
+    /* ============================================================
+       CASE 2: EDIT EXISTING PAYMENT ONLY
+       ============================================================ */
+    if (this.payment) {
+
+      const updatedPayment = {
+        ...this.payment,
+        paymentStatus: 'PAID',
+        paymentMode: this.paymentForm.get('paymentMode')?.value,
+        transactionNumber: this.paymentForm.get('transactionNumber')?.value,
+        description: this.paymentForm.get('description')?.value,
+        amount: this.paymentForm.get('amount')?.value
+      };
+
+      this.paymentService.makePayment(updatedPayment)
+        .pipe(catchError(errorHandler))
+        .subscribe(successCallback);
+
+      return;
+    }
+
+    /* ============================================================
+       CASE 3: FIRST-TIME PAYMENT (NO SERVICES)
+       ============================================================ */
     this.paymentService.makePayment(this.paymentForm.value)
       .pipe(catchError(errorHandler))
-      .subscribe(callback);
+      .subscribe(successCallback);
   }
-}
+
+
+
+
+
+
+
+
+  //   onSubmit() {
+  //   if (this.isSubmitting) return;
+
+  //   if (this.paymentForm.invalid) {
+  //     this.openSnackBar('Please fill all required fields');
+  //     return;
+  //   }
+
+  //   this.isSubmitting = true;
+
+  //   if (this.paymentForm.get('paymentMode')?.value === 'partial') {
+  //     const cash = Number(this.paymentForm.get('cashAmount')?.value) || 0;
+  //     const online = Number(this.paymentForm.get('onlineAmount')?.value) || 0;
+  //     this.paymentForm.patchValue({ amount: cash + online });
+  //   }
+
+  //   const callback = (result: any) => {
+  //     this.isSubmitting = false;
+  //     if (result['message'] === 'Data Saved Successfully') {
+  //       const direction: Direction = localStorage.getItem('isRtl') === 'true' ? 'rtl' : 'ltr';
+  //       this.dialog.open(PrintPaymentReceiptComponent, {
+  //         data: { payment: result['data'] },
+  //         direction,
+  //         height: '80%',
+  //         width: '80%'
+  //       }).afterClosed().subscribe(() => {
+  //         this.router.navigate(['/accountant/todays-payments']);
+  //       });
+  //     }
+  //   };
+
+  //   const errorHandler = () => {
+  //     this.isSubmitting = false;
+  //     this.openSnackBar('Error occurred to add');
+  //     return '';
+  //   };
+
+  //   if (this.payment) {
+  //     this.payment = {
+  //       ...this.payment,
+  //       paymentStatus: 'PAID',
+  //       paymentMode: this.paymentForm.get('paymentMode')?.value,
+  //       transactionNumber: this.paymentForm.get('transactionNumber')?.value
+  //     };
+  //     this.paymentService.makePayment(this.payment)
+  //       .pipe(catchError(errorHandler))
+  //       .subscribe(callback);
+  //   } else {
+  //     if (this.appoinmentServices.length > 0) {
+  //       this.paymentForm.patchValue({ appointmentServiceList: this.appoinmentServices });
+  //     }
+  //     this.paymentService.makePayment(this.paymentForm.value)
+  //       .pipe(catchError(errorHandler))
+  //       .subscribe(callback);
+  //   }
+  // }
 
   get f() {
     return this.paymentForm.controls;
@@ -315,4 +568,159 @@ export class MakePaymentComponent extends UnsubscribeOnDestroyAdapter {
       });
     }
   }
+
+  loadAppoinmentLabServiceDetails(checked: boolean) {
+    if (!checked) {
+      this.appoinmentServices = this.appoinmentServices.filter(s => s.type !== 'T');
+      this.recalculateAmount();
+      return;
+    }
+
+    const data = {
+      appointmentId: this.appointmentId,
+      type: 'T'
+    };
+
+    this.masterService.getAppoinmentServiceDetails(data).subscribe((res: any) => {
+      const labServices = res.data || [];
+
+      // remove old lab services & add fresh
+      this.appoinmentServices = [
+        ...this.appoinmentServices.filter(s => s.type !== 'T'),
+        ...labServices
+      ];
+
+      this.recalculateAmount();
+    });
+  }
+
+
+
+  loadAppoinmentXrayServiceDetails(checked: boolean) {
+    if (!checked) {
+      this.appoinmentServices = this.appoinmentServices.filter(s => s.type !== 'X');
+      this.recalculateAmount();
+      return;
+    }
+
+    const data = {
+      appointmentId: this.appointmentId,
+      type: 'X'
+    };
+
+    this.masterService.getAppoinmentServiceDetails(data).subscribe((res: any) => {
+      const xrayServices = res.data || [];
+
+      this.appoinmentServices = [
+        ...this.appoinmentServices.filter(s => s.type !== 'X'),
+        ...xrayServices
+      ];
+
+      this.recalculateAmount();
+    });
+  }
+
+
+
+  loadAppoinmentSonographyServiceDetails(checked: boolean) {
+    if (!checked) {
+      this.appoinmentServices = this.appoinmentServices.filter(s => s.type !== 'Q');
+      this.recalculateAmount();
+      return;
+    }
+
+    const data = {
+      appointmentId: this.appointmentId,
+      type: 'Q'
+    };
+
+    this.masterService.getAppoinmentServiceDetails(data).subscribe((res: any) => {
+      const sonoServices = res.data || [];
+
+      this.appoinmentServices = [
+        ...this.appoinmentServices.filter(s => s.type !== 'Q'),
+        ...sonoServices
+      ];
+
+      this.recalculateAmount();
+    });
+  }
+
+
+
+  recalculateAmount() {
+    const total = this.appoinmentServices.reduce(
+      (sum: number, s: any) => sum + Number(s.charges || 0),
+      0
+    );
+
+    this.paymentForm.patchValue({ amount: total });
+  }
+
+
+  loadAppointmentFromPayment(appointmentId: number) {
+    const payload = {
+      hospitalId: this.hospitalId,
+      appointmentId
+    };
+
+    this.appointmentsService.getAllAppoinment(payload)
+      .subscribe((res: any) => {
+
+        if (!res?.data || res.data.length === 0) {
+          this.openSnackBar('Appointment not found');
+          return;
+        }
+
+        const matchedAppointment = res.data.find(
+          (a: any) => a.id === appointmentId
+        );
+
+        if (!matchedAppointment) {
+          this.openSnackBar('Correct appointment not found');
+          return;
+        }
+
+        this.appointment = matchedAppointment;
+        this.appointmentId = matchedAppointment.id;
+        this.patientId = matchedAppointment.patientId;
+
+        this.populateAppointment();
+
+        this.loadAppoinmentLabServiceDetails(true);
+        this.loadAppoinmentXrayServiceDetails(true);
+        this.loadAppoinmentSonographyServiceDetails(true);
+      });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  onServiceChanged(services: any[]) {
+    // Only services added from payment screen
+    this.newlyAddedServices = services || [];
+
+    const total = this.newlyAddedServices.reduce(
+      (sum: number, s: any) => sum + Number(s.charges || 0),
+      0
+    );
+
+    this.paymentForm.patchValue({ amount: total });
+  }
+
+
+
 }

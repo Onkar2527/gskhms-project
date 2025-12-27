@@ -78,14 +78,16 @@ export class BookAppointmentComponent extends UnsubscribeOnDestroyAdapter {
 
   filterToggle = false;
   displayedColumns = [
+    'id',
     'name', 
-    // 'firstName',
-    // 'lastName',
+    'firstName',
+    'lastName',
     'mobileNumber',
     'address',
     'dob',
     'gender',
     'actions',
+    'reg_no'
   ];
 
   exampleDatabase?: PatientService;
@@ -128,10 +130,10 @@ export class BookAppointmentComponent extends UnsubscribeOnDestroyAdapter {
     this.hospitalId = currentUser.hospitalId;
     this.bookingForm = this.fb.group({
       id: [null],
-      // namePrefix: ['', [Validators.required]],
+      namePrefix: ['', [Validators.required]],
       mobileNumber: ['', [Validators.required]],
-      firstName: ['', [Validators.required, Validators.pattern('[a-zA-Z]+')]],
-      lastName: ['',[Validators.required, Validators.pattern('[a-zA-Z]+')]],
+      firstName: ['', [Validators.required]],
+      lastName: [''],
       aadharNumber: [''],
       gender: [''],
       type: ['opd'],
@@ -156,7 +158,12 @@ export class BookAppointmentComponent extends UnsubscribeOnDestroyAdapter {
       priority: ['Normal'],
       referredBy: [''],
       appointmentTime:[new Date()],
-      age:['']
+      age:[''],
+      ageYears: [''],
+      ageMonths: [''],
+      ageDays: [''],
+      regNo: ['']
+
 
 
 
@@ -185,7 +192,17 @@ export class BookAppointmentComponent extends UnsubscribeOnDestroyAdapter {
      this.bookingForm.get('dob')?.valueChanges.subscribe((dob) => {
       this.updateAgeFromDOB(dob);
     });
+
+    this.loadNextReg();
   }
+
+
+
+  loadNextReg() {
+  this.appointmentsService.getNextRegNo().subscribe((res: any) => {
+    this.bookingForm.patchValue({ regNo: res.regno });
+  });
+}
 
    updateAgeFromDOB(dob: Date | null) {
     if (dob) {
@@ -324,6 +341,8 @@ export class BookAppointmentComponent extends UnsubscribeOnDestroyAdapter {
 
 
  onSubmit() {
+
+  console.log('form valuexxxxxxxxxxxxxxxxxxxxxxxxxxx', this.bookingForm.value);
     if (this.bookingForm.invalid || this.isSubmitting) return;
 
     this.isSubmitting = true;
@@ -406,12 +425,17 @@ export class BookAppointmentComponent extends UnsubscribeOnDestroyAdapter {
     this.bookingForm.get('fatherName')?.patchValue(row.fatherName);
     this.bookingForm.get('referredBy')?.patchValue(row.referredBy);
     this.bookingForm.get('age')?.patchValue(row.age);
+    this.bookingForm.get('ageYears')?.patchValue(row.ageYears);
+    this.bookingForm.get('ageMonths')?.patchValue(row.ageMonths);
+    this.bookingForm.get('ageDays')?.patchValue(row.ageDays);
+    this.bookingForm.get('regNo')?.patchValue(row.regNo);
     
   }
 
  public loadData() {
-  if(this.bookingForm.get('mobileNumber')?.value?.length == 10 || this.bookingForm.get('firstName')?.value?.length > 2 || this.bookingForm.get('lastName')?.value?.length > 2){
+  if(this.bookingForm.get('mobileNumber')?.value?.length == 10 || this.bookingForm.get('firstName')?.value?.length > 2){
       // this.bookingForm.get('namePrefix')?.patchValue(null);
+      // this.bookingForm.get('regNo')?.patchValue(null);
       this.bookingForm.get('patientId')?.patchValue(null);
       // this.bookingForm.get('firstName')?.patchValue(null);
       this.bookingForm.get('aadharNumber')?.patchValue(null);
@@ -427,7 +451,7 @@ export class BookAppointmentComponent extends UnsubscribeOnDestroyAdapter {
       
       
       this.exampleDatabase = new PatientService(this.httpClient, this.config);
-      this.exampleDatabase.getAllPatientsByMNumberFnameLname(this.bookingForm.get('mobileNumber')?.value, this.bookingForm.get('firstName')?.value, this.bookingForm.get('lastName')?.value).pipe(
+      this.exampleDatabase.getAllPatientsByMNumberFnameLname(this.bookingForm.get('mobileNumber')?.value, this.bookingForm.get('firstName')?.value).pipe(
         catchError(() => {
           return '';
         })
@@ -489,11 +513,86 @@ export class BookAppointmentComponent extends UnsubscribeOnDestroyAdapter {
           deptId: this.appointment.deptId,
           referredBy: this.appointment.referredBy,
           appointmentTime:this.appointment.appointmentTime,
-          age:this.age
+          age:this.age,
+          ageYears:this.appointment.ageYears,
+         ageMonths: this.appointment.ageMonths,
+         ageDays: this.appointment.ageDays,
+         regNo: this.appointment.regNo
+
 
         });
     }
   }
+
+  onPrefixChange(prefix: string) {
+  switch (prefix) {
+    case 'Mr':
+      this.bookingForm.get('gender')?.setValue('M');
+      break;
+    case 'Mrs':
+    case 'Miss':
+      this.bookingForm.get('gender')?.setValue('F');
+      break;
+    default:
+      this.bookingForm.get('gender')?.reset();
+      break;
+  }
+
+
+  
+
+
+
+}
+
+
+ageDisplay: string = '';
+
+onDobChange(dob: Date) {
+  if (!dob) {
+    // enable manual entry
+    this.bookingForm.get('ageYears')?.enable();
+    this.bookingForm.get('ageMonths')?.enable();
+    this.bookingForm.get('ageDays')?.enable();
+    this.bookingForm.patchValue({ ageYears: '', ageMonths: '', ageDays: '' });
+    return;
+  }
+
+  const birthDate = new Date(dob);
+  const today = new Date();
+
+  let years = today.getFullYear() - birthDate.getFullYear();
+  let months = today.getMonth() - birthDate.getMonth();
+  let days = today.getDate() - birthDate.getDate();
+
+  if (days < 0) {
+    months--;
+    const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+    days += prevMonth.getDate();
+  }
+
+  if (months < 0) {
+    years--;
+    months += 12;
+  }
+
+  // Patch calculated values
+  this.bookingForm.patchValue({
+    ageYears: years,
+    ageMonths: months,
+    ageDays: days
+  });
+
+  // disable manual inputs when dob is present
+  this.bookingForm.get('ageYears')?.disable();
+  this.bookingForm.get('ageMonths')?.disable();
+  this.bookingForm.get('ageDays')?.disable();
+}
+
+
+
+
+
 }
 
 export class ExampleDataSource extends DataSource<Patient> {

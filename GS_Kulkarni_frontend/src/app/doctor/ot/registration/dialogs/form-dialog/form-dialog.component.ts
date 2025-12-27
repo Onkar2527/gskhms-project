@@ -202,7 +202,7 @@ export class FormDialogComponent {
       this.otRegistrationForm.get('address')?.patchValue(null);
       this.otRegistrationForm.get('dob')?.patchValue(null);
       this.exampleDatabase = new PatientService(this.httpClient, this.config);
-      this.exampleDatabase.getAllPatientsByMNumberFnameLname(this.otRegistrationForm.get('mobileNumber')?.value, this.otRegistrationForm.get('firstName')?.value, this.otRegistrationForm.get('lastName')?.value).pipe(
+      this.exampleDatabase.getAllPatientsByMNumberFnameLname(this.otRegistrationForm.get('mobileNumber')?.value, this.otRegistrationForm.get('firstName')?.value).pipe(
         catchError(() => {
           return '';
         })

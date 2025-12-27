@@ -69,9 +69,9 @@ export class TodaysPaymentsComponent extends UnsubscribeOnDestroyAdapter
   displayedColumns = [
     // 'select',
     // 'id',
-    'documentNumber',
+    // 'documentNumber',
     'uhidnumber',
-    'appointmentNumber',
+    // 'appointmentNumber',
     'name',
     // 'lastName',
     'mobileNumber',
@@ -80,7 +80,7 @@ export class TodaysPaymentsComponent extends UnsubscribeOnDestroyAdapter
     'paymentStatus',
     'createdBy',
     'paymentMode',
-    'transactionNumber',
+    // 'transactionNumber',
     'actions'
   ];
 
@@ -146,6 +146,15 @@ export class TodaysPaymentsComponent extends UnsubscribeOnDestroyAdapter
   editPayment(row: Payment) {
     this.router.navigate(['/accountant/payment'], { queryParams: { payment : JSON.stringify(row) } });
   }
+
+//   editPayment(row: Payment) {
+//   this.router.navigate(['/accountant/payment'], {
+//     queryParams: {
+//       appointment: JSON.stringify(row.appointmentId),
+//       payment: JSON.stringify(row)
+//     }
+//   });
+// }
 
   public loadData() {
     this.sort.active = 'paymentDate';

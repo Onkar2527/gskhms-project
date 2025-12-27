@@ -47,6 +47,11 @@ export class Appointments {
   referredBy!: string;
   appointmentTime!:Date;
   age!:string;
+  ageYears!:number;
+  ageMonths!:number;
+  ageDays!:number;
+  regNo!:string;
+
 
 
 
